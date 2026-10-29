@@ -17,7 +17,7 @@ function Navbar() {
       <nav className="navbar" aria-label="Navegación principal">
         <NavLink to="/" className="brand" onClick={closeMenu}>
           <span className="brand-mark">U</span>
-          <span>U-SERIES</span>
+          <span>RAGNAROK <em>:</em> U-SERIES</span>
         </NavLink>
         <button type="button" className="menu-toggle" aria-expanded={isOpen} aria-controls="main-navigation" aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'} onClick={() => setIsOpen((open) => !open)}>
           <span /><span /><span />
