@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M256 18 449 129v254L256 494 63 383V129L256 18Z" fill="#09090B" stroke="#22D3EE" stroke-width="8"/>
+  <path d="M256 49 422 145v222L256 463 90 367V145L256 49Z" stroke="#E11D48" stroke-width="3"/>
+  <path d="M83 256h346M256 83v346" stroke="#22D3EE" stroke-opacity=".25" stroke-width="2"/>
+  <path d="M150 144h117c66 0 104 29 104 78 0 34-20 58-52 69l62 91h-86l-51-79h-20v79h-74V144Zm74 55v54h33c24 0 37-9 37-27 0-18-13-27-37-27h-33Z" fill="url(#fire)"/>
+  <path d="m317 111-61 126h40l-35 91 94-142h-43l5-75Z" fill="#67E8F9"/>
+  <path d="M128 407h256" stroke="#E11D48" stroke-width="5"/>
+  <text x="256" y="433" text-anchor="middle" fill="#F4F4F5" font-family="Arial, sans-serif" font-size="18" font-weight="900" letter-spacing="5">U-SERIES</text>
+  <defs>
+    <linearGradient id="fire" x1="154" y1="157" x2="360" y2="367" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FB7185"/>
+      <stop offset=".52" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#FACC15"/>
+    </linearGradient>
+  </defs>
+</svg>

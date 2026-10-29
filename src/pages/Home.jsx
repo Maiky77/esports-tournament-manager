@@ -1,116 +1,123 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import ragnarokCrest from '../assets/ragnarok-crest.svg'
 
-const registrationDeadline = new Date('2026-12-15T23:59:59-05:00').getTime()
+const deadline = new Date('2026-12-15T23:59:59-05:00').getTime()
 
-function getRemainingTime() {
-  const remaining = Math.max(registrationDeadline - Date.now(), 0)
-
-  return {
-    días: Math.floor(remaining / 86400000),
-    horas: Math.floor((remaining / 3600000) % 24),
-    minutos: Math.floor((remaining / 60000) % 60),
-    segundos: Math.floor((remaining / 1000) % 60),
-  }
+function getTimeLeft() {
+  const time = Math.max(deadline - Date.now(), 0)
+  return [
+    ['DÍAS', Math.floor(time / 86400000)],
+    ['HRS', Math.floor((time / 3600000) % 24)],
+    ['MIN', Math.floor((time / 60000) % 60)],
+    ['SEG', Math.floor((time / 1000) % 60)],
+  ]
 }
 
 function Countdown() {
-  const [time, setTime] = useState(getRemainingTime)
+  const [time, setTime] = useState(getTimeLeft)
 
   useEffect(() => {
-    const timer = window.setInterval(() => setTime(getRemainingTime()), 1000)
-    return () => window.clearInterval(timer)
+    const interval = window.setInterval(() => setTime(getTimeLeft()), 1000)
+    return () => window.clearInterval(interval)
   }, [])
 
   return (
-    <div className="countdown" aria-label="Tiempo restante para el cierre de inscripciones">
-      {Object.entries(time).map(([unit, value]) => (
-        <div className="countdown-item" key={unit}>
+    <div className="template-countdown">
+      {time.map(([label, value]) => (
+        <div key={label}>
           <strong>{String(value).padStart(2, '0')}</strong>
-          <span>{unit}</span>
+          <span>{label}</span>
         </div>
       ))}
     </div>
   )
 }
 
-const prizes = [
-  { place: '01', title: 'CAMPEÓN', amount: 'S/ 1,500', accent: 'gold' },
-  { place: '02', title: 'SUBCAMPEÓN', amount: 'S/ 800', accent: 'silver' },
-  { place: '03', title: 'TERCER LUGAR', amount: 'S/ 400', accent: 'bronze' },
+const divisions = [
+  {
+    key: 'mlbb',
+    title: 'DIVISIÓN MLBB',
+    name: 'Mobile Legends: Bang Bang',
+    image: '/images/mlbb.jpg',
+    color: '#22d3ee',
+    detail: '5 titulares + hasta 2 suplentes',
+    format: '5V5 MOBA',
+  },
+  {
+    key: 'ff',
+    title: 'DIVISIÓN FREE FIRE',
+    name: 'Free Fire',
+    image: '/images/free-fire.jpg',
+    color: '#f97316',
+    detail: '4 titulares + 1 suplente',
+    format: 'SQUADS BR',
+  },
 ]
 
 function Home() {
   return (
-    <main className="home-page">
-      <section className="home-hero">
-        <div className="hero-copy">
-          <span className="eyebrow">RAGNAROK // CIRCUITO COMPETITIVO DE PUNO</span>
-          <h1>
-            FORJA TU
-            <span className="hero-title-accent"> RAGNAROK</span>
-            <span className="hero-title-line">EN LA ARENA</span>
-          </h1>
-          <div className="series-plate">U-SERIES <span>// OPEN CHAMPIONSHIP 2026</span></div>
-          <p className="hero-description">
-            El circuito competitivo más intenso de Puno. Abierto para escuadras
-            universitarias, colegios e independientes. Demuestra tu nivel en
-            Free Fire y MLBB.
-          </p>
-          <div className="hero-actions">
-            <Link className="primary-button" to="/inscripcion">
-              INSCRIBIR ESCUADRA <span aria-hidden="true">↗</span>
-            </Link>
-            <Link className="secondary-button" to="/equipos">
-              VER ESCUADRAS
-            </Link>
-          </div>
-          <div className="hero-meta">
-            <span><i className="status-dot" /> INSCRIPCIONES ABIERTAS</span>
-            <span>FREE FIRE <b>×</b> MLBB</span>
-          </div>
-        </div>
-
-        <div className="hero-visual" aria-hidden="true">
-          <div className="hero-glow" />
-          <div className="hero-ring hero-ring--outer" />
-          <div className="hero-ring hero-ring--inner" />
-          <div className="hero-badge">R</div>
-          <span className="visual-label visual-label--top">RAGNAROK<br />SEASON // 01</span>
-          <span className="visual-label visual-label--bottom">PUNO / PERÚ<br />EST. 2026</span>
-          <span className="visual-cross visual-cross--one">+</span>
-          <span className="visual-cross visual-cross--two">+</span>
-        </div>
-      </section>
-
-      <section className="home-section countdown-section">
-        <div>
-          <span className="section-kicker">// DEADLINE</span>
-          <h2>EL TIEMPO SE AGOTA</h2>
-          <p>Las inscripciones cierran el 15 de diciembre de 2026.</p>
-        </div>
-        <Countdown />
-      </section>
-
-      <section className="home-section prize-section">
-        <div className="section-heading">
+    <main className="home-page home-page--template">
+      <section className="template-hero">
+        <div className="hero-status"><i /> TEMPORADA OFICIAL 2026 · PUNO</div>
+        <div className="template-title-block">
+          <img className="template-crest" src={ragnarokCrest} alt="Emblema RAGNAROK U-Series" />
           <div>
-            <span className="section-kicker">// LOOT DROP</span>
-            <h2>COMPITE. SOBREVIVE. COBRA.</h2>
+            <h1>RAGNAROK</h1>
+            <p>U-SERIES</p>
           </div>
-          <span className="prize-total">S/ 2,700 <small>BOLSA TOTAL</small></span>
         </div>
-        <div className="prize-grid">
-          {prizes.map((prize) => (
-            <article className={`prize-card prize-card--${prize.accent}`} key={prize.place}>
-              <span className="prize-place">RANK // {prize.place}</span>
-              <div className="prize-icon" aria-hidden="true">✦</div>
-              <div>
-                <h3>{prize.title}</h3>
-                <strong>{prize.amount}</strong>
-              </div>
-            </article>
-          ))}
+        <p className="template-subtitle">
+          El torneo universitario de esports de Puno. Forma tu escuadra,
+          representa a tu universidad y compite en Free Fire o MLBB.
+        </p>
+
+        <div className="template-feature-grid">
+          <article className="event-console clip-card">
+            <span>PREMIO TOTAL</span>
+            <strong>S/ 2,700</strong>
+            <small>EN PREMIOS PARA LAS DOS DIVISIONES</small>
+            <div className="event-console-divider" />
+            <p>CIERRE DE INSCRIPCIONES EN</p>
+            <Countdown />
+            <div className="event-console-actions">
+              <Link to="/inscripcion" className="template-primary-button">INSCRIBIR ESCUADRA</Link>
+              <Link to="/equipos" className="template-secondary-button">VER EQUIPOS</Link>
+            </div>
+          </article>
+
+          <div className="division-list">
+            {divisions.map((division) => (
+              <Link
+                className="division-card clip-card"
+                key={division.key}
+                style={{ '--division-color': division.color }}
+                to="/inscripcion"
+              >
+                <img src={division.image} alt="" />
+                <span className="division-card-overlay" />
+                <div className="division-card-content">
+                  <span>{division.title}</span>
+                  <strong>{division.name}</strong>
+                  <small>{division.detail} · {division.format}</small>
+                  <b>INSCRIBIRSE →</b>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="template-prizes">
+        <div className="template-section-title">
+          <span>// PREMIO Y RECONOCIMIENTO</span>
+          <h2>COMPITE POR TU UNIVERSIDAD</h2>
+          <p>Los mejores equipos de cada división avanzarán en la competencia oficial de RAGNAROK : U-Series.</p>
+        </div>
+        <div className="template-prize-grid">
+          <article><span>01 · CAMPEÓN</span><strong>S/ 1,500</strong><small>Trofeo y reconocimiento oficial</small></article>
+          <article><span>02 · SUBCAMPEÓN</span><strong>S/ 800</strong><small>Medallas y reconocimiento oficial</small></article>
+          <article><span>03 · TERCER LUGAR</span><strong>S/ 400</strong><small>Reconocimiento oficial</small></article>
         </div>
       </section>
     </main>
