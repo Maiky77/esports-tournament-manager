@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ragnarokCrest from '../assets/ragnarok-crest.svg'
+import { useRegistration } from '../context/RegistrationContext'
 
 const deadline = new Date('2026-12-15T23:59:59-05:00').getTime()
 
@@ -41,6 +42,7 @@ const divisions = [
     name: 'Mobile Legends: Bang Bang',
     image: '/images/mlbb.jpg',
     color: '#22d3ee',
+    fee: 'S/ 20.00',
     detail: '5 titulares + hasta 2 suplentes',
     format: '5V5 MOBA',
   },
@@ -50,12 +52,15 @@ const divisions = [
     name: 'Free Fire',
     image: '/images/free-fire.jpg',
     color: '#f97316',
+    fee: 'S/ 15.00',
     detail: '4 titulares + 1 suplente',
     format: 'SQUADS BR',
   },
 ]
 
 function Home() {
+  const { openRegistration } = useRegistration()
+
   return (
     <main className="home-page home-page--template">
       <section className="template-hero">
@@ -81,28 +86,29 @@ function Home() {
             <p>CIERRE DE INSCRIPCIONES EN</p>
             <Countdown />
             <div className="event-console-actions">
-              <Link to="/inscripcion" className="template-primary-button">INSCRIBIR ESCUADRA</Link>
+              <button onClick={openRegistration} type="button" className="template-primary-button">INSCRIBIR ESCUADRA</button>
               <Link to="/equipos" className="template-secondary-button">VER EQUIPOS</Link>
             </div>
           </article>
 
           <div className="division-list">
             {divisions.map((division) => (
-              <Link
+              <button
                 className="division-card clip-card"
                 key={division.key}
+                onClick={() => openRegistration(division.key)}
                 style={{ '--division-color': division.color }}
-                to="/inscripcion"
+                type="button"
               >
                 <img src={division.image} alt="" />
                 <span className="division-card-overlay" />
                 <div className="division-card-content">
                   <span>{division.title}</span>
                   <strong>{division.name}</strong>
-                  <small>{division.detail} · {division.format}</small>
+                  <small>{division.detail} · {division.format} · Tarifa: {division.fee}</small>
                   <b>INSCRIBIRSE →</b>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
         </div>

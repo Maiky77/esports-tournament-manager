@@ -5,7 +5,7 @@ function SplashScreen({ onEnter }) {
 
   const enterArena = () => {
     setIsOpening(true)
-    window.setTimeout(onEnter, 850)
+    onEnter()
   }
 
   return (

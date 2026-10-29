@@ -1,23 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { audio } from '../lib/audioEngine'
+import { useRegistration } from '../context/RegistrationContext'
+import ragnarokCrest from '../assets/ragnarok-crest.svg'
 
 const games = {
-  ff: {
-    name: 'Free Fire',
-    image: '/images/free-fire.jpg',
-    accent: '#f97316',
-    detail: 'Capitán + 3 titulares · 1 suplente opcional',
-    slots: [
-      { label: 'CAPITÁN', required: true },
-      { label: 'TITULAR 02', required: true },
-      { label: 'TITULAR 03', required: true },
-      { label: 'TITULAR 04', required: true },
-      { label: 'SUPLENTE', required: false },
-    ],
-  },
   mlbb: {
     name: 'Mobile Legends: Bang Bang',
+    shortName: 'MOBA MLBB',
+    modeBadge: '5V5 MOBA',
     image: '/images/mlbb.jpg',
     accent: '#22d3ee',
+    price: 20,
+    priceFormatted: 'S/ 20.00',
     detail: 'Capitán + 4 titulares · Hasta 2 suplentes',
     slots: [
       { label: 'CAPITÁN', required: true },
@@ -27,6 +21,23 @@ const games = {
       { label: 'TITULAR 05', required: true },
       { label: 'SUPLENTE 01', required: false },
       { label: 'SUPLENTE 02', required: false },
+    ],
+  },
+  ff: {
+    name: 'Free Fire',
+    shortName: 'FREE FIRE',
+    modeBadge: 'SQUADS BATTLE ROYALE',
+    image: '/images/free-fire.jpg',
+    accent: '#f97316',
+    price: 15,
+    priceFormatted: 'S/ 15.00',
+    detail: 'Capitán + 3 titulares · 1 suplente opcional',
+    slots: [
+      { label: 'CAPITÁN', required: true },
+      { label: 'TITULAR 02', required: true },
+      { label: 'TITULAR 03', required: true },
+      { label: 'TITULAR 04', required: true },
+      { label: 'SUPLENTE', required: false },
     ],
   },
 }
@@ -42,15 +53,25 @@ const professionalSchools = [
   'Otra escuela profesional',
 ]
 
-function Inscription() {
-  const [game, setGame] = useState('ff')
+function Inscription({ modal = false }) {
+  const { registrationGame, setActiveGame } = useRegistration()
+  const [game, setGame] = useState(() => registrationGame || 'mlbb')
   const [institution, setInstitution] = useState('UNAP')
   const [notice, setNotice] = useState(null)
+
+  useEffect(() => {
+    if (registrationGame && (registrationGame === 'ff' || registrationGame === 'mlbb')) {
+      setGame(registrationGame)
+    }
+  }, [registrationGame])
+
   const gameInfo = games[game]
   const playerSlots = useMemo(() => gameInfo.slots, [gameInfo])
 
   const changeGame = (nextGame) => {
     setGame(nextGame)
+    setActiveGame(nextGame)
+    audio.selectGame(nextGame)
     setNotice(null)
   }
 
@@ -63,15 +84,41 @@ function Inscription() {
   }
 
   return (
-    <main className="registration-page">
-      <section className="registration-intro">
-        <span className="section-kicker">// REGISTRO OFICIAL</span>
-        <h1>INSCRIBE A TU ESCUADRA</h1>
-        <p>
-          Completa tus datos y los de tu roster. La organización verificará el
-          pago y aprobará las escuadras desde el panel del torneo.
-        </p>
-      </section>
+    <main className={`registration-page ${modal ? 'registration-page--modal' : ''}`}>
+      {/* Banner de cabecera con arte del juego e info compacta */}
+      {modal ? (
+        <div className="modal-hero-banner" style={{ '--banner-accent': gameInfo.accent }}>
+          <img className="modal-hero-bg" src={gameInfo.image} alt={gameInfo.name} />
+          <div className="modal-hero-overlay" />
+          <div className="modal-hero-content">
+            <div className="modal-hero-left">
+              <img className="modal-hero-crest" src={ragnarokCrest} alt="Crest" />
+              <div>
+                <span className="modal-hero-kicker">// RAGNAROK U-SERIES 2026</span>
+                <h2>INSCRIBE A TU ESCUADRA</h2>
+                <div className="modal-hero-tags">
+                  <span className="modal-hero-tag">{gameInfo.name}</span>
+                  <span className="modal-hero-tag modal-hero-tag--accent">{gameInfo.modeBadge}</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-hero-price-badge">
+              <span className="price-badge-sub">TARIFA DE INSCRIPCIÓN</span>
+              <strong className="price-badge-val">{gameInfo.priceFormatted}</strong>
+              <small className="price-badge-note">Por escuadra completa</small>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <section className="registration-intro">
+          <span className="section-kicker">// REGISTRO OFICIAL</span>
+          <h1>INSCRIBE A TU ESCUADRA</h1>
+          <p>
+            Completa tus datos y los de tu roster. La organización verificará el
+            pago de <strong>{gameInfo.priceFormatted}</strong> y aprobará las escuadras desde el panel del torneo.
+          </p>
+        </section>
+      )}
 
       <form className="registration-form" onSubmit={submitRegistration}>
         <div className="form-step-label"><span>01</span> ELIGE TU DISCIPLINA</div>
@@ -87,8 +134,13 @@ function Inscription() {
               <img src={item.image} alt="" />
               <span className="game-choice-overlay" />
               <span className="game-choice-content">
+                <span className="game-choice-badge">{item.modeBadge}</span>
                 <strong>{item.name}</strong>
                 <small>{item.detail}</small>
+                <div className="game-choice-pricing">
+                  <span>Tarifa:</span>
+                  <b>{item.priceFormatted}</b>
+                </div>
               </span>
               {game === key && <span className="game-choice-status">SELECCIONADO</span>}
             </button>
@@ -170,13 +222,28 @@ function Inscription() {
             <div className="qr-placeholder" aria-label="Código QR de Yape pendiente de configurar">
               {Array.from({ length: 49 }).map((_, index) => <i key={index} />)}
             </div>
-            <small>QR DE YAPE</small>
+            <span className="yape-tag">YAPE OFICIAL</span>
           </div>
           <div className="payment-copy">
-            <h2>REALIZA EL PAGO DE INSCRIPCIÓN</h2>
-            <p>Escanea el QR de Yape y sube el comprobante. Tu escuadra quedará pendiente hasta la verificación de la organización.</p>
+            {/* Tarjeta destacada con el precio */}
+            <div className="payment-price-card">
+              <div className="price-card-main">
+                <span className="price-card-label">MONTO A PAGAR · {gameInfo.shortName}</span>
+                <strong className="price-card-amount">{gameInfo.priceFormatted}</strong>
+              </div>
+              <span className="price-card-note">
+                {game === 'mlbb'
+                  ? 'Tarifa torneo MOBA (5 titulares + hasta 2 suplentes)'
+                  : 'Tarifa torneo Battle Royale (4 titulares + 1 suplente)'}
+              </span>
+            </div>
+
+            <h2>PAGO DE INSCRIPCIÓN POR YAPE</h2>
+            <p>
+              Escanea el QR de Yape y abona exactamente <strong>{gameInfo.priceFormatted}</strong>. Sube tu comprobante de pago para que la organización valide la inscripción.
+            </p>
             <label className="form-field form-field--file">
-              <span>COMPROBANTE DE PAGO *</span>
+              <span>COMPROBANTE DE PAGO (CAPTURA DE YAPE) *</span>
               <input accept="image/png,image/jpeg,image/webp,application/pdf" name="paymentReceipt" required type="file" />
               <small>Imagen o PDF · máx. 5 MB</small>
             </label>
@@ -189,11 +256,12 @@ function Inscription() {
         </label>
 
         {notice && <p className={`form-notice form-notice--${notice.type}`}>{notice.text}</p>}
-        <button className="registration-submit" type="submit">ENVIAR INSCRIPCIÓN <span>↗</span></button>
+        <button className="registration-submit" type="submit">
+          ENVIAR INSCRIPCIÓN ({gameInfo.priceFormatted}) <span>↗</span>
+        </button>
       </form>
     </main>
   )
 }
 
 export default Inscription
-

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useRegistration } from '../context/RegistrationContext'
 
 const links = [
   { label: 'Inicio', to: '/' },
@@ -10,7 +11,12 @@ const links = [
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const { openRegistration } = useRegistration()
   const closeMenu = () => setIsOpen(false)
+  const showRegistration = () => {
+    closeMenu()
+    openRegistration()
+  }
 
   return (
     <header className="site-header">
@@ -24,12 +30,16 @@ function Navbar() {
         </button>
         <div id="main-navigation" className={`nav-links ${isOpen ? 'nav-links--open' : ''}`}>
           {links.map(({ label, to }) => (
-            <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`} onClick={closeMenu}>
-              {label}
-            </NavLink>
+            to === '/inscripcion' ? (
+              <button className="nav-link nav-link-button" key={to} onClick={showRegistration} type="button">{label}</button>
+            ) : (
+              <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`} onClick={closeMenu}>
+                {label}
+              </NavLink>
+            )
           ))}
         </div>
-        <NavLink to="/inscripcion" className="nav-cta" onClick={closeMenu}>Inscribe tu escuadra</NavLink>
+        <button className="nav-cta" onClick={showRegistration} type="button">Inscribe tu escuadra</button>
       </nav>
     </header>
   )
