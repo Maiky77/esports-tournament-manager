@@ -5,6 +5,7 @@ import AudioControls from './components/AudioControls'
 import ParticleBackground from './components/ParticleBackground'
 import RegistrationModal from './components/RegistrationModal'
 import SplashScreen from './components/SplashScreen'
+import Footer from './components/Footer'
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext'
 import { audio } from './lib/audioEngine'
 import Home from './pages/Home'
@@ -41,6 +42,7 @@ function AppContent() {
           <Route path="/llaves" element={<PagePlaceholder title="Llaves del torneo" description="La vista del bracket de Challonge se incorporará en la Fase 5." />} />
           <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." />} />
         </Routes>
+        <Footer />
         {audioStarted && <AudioControls />}
         <RegistrationModal onClose={closeRegistration} open={isRegistrationOpen}>
           <Inscription modal />

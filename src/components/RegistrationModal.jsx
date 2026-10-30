@@ -32,7 +32,7 @@ function RegistrationModal({ children, onClose, open }) {
         className="registration-modal anim-modal clip-corner"
         aria-modal="true"
         role="dialog"
-        aria-label="Inscripción de escuadra"
+        aria-label="Inscripción de equipo"
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="registration-modal-stripe" />
