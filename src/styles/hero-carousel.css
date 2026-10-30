@@ -1,0 +1,32 @@
+/* The artwork and backdrop share one game state, independent of page filters. */
+.hero-visual-wrap { min-width: 0; width: 100%; }
+.hero-character-layer { position: absolute; z-index: 1; inset: 0; opacity: 0; transform: translateY(12px) scale(0.98); pointer-events: none; transition: opacity 800ms ease, transform 1000ms cubic-bezier(0.2,0.7,0.3,1); }
+.hero-character-layer--active { opacity: 1; transform: translateY(0) scale(1); }
+.hero-visual .hero-character-layer--mlbb .hero-character { width: 110%; height: 110%; left: -5%; bottom: 25px; }
+.hero-visual .hero-character-layer--ff .hero-character { width: 100%; height: 110%; left: 0; bottom: 25px; }
+.template-hero-v2 .hero-bg-img { transition: opacity 800ms ease; }
+.template-hero-v2[data-hero-game="mlbb"] .hero-gradient-text { color: #c6a5ff; }
+.template-hero-v2[data-hero-game="ff"] .hero-gradient-text { color: #f0a1d5; }
+.hero-visual-caption { transition: border-color 800ms ease; }
+.hero-carousel-controls { display: flex; align-items: center; gap: 0.5rem; width: 92%; margin: 0.3rem auto 0; padding: 0.5rem 0 0.2rem; }
+.hero-carousel-controls button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 36px; padding: 0.55rem 0.8rem; border: 1px solid #aa7dce36; background: #120c1c9c; color: #a993bf; font-family: var(--font-body); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; transition: color 180ms ease, border-color 180ms ease, background 180ms ease; }
+.hero-carousel-game > span { width: 4px; height: 4px; background: currentColor; opacity: 0.5; }
+.hero-carousel-controls .hero-carousel-game[aria-pressed="true"] { background: #321d4a; border-color: #b589ee80; color: #dbc4ff; }
+.hero-carousel-controls .hero-carousel-game[data-game="ff"][aria-pressed="true"] { background: #3b182e; border-color: #e582bf80; color: #f2b7da; }
+.hero-carousel-game[aria-pressed="true"] > span { opacity: 1; }
+.hero-carousel-controls button:hover { color: #f2e6fd; border-color: #bb93e8; }
+.hero-carousel-controls .hero-carousel-playback { margin-left: auto; padding-inline: 0.7rem; background: transparent; border-color: transparent; font-size: 0.58rem; color: #a18ab5; }
+.hero-carousel-playback svg { flex-shrink: 0; }
+@media (max-width: 760px) {
+  .hero-visual .hero-character-layer .hero-character { width: 100%; height: 100%; left: 0; bottom: 15px; }
+  .hero-carousel-controls { width: 100%; max-width: 520px; }
+}
+@media (max-width: 400px) {
+  .hero-carousel-controls { gap: 0.35rem; }
+  .hero-carousel-controls button { font-size: 0.56rem; padding: 0.5rem 0.65rem; }
+  .hero-carousel-controls .hero-carousel-playback { font-size: 0.52rem; padding-inline: 0.35rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-character-layer { transform: none; transition: none; }
+  .template-hero-v2 .hero-bg-img { transition: none; }
+}

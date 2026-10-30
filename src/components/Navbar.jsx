@@ -35,6 +35,7 @@ function Navbar() {
   const switchDivision = (gameKey) => {
     setActiveGame(gameKey)
     audio.selectGame(gameKey)
+    closeMenu()
   }
 
   const goToRules = () => {
@@ -57,7 +58,7 @@ function Navbar() {
       />
       <nav className="navbar" aria-label="Navegación principal">
         <NavLink to="/" className="brand" onClick={closeMenu}>
-          <span className="brand-mark">U</span>
+          <span className="brand-mark" aria-hidden="true">R//</span>
           <div className="brand-copy">
             <span className="brand-title">RAGNAROK <em>:</em> U-SERIES</span>
             <span className="brand-sub">ESPORTS UNIVERSITARIO 2026</span>

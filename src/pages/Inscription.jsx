@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { audio } from '../lib/audioEngine'
+import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
 import ragnarokCrest from '../assets/ragnarok-crest.svg'
 
@@ -8,10 +9,10 @@ const games = {
     name: 'Mobile Legends: Bang Bang',
     shortName: 'MOBA MLBB',
     modeBadge: '5V5 MOBA · DRAFT PICK',
-    image: '/images/mlbb.jpg',
+    image: '/img/hero-mlbb.jpg',
     pdfUrl: '/docs/Bases_MOBA.pdf',
     pdfName: 'Bases_MOBA.pdf',
-    accent: '#22d3ee',
+    accent: '#b48aff',
     price: 20,
     priceFormatted: 'S/ 20.00',
     detail: 'Capitán + 4 titulares · Hasta 2 suplentes',
@@ -29,10 +30,10 @@ const games = {
     name: 'Free Fire',
     shortName: 'FREE FIRE',
     modeBadge: 'SQUADS BATTLE ROYALE',
-    image: '/images/free-fire.jpg',
+    image: '/img/hero-ff.jpg',
     pdfUrl: '/docs/Bases_FF.pdf',
     pdfName: 'Bases_FF.pdf',
-    accent: '#f97316',
+    accent: '#ef54a6',
     price: 15,
     priceFormatted: 'S/ 15.00',
     detail: 'Capitán + 3 titulares · 1 suplente opcional',
@@ -258,16 +259,17 @@ function Inscription({ modal = false }) {
 
     setNotice({
       type: 'warning',
-      text: '¡Datos y comprobante validados! La interfaz está lista para el envío a Supabase (Fase 5: inserción de tablas y almacenamiento).',
+      text: 'Tu información está completa. El envío de inscripciones está pendiente de habilitación.',
     })
   }
 
   return (
     <main className={`registration-page ${modal ? 'registration-page--modal' : ''}`}>
       {/* Banner de cabecera con arte del juego */}
-      <div className="modal-hero-banner" style={{ '--banner-accent': gameInfo.accent }}>
+      <div className={`modal-hero-banner modal-hero-banner--${game}`} style={{ '--banner-accent': gameInfo.accent }}>
         <img className="modal-hero-bg" src={gameInfo.image} alt={gameInfo.name} />
         <div className="modal-hero-overlay" />
+        <CharacterArt character={game === 'mlbb' ? 'zetian' : 'moco'} className={`registration-character ${game === 'ff' ? 'registration-character--ff' : ''}`} />
         <div className="modal-hero-content">
           <div className="modal-hero-left">
             <img className="modal-hero-crest" src={ragnarokCrest} alt="Crest" />
@@ -300,7 +302,7 @@ function Inscription({ modal = false }) {
               </div>
               <div className="stepper-label-wrap">
                 <span className="stepper-stage">ETAPA 0{s.num}</span>
-                <span className="stepper-title">{s.label}</span>
+                <span className="stepper-title"><span className="stepper-title-full">{s.label}</span><span className="stepper-title-short">{s.short}</span></span>
               </div>
               {idx < STEPS.length - 1 && <div className={`stepper-connector ${step > s.num ? 'stepper-connector--done' : ''}`} />}
             </div>
@@ -321,7 +323,7 @@ function Inscription({ modal = false }) {
             <div className="game-choice-grid">
               {Object.entries(games).map(([key, item]) => (
                 <button
-                  className={`game-choice ${game === key ? 'game-choice--active' : ''}`}
+                  className={`game-choice game-choice--${key} ${game === key ? 'game-choice--active' : ''}`}
                   key={key}
                   onClick={() => changeGame(key)}
                   style={{ '--game-accent': item.accent }}
@@ -531,12 +533,11 @@ function Inscription({ modal = false }) {
 
             <div className="payment-panel">
               <div className="payment-qr-wrap">
-                <div className="qr-placeholder" aria-label="Código QR de Yape oficial">
-                  {Array.from({ length: 49 }).map((_, index) => (
-                    <i key={index} />
-                  ))}
+                <div className="payment-qr-pending">
+                  <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5" /><rect x="8" y="8" width="8" height="8" /></svg>
+                  <strong>QR DE YAPE</strong><span>PENDIENTE DE PUBLICACIÓN</span>
                 </div>
-                <span className="yape-tag">YAPE OFICIAL</span>
+                <span className="yape-tag">PAGO POR YAPE</span>
               </div>
               <div className="payment-copy">
                 <div className="payment-price-card">
@@ -553,8 +554,8 @@ function Inscription({ modal = false }) {
 
                 <h2>REALIZA EL ABONO POR YAPE</h2>
                 <p>
-                  Escanea el código QR y transfiere exactamente <strong>{gameInfo.priceFormatted}</strong>.
-                  Sube la captura de pantalla de la transacción para la validación del comité organizador.
+                  La organización publicará aquí el código oficial y los datos de pago.
+                  La tarifa de esta disciplina es <strong>{gameInfo.priceFormatted}</strong> por equipo.
                 </p>
                 <label className="form-field form-field--file">
                   <span>COMPROBANTE DE PAGO (CAPTURA DE YAPE) *</span>
@@ -617,7 +618,7 @@ function Inscription({ modal = false }) {
             </button>
           ) : (
             <button className="registration-submit" type="submit">
-              ENVIAR INSCRIPCIÓN OFICIAL ({gameInfo.priceFormatted}) <span>↗</span>
+              REVISAR INSCRIPCIÓN ({gameInfo.priceFormatted}) <span>↗</span>
             </button>
           )}
         </div>

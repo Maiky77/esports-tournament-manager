@@ -12,6 +12,7 @@ function ParticleBackground() {
 
   useEffect(() => {
     const canvas = canvasRef.current
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
     const context = canvas.getContext('2d')
     const ratio = Math.min(window.devicePixelRatio || 1, 2)
     let width = 0
@@ -53,13 +54,13 @@ function ParticleBackground() {
         if (particle.y < -10) particle.y = height + 10
         if (particle.y > height + 10) particle.y = -10
 
-        let color = '34,211,238'
+        let color = '168,112,255'
         if (currentGame === 'ff') {
-          color = particle.orange ? '255,85,0' : '251,191,36'
+          color = particle.orange ? '236,74,158' : '205,103,219'
         } else if (currentGame === 'mlbb') {
-          color = particle.orange ? '0,190,255' : '56,189,248'
+          color = particle.orange ? '156,99,255' : '191,151,255'
         } else {
-          color = particle.orange ? '249,115,22' : '34,211,238'
+          color = particle.orange ? '236,74,158' : '168,112,255'
         }
 
         const alpha = 0.22 + (Math.sin(time * 0.002 + particle.phase) + 1) * 0.16
@@ -72,7 +73,7 @@ function ParticleBackground() {
       })
 
       context.shadowBlur = 0
-      const strokePrefix = currentGame === 'ff' ? 'rgba(255,106,26,' : 'rgba(34,211,238,'
+      const strokePrefix = currentGame === 'ff' ? 'rgba(236,74,158,' : 'rgba(168,112,255,'
 
       for (let first = 0; first < particles.length; first += 1) {
         for (let second = first + 1; second < particles.length; second += 1) {
@@ -92,10 +93,21 @@ function ParticleBackground() {
       frame = window.requestAnimationFrame(draw)
     }
 
-    frame = window.requestAnimationFrame(draw)
+    const handleMotionChange = () => {
+      window.cancelAnimationFrame(frame)
+      if (motionPreference.matches) {
+        context.clearRect(0, 0, width, height)
+      } else {
+        frame = window.requestAnimationFrame(draw)
+      }
+    }
+
+    motionPreference.addEventListener('change', handleMotionChange)
+    handleMotionChange()
     return () => {
       window.cancelAnimationFrame(frame)
       window.removeEventListener('resize', resize)
+      motionPreference.removeEventListener('change', handleMotionChange)
     }
   }, [])
 

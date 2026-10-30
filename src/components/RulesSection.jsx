@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import CharacterArt from './CharacterArt'
 import { audio } from '../lib/audioEngine'
 import { useRegistration } from '../context/RegistrationContext'
 
@@ -8,7 +9,7 @@ const RULES_DATA = {
     subtitle: 'Modalidad 5v5 (Torneo - Draft Pick)',
     pdfUrl: '/docs/Bases_MOBA.pdf',
     pdfName: 'Bases_MOBA.pdf',
-    accent: '#22d3ee',
+    accent: '#b48aff',
     badge: '5V5 MOBA · DRAFT PICK',
     sections: [
       {
@@ -71,7 +72,7 @@ const RULES_DATA = {
     subtitle: 'Modalidad Escuadras (Squads - Battle Royale)',
     pdfUrl: '/docs/Bases_FF.pdf',
     pdfName: 'Bases_FF.pdf',
-    accent: '#f97316',
+    accent: '#ef54a6',
     badge: 'BATTLE ROYALE SQUADS',
     scoringTable: [
       { pos: '1ro (Booyah!)', pts: '12 pts' },
@@ -169,10 +170,10 @@ function RulesSection() {
   }
 
   return (
-    <section id="reglamento" className="rules-section">
+    <section id="reglamento" className="rules-section" aria-labelledby="rules-title">
       <div className="template-section-title">
-        <span>// BASES Y NORMATIVA OFICIAL</span>
-        <h2>REGLAMENTO DE LA COMPETENCIA</h2>
+        <span>04 / BASES Y NORMATIVA OFICIAL</span>
+        <h2 id="rules-title">CONOCE LAS REGLAS.<br /><em>DOMINA LA ARENA.</em></h2>
         <p>
           Extraído directamente de las bases aprobadas para RAGNAROK U-Series 2026.
           Selecciona tu disciplina para revisar las reglas oficiales o descargar el PDF firmado.
@@ -202,7 +203,9 @@ function RulesSection() {
       </div>
 
       {/* Cabecera contextual del juego activo */}
-      <div className="rules-active-header">
+      <div className="rules-layout">
+      <div className={`rules-active-header rules-active-header--${activeTab}`}>
+        <CharacterArt character={activeTab === 'mlbb' ? 'obsidia' : 'rafael'} className={`rules-character ${activeTab === 'ff' ? 'rules-character--ff' : ''}`} />
         <div className="active-header-info">
           <span className="active-header-badge" style={{ color: activeData.accent, borderColor: activeData.accent }}>
             {activeData.badge}
@@ -279,6 +282,8 @@ function RulesSection() {
             </div>
           )
         })}
+      </div>
+
       </div>
 
       {/* Pie con llamada a descargar y nota legal */}

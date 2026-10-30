@@ -4,16 +4,18 @@
 
 :root {
   color: #f4f4f5;
-  --bg0: #070a0f;
+  --font-display: "Tektur", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --bg0: #08070e;
   --bg1: #0f1422;
   --bg2: #141f33;
-  --a1: #00d2ff;
-  --a2: #d4af37;
+  --a1: #9d5cff;
+  --a2: #c1a2ff;
   --a3: #12325a;
-  --accent-cyan: #22d3ee;
-  --accent-orange: #f97316;
+  --accent-cyan: #b48aff;
+  --accent-orange: #ef54a6;
   --panel: rgba(13, 20, 32, 0.78);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-body);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   transition: --bg0 0.8s ease, --bg1 0.8s ease, --bg2 0.8s ease;
@@ -21,35 +23,35 @@
 
 /* TEMA MOBILE LEGENDS (CYAN / AZUL / ARCANO) */
 :root[data-game="mlbb"], .theme-mlbb {
-  --bg0: #040914;
-  --bg1: #081226;
-  --bg2: #0f2240;
-  --a1: #00d2ff;
+  --bg0: #090712;
+  --bg1: #100c1d;
+  --bg2: #1a1030;
+  --a1: #9d5cff;
   --a2: #38bdf8;
   --a3: #102a4a;
-  --accent-cyan: #00d2ff;
+  --accent-cyan: #9d5cff;
   --accent-orange: #38bdf8;
 }
 
 /* TEMA FREE FIRE (NARANJA / FUEGO / TÁCTICO) */
 :root[data-game="ff"], .theme-ff {
-  --bg0: #0d0603;
-  --bg1: #1a0a03;
-  --bg2: #2e1105;
-  --a1: #ff5500;
-  --a2: #ffb800;
+  --bg0: #100710;
+  --bg1: #1a0c1b;
+  --bg2: #2c102b;
+  --a1: #e63893;
+  --a2: #fb87cc;
   --a3: #3f1604;
-  --accent-cyan: #ff7700;
-  --accent-orange: #ff5500;
+  --accent-cyan: #ee5eaa;
+  --accent-orange: #e63893;
 }
 
 /* TEMA GENERAL / DUAL */
 :root[data-game="all"], .theme-all {
-  --bg0: #070a0f;
-  --bg1: #0f1420;
-  --bg2: #141c2c;
-  --a1: #00d2ff;
-  --a2: #ff5500;
+  --bg0: #08070e;
+  --bg1: #11101a;
+  --bg2: #1b172a;
+  --a1: #9d5cff;
+  --a2: #e63893;
   --a3: #1b2038;
 }
 
@@ -191,11 +193,11 @@ button, a { font: inherit; }
   place-items: center;
   border: 1px solid var(--a1);
   background: #090d16;
-  box-shadow: 2px 2px 0 #e11d48, 0 0 14px color-mix(in srgb, var(--a1) 45%, transparent);
+  box-shadow: 2px 2px 0 #963bff, 0 0 14px color-mix(in srgb, var(--a1) 45%, transparent);
   color: var(--a1);
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
-  font-weight: 900;
+  font-weight: 700;
   font-style: italic;
   transition: all 0.3s ease;
 }
@@ -206,23 +208,23 @@ button, a { font: inherit; }
 }
 
 .brand-title {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: #fff;
   line-height: 1.1;
 }
 
 .brand-title em {
-  color: #f43f5e;
+  color: #ef54a6;
   font-style: normal;
 }
 
 .brand-sub {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.24em;
   color: #94a3b8;
 }
@@ -238,9 +240,9 @@ button, a { font: inherit; }
   position: relative;
   padding: 0.55rem 0.8rem;
   color: #94a3b8;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-decoration: none;
   text-transform: uppercase;
@@ -285,9 +287,9 @@ button, a { font: inherit; }
   border: 0;
   background: transparent;
   padding: 0.35rem 0.65rem;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.64rem;
-  font-weight: 850;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: #94a3b8;
   cursor: pointer;
@@ -300,25 +302,25 @@ button, a { font: inherit; }
 }
 
 .nav-switch-tab--active.nav-switch-tab--mlbb {
-  background: #22d3ee;
-  color: #040914;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
-  font-weight: 900;
+  background: #b48aff;
+  color: #090712;
+  box-shadow: 0 0 12px rgba(180,138,255, 0.4);
+  font-weight: 700;
 }
 
 .nav-switch-tab--active.nav-switch-tab--ff {
-  background: #f97316;
-  color: #0d0603;
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
-  font-weight: 900;
+  background: #ef54a6;
+  color: #100710;
+  box-shadow: 0 0 12px rgba(239,84,166, 0.4);
+  font-weight: 700;
 }
 
 .nav-cta, .primary-button {
   border: 1px solid var(--a1);
   background: #090d16;
   color: #fff;
-  font-family: Orbitron, sans-serif;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 700;
   text-decoration: none;
   text-transform: uppercase;
   transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
@@ -416,9 +418,9 @@ button, a { font: inherit; }
 }
 
 .hero-watermark span {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: min(18vw, 240px);
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: -0.05em;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.05);
@@ -445,9 +447,9 @@ button, a { font: inherit; }
   background: rgba(7, 12, 22, 0.75);
   backdrop-filter: blur(10px);
   color: #cbd5e1;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   margin-bottom: 1.4rem;
@@ -466,9 +468,9 @@ button, a { font: inherit; }
 
 .hero-subkicker {
   display: block;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.35em;
   color: var(--a1);
   margin-bottom: 0.35rem;
@@ -476,9 +478,9 @@ button, a { font: inherit; }
 
 .hero-grand-title h1 {
   margin: 0;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.8rem, 6.5vw, 5.8rem);
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: -0.06em;
   line-height: 0.94;
   color: #fff;
@@ -496,7 +498,7 @@ button, a { font: inherit; }
 .hero-lead-desc {
   max-width: 680px;
   margin: 0.85rem auto 1.8rem;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.8vw, 1.15rem);
   color: #94a3b8;
   font-weight: 600;
@@ -515,18 +517,18 @@ button, a { font: inherit; }
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.25em;
   color: var(--a2);
   margin-bottom: 0.25rem;
 }
 
 .hero-prize-amount {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.8rem, 5.5vw, 4.4rem);
-  font-weight: 950;
+  font-weight: 700;
   color: #fff;
   letter-spacing: -0.04em;
   text-shadow: 0 0 32px color-mix(in srgb, var(--a1) 50%, transparent);
@@ -534,7 +536,7 @@ button, a { font: inherit; }
 }
 
 .hero-prize-note {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.76rem;
   font-weight: 700;
   color: #94a3b8;
@@ -553,9 +555,9 @@ button, a { font: inherit; }
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.22em;
   color: #cbd5e1;
   margin-bottom: 0.75rem;
@@ -585,26 +587,26 @@ button, a { font: inherit; }
 }
 
 .countdown-digit {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.4rem, 2.5vw, 2.1rem);
-  font-weight: 900;
+  font-weight: 700;
   color: #fff;
   line-height: 1;
 }
 
 .countdown-unit {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.15em;
   color: var(--a1);
   margin-top: 0.35rem;
 }
 
 .countdown-colon {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.4rem;
-  font-weight: 900;
+  font-weight: 700;
   color: color-mix(in srgb, var(--a1) 60%, transparent);
 }
 
@@ -624,9 +626,9 @@ button, a { font: inherit; }
   padding: 0.95rem 2.2rem;
   background: linear-gradient(90deg, var(--a1), var(--a2));
   color: #040810;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: 0.08em;
   border: 0;
   cursor: pointer;
@@ -654,9 +656,9 @@ button, a { font: inherit; }
   background: rgba(8, 12, 22, 0.7);
   border: 1px solid color-mix(in srgb, var(--a1) 40%, rgba(255, 255, 255, 0.15));
   color: #fff;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
   text-decoration: none;
@@ -678,9 +680,9 @@ button, a { font: inherit; }
   background: rgba(37, 211, 102, 0.12);
   border: 1px solid rgba(37, 211, 102, 0.45);
   color: #4ade80;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
   text-decoration: none;
@@ -769,18 +771,18 @@ button, a { font: inherit; }
 }
 
 .division-card-tag {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--division-color);
   text-transform: uppercase;
 }
 
 .division-active-badge {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.55rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--division-color);
   background: color-mix(in srgb, var(--division-color) 20%, transparent);
@@ -791,16 +793,16 @@ button, a { font: inherit; }
 
 .division-card-name {
   margin: 0.35rem 0 0.15rem;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.2vw, 1.35rem);
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: #fff;
   text-transform: uppercase;
 }
 
 .division-card-detail {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 700;
   color: #94a3b8;
@@ -809,9 +811,9 @@ button, a { font: inherit; }
 .division-card-action {
   align-self: flex-end;
   margin-top: 0.4rem;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--division-color);
   transition: transform 0.2s ease;
@@ -829,9 +831,9 @@ button, a { font: inherit; }
   background: rgba(9, 13, 24, 0.65);
   backdrop-filter: blur(8px);
   color: #cbd5e1;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.2em;
   padding: 0.45rem 0.9rem;
 }
@@ -860,9 +862,9 @@ button, a { font: inherit; }
 .template-title-block h1 {
   margin: 0;
   color: #f8fafc;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.095em;
   line-height: 0.82;
 }
@@ -873,9 +875,9 @@ button, a { font: inherit; }
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1rem, 2vw, 1.65rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.33em;
   text-align: left;
 }
@@ -884,7 +886,7 @@ button, a { font: inherit; }
   max-width: 720px;
   margin: 1.3rem auto 0;
   color: #94a3b8;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(1.05rem, 2vw, 1.3rem);
   font-weight: 600;
   letter-spacing: 0.025em;
@@ -915,9 +917,9 @@ button, a { font: inherit; }
 .event-console { padding: 2.2rem; }
 .event-console > span, .event-console p {
   color: #94a3b8;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.2em;
 }
 
@@ -928,15 +930,15 @@ button, a { font: inherit; }
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.7rem, 5vw, 5rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.08em;
 }
 
 .event-console > small {
   color: #64748b;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -956,17 +958,17 @@ button, a { font: inherit; }
 .template-countdown strong {
   display: block;
   color: #f8fafc;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 2.3rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.08em;
 }
 
 .template-countdown span {
   color: var(--a1);
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.1em;
 }
 
@@ -976,9 +978,9 @@ button, a { font: inherit; }
   background: linear-gradient(90deg, var(--a1), var(--a2));
   color: #071017;
   cursor: pointer;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.08em;
   padding: 1rem 1.4rem;
   clip-path: polygon(11px 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
@@ -992,9 +994,9 @@ button, a { font: inherit; }
   align-items: center;
   border: 1px solid color-mix(in srgb, var(--a1) 60%, transparent);
   color: var(--a1);
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   padding: 0.95rem 1.1rem;
   text-decoration: none;
@@ -1034,7 +1036,7 @@ button, a { font: inherit; }
 .division-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, #070a0f 22%, rgba(7,10,15,0.78) 58%, color-mix(in srgb, var(--division-color) 28%, transparent));
+  background: linear-gradient(100deg, #08070e 22%, rgba(7,10,15,0.78) 58%, color-mix(in srgb, var(--division-color) 28%, transparent));
 }
 
 .division-card-content {
@@ -1050,23 +1052,23 @@ button, a { font: inherit; }
 
 .division-card-content > span {
   color: var(--division-color);
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.16em;
 }
 
 .division-card-content strong {
   margin-top: 0.2rem;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.15rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .division-card-content small {
   margin-top: 0.35rem;
   color: #cbd5e1;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 600;
 }
@@ -1076,7 +1078,7 @@ button, a { font: inherit; }
   right: 1.4rem;
   bottom: 1.4rem;
   color: var(--division-color);
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   letter-spacing: 0.08em;
 }
@@ -1085,25 +1087,25 @@ button, a { font: inherit; }
 .template-section-title { max-width: 690px; margin: 0 auto 2rem; text-align: center; }
 .template-section-title > span {
   color: var(--a1);
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.2em;
 }
 
 .template-section-title h2 {
   margin: 0.6rem 0;
   color: #f8fafc;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.65rem, 4vw, 3rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.07em;
 }
 
 .template-section-title p {
   margin: 0;
   color: #94a3b8;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -1117,19 +1119,19 @@ button, a { font: inherit; }
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.template-prize-grid article:nth-child(2) { border-left-color: #facc15; }
-.template-prize-grid article:nth-child(3) { border-left-color: #f97316; }
-.template-prize-grid span { color: #94a3b8; font-family: Rajdhani, sans-serif; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; }
+.template-prize-grid article:nth-child(2) { border-left-color: #c7abff; }
+.template-prize-grid article:nth-child(3) { border-left-color: #ef54a6; }
+.template-prize-grid span { color: #94a3b8; font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; }
 .template-prize-grid strong {
   display: block;
   margin: 0.55rem 0 0.3rem;
   color: #f8fafc;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.7rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.07em;
 }
-.template-prize-grid small { color: #94a3b8; font-family: Rajdhani, sans-serif; }
+.template-prize-grid small { color: #94a3b8; font-family: var(--font-body); }
 
 /* ============ SECCIÓN COMUNIDAD Y WHATSAPP (HOME) ============ */
 .community-section {
@@ -1217,7 +1219,7 @@ button, a { font: inherit; }
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.75rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -1225,7 +1227,7 @@ button, a { font: inherit; }
 }
 
 .community-qr-hint {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.74rem;
   color: #94a3b8;
 }
@@ -1251,7 +1253,7 @@ button, a { font: inherit; }
   background: rgba(37, 211, 102, 0.15);
   border: 1px solid rgba(37, 211, 102, 0.5);
   color: #4ade80;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1273,7 +1275,7 @@ button, a { font: inherit; }
 }
 
 .community-pill-tag {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -1285,7 +1287,7 @@ button, a { font: inherit; }
 
 .community-info h3 {
   margin: 0;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 1.8rem);
   font-weight: 700;
   color: #f8fafc;
@@ -1294,7 +1296,7 @@ button, a { font: inherit; }
 
 .community-desc {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.92rem;
   color: #cbd5e1;
   line-height: 1.55;
@@ -1323,7 +1325,7 @@ button, a { font: inherit; }
 
 .community-perks strong {
   display: block;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 700;
   color: #f1f5f9;
@@ -1331,7 +1333,7 @@ button, a { font: inherit; }
 
 .community-perks small {
   display: block;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   color: #94a3b8;
   line-height: 1.4;
@@ -1353,8 +1355,8 @@ button, a { font: inherit; }
   gap: 0.6rem;
   padding: 0.85rem 1.6rem;
   background: linear-gradient(135deg, #25d366, #16a34a);
-  color: #040914;
-  font-family: "Chakra Petch", sans-serif;
+  color: #090712;
+  font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1373,7 +1375,7 @@ button, a { font: inherit; }
 }
 
 .community-note {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.78rem;
   color: #94a3b8;
   max-width: 320px;
@@ -1423,35 +1425,35 @@ button, a { font: inherit; }
 .placeholder-card h1 {
   margin: 1rem 0;
   color: #fff;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: -0.06em;
   text-transform: uppercase;
 }
 
-.placeholder-card p { margin: 0; color: #a1a1aa; line-height: 1.7; font-family: Rajdhani, sans-serif; font-size: 1.1rem; }
+.placeholder-card p { margin: 0; color: #a1a1aa; line-height: 1.7; font-family: var(--font-body); font-size: 1.1rem; }
 
 /* ============ FORMULARIO DE INSCRIPCIÓN ============ */
 .registration-page {
   max-width: 1080px;
   margin: 0 auto;
   padding: 4rem 1.5rem 6rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
 }
 
 .registration-intro { max-width: 680px; margin-bottom: 2.5rem; }
-.section-kicker { color: var(--a1); font-family: "Chakra Petch", sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; }
+.section-kicker { color: var(--a1); font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; }
 .registration-intro h1 {
   margin: 0.7rem 0;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 4.2rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
-.registration-intro p { margin: 0; color: #94a3b8; line-height: 1.65; font-family: "Barlow", sans-serif; }
+.registration-intro p { margin: 0; color: #94a3b8; line-height: 1.65; font-family: var(--font-body); }
 .registration-form { display: grid; gap: 1.35rem; }
 
 .form-step-label {
@@ -1460,7 +1462,7 @@ button, a { font: inherit; }
   gap: 0.75rem;
   margin-top: 1.8rem;
   color: #f4f4f5;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1473,10 +1475,10 @@ button, a { font: inherit; }
   place-items: center;
   border: 1px solid var(--a1);
   background: #090d16;
-  box-shadow: 2px 2px 0 #e11d48;
+  box-shadow: 2px 2px 0 #963bff;
   color: var(--a1);
   font-size: 0.72rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
 }
 
 .game-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
@@ -1522,14 +1524,14 @@ button, a { font: inherit; }
 
 .game-choice strong {
   color: var(--game-accent);
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
-.game-choice small { margin-top: 0.35rem; color: #cbd5e1; font-size: 0.82rem; font-weight: 500; font-family: "Barlow", sans-serif; }
+.game-choice small { margin-top: 0.35rem; color: #cbd5e1; font-size: 0.82rem; font-weight: 500; font-family: var(--font-body); }
 .game-choice-status {
   position: absolute;
   z-index: 2;
@@ -1538,7 +1540,7 @@ button, a { font: inherit; }
   border: 1px solid var(--game-accent);
   background: #090d16;
   color: var(--game-accent);
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1548,7 +1550,7 @@ button, a { font: inherit; }
 .game-choice:hover img, .game-choice--active img { opacity: 0.6; transform: scale(1.06); }
 .game-choice--active {
   border-color: var(--game-accent);
-  box-shadow: 0 0 25px color-mix(in srgb, var(--game-accent) 32%, transparent), 4px 4px 0 color-mix(in srgb, var(--game-accent) 65%, #e11d48);
+  box-shadow: 0 0 25px color-mix(in srgb, var(--game-accent) 32%, transparent), 4px 4px 0 color-mix(in srgb, var(--game-accent) 65%, #963bff);
 }
 
 .form-grid {
@@ -1565,7 +1567,7 @@ button, a { font: inherit; }
 .form-field { display: grid; gap: 0.28rem; }
 .form-field > span {
   color: #94a3b8;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1580,13 +1582,13 @@ button, a { font: inherit; }
   background: rgba(7, 10, 16, 0.8);
   color: #f4f4f5;
   padding: 0.45rem 0.75rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-.form-field input::placeholder { color: #64748b; font-family: "Barlow", sans-serif; }
+.form-field input::placeholder { color: #64748b; font-family: var(--font-body); }
 .form-field input:focus, .form-field select:focus {
   border-color: var(--a1);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--a1) 25%, transparent);
@@ -1595,21 +1597,21 @@ button, a { font: inherit; }
 .form-field select option {
   background: #090e18;
   color: #f1f5f9;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   padding: 0.35rem 0.5rem;
 }
 
 .form-field select optgroup {
   background: #060910;
   color: var(--a1);
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   padding: 0.4rem 0.2rem;
 }
 
-.form-field--file input { padding: 0.38rem 0.6rem; color: #a1a1aa; font-size: 0.78rem; font-family: "Barlow", sans-serif; }
+.form-field--file input { padding: 0.38rem 0.6rem; color: #a1a1aa; font-size: 0.78rem; font-family: var(--font-body); }
 .form-field--file input::file-selector-button {
   margin-right: 0.6rem;
   border: 0;
@@ -1617,15 +1619,15 @@ button, a { font: inherit; }
   background: #182030;
   color: var(--a1);
   cursor: pointer;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 0.25rem 0.5rem;
 }
 
-.form-field small { color: #64748b; font-size: 0.68rem; font-family: "Barlow", sans-serif; }
-.roster-note { margin: -0.4rem 0 0; color: #94a3b8; font-size: 0.82rem; font-family: "Barlow", sans-serif; }
+.form-field small { color: #64748b; font-size: 0.68rem; font-family: var(--font-body); }
+.roster-note { margin: -0.4rem 0 0; color: #94a3b8; font-size: 0.82rem; font-family: var(--font-body); }
 .roster-list { display: grid; gap: 0.45rem; }
 
 /* Roster Table Head & Compact Rows */
@@ -1634,7 +1636,7 @@ button, a { font: inherit; }
   grid-template-columns: 135px 1fr 1fr;
   gap: 0.65rem;
   padding: 0.35rem 0.8rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1686,7 +1688,7 @@ button, a { font: inherit; }
   justify-content: center;
   min-width: 28px;
   height: 22px;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   color: var(--a1);
@@ -1696,7 +1698,7 @@ button, a { font: inherit; }
 }
 
 .roster-slot-label {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1723,14 +1725,14 @@ button, a { font: inherit; }
   background: rgba(6, 9, 15, 0.75);
   color: #f8fafc;
   padding: 0.35rem 0.65rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.86rem;
   font-weight: 500;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .compact-input--mono {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-body);
   font-size: 0.84rem;
   letter-spacing: 0.03em;
 }
@@ -1738,7 +1740,7 @@ button, a { font: inherit; }
 .compact-input::placeholder {
   color: #526078;
   font-size: 0.82rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
 }
 
 .compact-input:focus {
@@ -1756,7 +1758,7 @@ button, a { font: inherit; }
 
 .terms-rule-link {
   color: var(--a1);
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 0.2s ease;
@@ -1773,34 +1775,34 @@ button, a { font: inherit; }
   gap: 1.5rem;
   align-items: center;
   border: 1px solid rgba(255,255,255,0.12);
-  border-top: 3px solid #e11d48;
+  border-top: 3px solid #963bff;
   background: linear-gradient(150deg, rgba(16, 24, 38, 0.85), rgba(8, 12, 20, 0.8));
   backdrop-filter: blur(10px);
   padding: 1.4rem;
 }
 
 .payment-qr-wrap { display: grid; justify-items: center; gap: 0.55rem; }
-.payment-qr-wrap small { color: #a1a1aa; font-family: "Chakra Petch", sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; }
+.payment-qr-wrap small { color: #a1a1aa; font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; }
 .qr-placeholder { display: grid; grid-template-columns: repeat(7, 14px); gap: 3px; width: max-content; padding: 10px; background: #fff; }
 .qr-placeholder i { width: 14px; height: 14px; background: #111; }
 .qr-placeholder i:nth-child(3n), .qr-placeholder i:nth-child(7n), .qr-placeholder i:nth-child(11n) { background: #fff; }
 .qr-placeholder i:nth-child(1), .qr-placeholder i:nth-child(2), .qr-placeholder i:nth-child(8), .qr-placeholder i:nth-child(15), .qr-placeholder i:nth-child(41), .qr-placeholder i:nth-child(42), .qr-placeholder i:nth-child(48), .qr-placeholder i:nth-child(49) { background: #111; }
 
-.payment-copy h2 { margin: 0; font-family: "Chakra Petch", sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.02em; }
-.payment-copy > p { margin: 0.5rem 0 1rem; color: #94a3b8; font-family: "Barlow", sans-serif; font-size: 0.9rem; line-height: 1.55; }
-.terms-field { display: flex; align-items: flex-start; gap: 0.75rem; color: #cbd5e1; cursor: pointer; font-family: "Barlow", sans-serif; font-size: 0.84rem; line-height: 1.5; }
+.payment-copy h2 { margin: 0; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; letter-spacing: 0.02em; }
+.payment-copy > p { margin: 0.5rem 0 1rem; color: #94a3b8; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.55; }
+.terms-field { display: flex; align-items: flex-start; gap: 0.75rem; color: #cbd5e1; cursor: pointer; font-family: var(--font-body); font-size: 0.84rem; line-height: 1.5; }
 .terms-field input { margin-top: 0.18rem; accent-color: var(--a1); }
-.form-notice { margin: 0; border-left: 3px solid #facc15; background: rgba(250, 204, 21, 0.08); color: #fde68a; padding: 0.85rem 1.1rem; font-family: "Barlow", sans-serif; font-size: 0.86rem; }
+.form-notice { margin: 0; border-left: 3px solid #c7abff; background: rgba(250, 204, 21, 0.08); color: #fde68a; padding: 0.85rem 1.1rem; font-family: var(--font-body); font-size: 0.86rem; }
 
 .registration-submit {
   justify-self: start;
   border: 1px solid var(--a1);
   border-radius: 2px;
   background: linear-gradient(90deg, var(--a1), var(--a2));
-  box-shadow: 4px 4px 0 #e11d48, 0 0 20px color-mix(in srgb, var(--a1) 40%, transparent);
+  box-shadow: 4px 4px 0 #963bff, 0 0 20px color-mix(in srgb, var(--a1) 40%, transparent);
   color: #070e17;
   cursor: pointer;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1811,7 +1813,7 @@ button, a { font: inherit; }
 
 .registration-submit:hover {
   filter: brightness(1.15);
-  box-shadow: 6px 6px 0 #e11d48, 0 0 28px color-mix(in srgb, var(--a1) 60%, transparent);
+  box-shadow: 6px 6px 0 #963bff, 0 0 28px color-mix(in srgb, var(--a1) 60%, transparent);
   transform: translateY(-2px);
 }
 
@@ -1899,18 +1901,18 @@ button, a { font: inherit; }
   transform: scale(1.06);
 }
 
-.registration-page--modal { padding: 0.95rem 1.35rem 1.5rem; font-family: "Barlow", sans-serif; }
+.registration-page--modal { padding: 0.95rem 1.35rem 1.5rem; font-family: var(--font-body); }
 .registration-page--modal .registration-intro { margin-bottom: 1.1rem; }
-.registration-page--modal .registration-intro h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-family: "Chakra Petch", sans-serif; }
+.registration-page--modal .registration-intro h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-family: var(--font-display); }
 .registration-page--modal .game-choice { min-height: 115px; }
 .registration-page--modal .game-choice-content { min-height: 115px; padding: 0.75rem 0.95rem; }
-.registration-page--modal .game-choice strong { font-size: 1.15rem; font-family: "Chakra Petch", sans-serif; }
+.registration-page--modal .game-choice strong { font-size: 1.15rem; font-family: var(--font-display); }
 .registration-page--modal .wizard-stepper { margin-bottom: 1.1rem; padding: 0.55rem 0.85rem; }
-.registration-page--modal .stepper-circle { width: 28px; height: 28px; font-size: 0.8rem; font-family: "Chakra Petch", sans-serif; }
-.registration-page--modal .stepper-title { font-size: 0.78rem; font-family: "Chakra Petch", sans-serif; }
+.registration-page--modal .stepper-circle { width: 28px; height: 28px; font-size: 0.8rem; font-family: var(--font-display); }
+.registration-page--modal .stepper-title { font-size: 0.78rem; font-family: var(--font-display); }
 .registration-page--modal .form-grid { padding: 0.75rem 0.95rem; gap: 0.65rem; }
 .registration-page--modal .form-field input,
-.registration-page--modal .form-field select { min-height: 35px; padding: 0.35rem 0.65rem; font-size: 0.86rem; font-family: "Barlow", sans-serif; }
+.registration-page--modal .form-field select { min-height: 35px; padding: 0.35rem 0.65rem; font-size: 0.86rem; font-family: var(--font-body); }
 
 /* Banner hero para la ventana emergente */
 .modal-hero-banner {
@@ -1963,7 +1965,7 @@ button, a { font: inherit; }
 
 .modal-hero-kicker {
   display: block;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -1972,7 +1974,7 @@ button, a { font: inherit; }
 
 .modal-hero-left h2 {
   margin: 0.15rem 0 0.3rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.25rem, 3vw, 1.6rem);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -1988,7 +1990,7 @@ button, a { font: inherit; }
 }
 
 .modal-hero-tag {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -2018,7 +2020,7 @@ button, a { font: inherit; }
 }
 
 .price-badge-sub {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -2026,7 +2028,7 @@ button, a { font: inherit; }
 }
 
 .price-badge-val {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -2036,7 +2038,7 @@ button, a { font: inherit; }
 }
 
 .price-badge-note {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.68rem;
   font-weight: 500;
   color: #cbd5e1;
@@ -2047,7 +2049,7 @@ button, a { font: inherit; }
 .game-choice-badge {
   display: inline-block;
   align-self: flex-start;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -2064,14 +2066,14 @@ button, a { font: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 500;
   color: #cbd5e1;
 }
 
 .game-choice-pricing b {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   color: var(--game-accent);
   font-size: 0.95rem;
   font-weight: 700;
@@ -2100,7 +2102,7 @@ button, a { font: inherit; }
 }
 
 .price-card-label {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2108,7 +2110,7 @@ button, a { font: inherit; }
 }
 
 .price-card-amount {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -2117,7 +2119,7 @@ button, a { font: inherit; }
 }
 
 .price-card-note {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 500;
   color: #94a3b8;
@@ -2125,7 +2127,7 @@ button, a { font: inherit; }
 
 .yape-tag {
   display: inline-block;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2134,79 +2136,6 @@ button, a { font: inherit; }
   border: 1px solid rgba(168, 85, 247, 0.4);
   padding: 0.25rem 0.6rem;
   border-radius: 2px;
-}
-
-/* ============ SPLASH SCREEN ============ */
-.splash-screen { position: fixed; z-index: 100; inset: 0; overflow: hidden; background: #070a0f; }
-.splash-panel { position: absolute; inset: 0; overflow: hidden; transition: transform 850ms cubic-bezier(.7, 0, .2, 1); }
-.splash-panel img { width: 100%; height: 100%; object-fit: cover; opacity: 0.56; }
-.splash-panel--mlbb { clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%); }
-.splash-panel--ff { clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%); }
-.splash-panel--mlbb::after, .splash-panel--ff::after { position: absolute; inset: 0; content: ""; }
-.splash-panel--mlbb::after { background: linear-gradient(90deg, rgba(0, 210, 255, 0.36), rgba(7, 10, 15, 0.48) 74%, transparent); }
-.splash-panel--ff::after { background: linear-gradient(270deg, rgba(255, 85, 0, 0.4), rgba(7, 10, 15, 0.48) 74%, transparent); }
-
-.splash-panel-copy { position: absolute; z-index: 2; top: 51%; display: grid; font-family: Rajdhani, sans-serif; text-transform: uppercase; }
-.splash-panel-copy--left { left: 6vw; }
-.splash-panel-copy--right { right: 6vw; text-align: right; }
-.splash-panel-copy span { color: #d4af37; font-weight: 800; letter-spacing: 0.23em; }
-.splash-panel-copy strong { color: #22d3ee; font-family: Orbitron, sans-serif; font-size: clamp(2.5rem, 6vw, 6rem); font-weight: 900; line-height: 1; text-shadow: 0 0 22px currentColor; }
-.splash-panel-copy--right strong { color: #ff6b21; }
-.splash-panel-copy small { color: #e2e8f0; font-size: 1rem; }
-
-.splash-seam { position: absolute; z-index: 3; inset: 0; background: linear-gradient(110deg, transparent 49.75%, rgba(255,255,255,0.8) 50%, transparent 50.25%); pointer-events: none; }
-.splash-content {
-  position: absolute;
-  z-index: 4;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  justify-items: center;
-  min-width: min(560px, calc(100vw - 2rem));
-  padding: 2.3rem 2rem;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: linear-gradient(145deg, rgba(20, 27, 40, 0.92), rgba(7, 10, 15, 0.87));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 55px rgba(0,0,0,0.55);
-  text-align: center;
-  transform: translate(-50%, -50%);
-}
-
-.splash-kicker { margin: 0; color: #22d3ee; font-family: Rajdhani, sans-serif; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.28em; }
-.splash-content h1 {
-  margin: 0.7rem 0 0;
-  background: linear-gradient(90deg, #22d3ee, #f97316);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-family: Orbitron, sans-serif;
-  font-size: clamp(2.3rem, 6vw, 4.6rem);
-  font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 0.95;
-}
-
-.splash-series { margin: 0.65rem 0 1.8rem; color: #e2e8f0; font-family: Rajdhani, sans-serif; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.2em; }
-.splash-content button {
-  border: 0;
-  background: linear-gradient(90deg, #22d3ee, #f97316);
-  color: #071017;
-  cursor: pointer;
-  font-family: Orbitron, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  padding: 1rem 1.4rem;
-  clip-path: polygon(11px 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
-  transition: filter 180ms ease, transform 180ms ease;
-}
-
-.splash-content button:hover { filter: brightness(1.16); transform: translateY(-2px); }
-.splash-screen--opening .splash-panel--mlbb { transform: translateX(-105%); }
-.splash-screen--opening .splash-panel--ff { transform: translateX(105%); }
-.splash-screen--opening .splash-content, .splash-screen--opening .splash-seam {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.05);
-  transition: opacity 260ms ease, transform 260ms ease;
 }
 
 /* ============ AUDIO CONTROLS ============ */
@@ -2221,11 +2150,11 @@ button, a { font: inherit; }
   border: 1px solid color-mix(in srgb, var(--a1) 60%, transparent);
   background: rgba(7, 10, 16, 0.85);
   box-shadow: 0 0 20px color-mix(in srgb, var(--a1) 20%, transparent);
-  color: #a5f3fc;
+  color: #d5baff;
   cursor: pointer;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.09em;
   padding: 0.65rem 0.85rem;
   backdrop-filter: blur(10px);
@@ -2278,8 +2207,6 @@ button, a { font: inherit; }
   .game-choice-grid, .form-grid, .form-grid--team, .payment-panel { grid-template-columns: 1fr; }
   .roster-row { grid-template-columns: 1fr; gap: 0.65rem; }
   .roster-position { align-self: auto; }
-  .splash-panel-copy { display: none; }
-  .splash-content { min-width: min(420px, calc(100vw - 2rem)); padding: 2rem 1rem; }
   .template-hero { padding-top: 3.2rem; }
   .rules-download-banner { grid-template-columns: 1fr; }
   .roster-table-head { display: none; }
@@ -2317,7 +2244,7 @@ button, a { font: inherit; }
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(14, 20, 32, 0.9);
   color: #94a3b8;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
   font-weight: 700;
   border-radius: 2px;
@@ -2328,7 +2255,7 @@ button, a { font: inherit; }
 .stepper-node--active .stepper-circle {
   border-color: var(--a1);
   background: var(--a1);
-  color: #040914;
+  color: #090712;
   box-shadow: 0 0 14px color-mix(in srgb, var(--a1) 70%, transparent);
 }
 
@@ -2344,7 +2271,7 @@ button, a { font: inherit; }
 }
 
 .stepper-stage {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -2356,7 +2283,7 @@ button, a { font: inherit; }
 }
 
 .stepper-title {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -2400,7 +2327,7 @@ button, a { font: inherit; }
 
 .stage-eyebrow {
   display: block;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2409,7 +2336,7 @@ button, a { font: inherit; }
 
 .stage-section-intro h3 {
   margin: 0.15rem 0 0.25rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
   color: #f8fafc;
@@ -2418,7 +2345,7 @@ button, a { font: inherit; }
 
 .stage-section-intro p {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: #94a3b8;
   line-height: 1.5;
@@ -2443,7 +2370,7 @@ button, a { font: inherit; }
 }
 
 .summary-label {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2451,7 +2378,7 @@ button, a { font: inherit; }
 }
 
 .summary-col strong {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -2459,7 +2386,7 @@ button, a { font: inherit; }
 }
 
 .summary-col small {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.78rem;
   color: #cbd5e1;
 }
@@ -2471,7 +2398,7 @@ button, a { font: inherit; }
   border: 1px solid rgba(239, 68, 68, 0.4);
   border-left: 3px solid #ef4444;
   color: #fca5a5;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 2px;
@@ -2496,7 +2423,7 @@ button, a { font: inherit; }
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #cbd5e1;
   cursor: pointer;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -2517,9 +2444,9 @@ button, a { font: inherit; }
   padding: 0.75rem 1.4rem;
   background: linear-gradient(90deg, var(--a1), var(--a2));
   border: 0;
-  color: #040914;
+  color: #090712;
   cursor: pointer;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -2566,16 +2493,16 @@ button, a { font: inherit; }
   background: transparent;
   color: #94a3b8;
   cursor: pointer;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.08em;
   transition: all 0.25s ease;
   border-radius: 2px;
 }
 
 .rules-tab small {
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 700;
   opacity: 0.85;
@@ -2583,15 +2510,15 @@ button, a { font: inherit; }
 }
 
 .rules-tab--active.rules-tab--mlbb {
-  background: #22d3ee;
-  color: #040914;
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+  background: #b48aff;
+  color: #090712;
+  box-shadow: 0 0 20px rgba(180,138,255, 0.4);
 }
 
 .rules-tab--active.rules-tab--ff {
-  background: #f97316;
-  color: #0d0603;
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+  background: #ef54a6;
+  color: #100710;
+  box-shadow: 0 0 20px rgba(239,84,166, 0.4);
 }
 
 /* Cabecera compacta de la disciplina activa con botón de descarga */
@@ -2617,9 +2544,9 @@ button, a { font: inherit; }
 .active-header-badge {
   display: inline-block;
   align-self: flex-start;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.65rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.15em;
   padding: 0.12rem 0.45rem;
   border: 1px solid;
@@ -2629,15 +2556,15 @@ button, a { font: inherit; }
 
 .active-header-info h3 {
   margin: 0.15rem 0 0;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.2rem;
-  font-weight: 950;
+  font-weight: 700;
   color: #f8fafc;
 }
 
 .active-header-info p {
   margin: 0;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: #94a3b8;
 }
@@ -2650,9 +2577,9 @@ button, a { font: inherit; }
   border: 1px solid var(--btn-accent, var(--a1));
   background: color-mix(in srgb, var(--btn-accent, var(--a1)) 12%, transparent);
   color: var(--btn-accent, var(--a1));
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-decoration: none;
   border-radius: 2px;
@@ -2661,7 +2588,7 @@ button, a { font: inherit; }
 
 .rules-download-pill:hover {
   background: var(--btn-accent, var(--a1));
-  color: #040914;
+  color: #090712;
   box-shadow: 0 0 16px var(--btn-accent, var(--a1));
 }
 
@@ -2697,9 +2624,9 @@ button, a { font: inherit; }
 }
 
 .rules-item-num {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 700;
   color: var(--item-accent);
 }
 
@@ -2709,16 +2636,16 @@ button, a { font: inherit; }
 
 .rules-item-headings h3 {
   margin: 0;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.92rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: #f8fafc;
 }
 
 .rules-item-headings p {
   margin: 0.2rem 0 0;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   color: #94a3b8;
 }
@@ -2764,11 +2691,11 @@ button, a { font: inherit; }
 
 .rules-table-title {
   padding: 0.45rem 0.85rem;
-  background: rgba(249, 115, 22, 0.15);
+  background: rgba(239,84,166, 0.15);
   color: #fb923c;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.12em;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -2794,7 +2721,7 @@ button, a { font: inherit; }
 }
 
 .row-pts {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
   color: #fb923c;
 }
@@ -2815,7 +2742,7 @@ button, a { font: inherit; }
 
 .rules-footer-note p {
   margin: 0;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: #cbd5e1;
 }
@@ -2826,10 +2753,10 @@ button, a { font: inherit; }
   gap: 0.5rem;
   padding: 0.75rem 1.4rem;
   background: var(--btn-accent, var(--a1));
-  color: #040914;
-  font-family: Orbitron, sans-serif;
+  color: #090712;
+  font-family: var(--font-display);
   font-size: 0.7rem;
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-decoration: none;
   border-radius: 2px;
@@ -2910,7 +2837,7 @@ button, a { font: inherit; }
   background: rgba(37, 211, 102, 0.18);
   border: 1px solid rgba(37, 211, 102, 0.55);
   color: #4ade80;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2927,7 +2854,7 @@ button, a { font: inherit; }
 }
 
 .footer-access-tag {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -2939,7 +2866,7 @@ button, a { font: inherit; }
 
 .footer-whatsapp-info h3 {
   margin: 0 0 0.5rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.5vw, 1.7rem);
   font-weight: 700;
   color: #f8fafc;
@@ -2948,7 +2875,7 @@ button, a { font: inherit; }
 
 .footer-whatsapp-info p {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.92rem;
   color: #cbd5e1;
   line-height: 1.55;
@@ -2969,8 +2896,8 @@ button, a { font: inherit; }
   gap: 0.6rem;
   padding: 0.85rem 1.65rem;
   background: linear-gradient(135deg, #25d366, #16a34a);
-  color: #040914;
-  font-family: "Chakra Petch", sans-serif;
+  color: #090712;
+  font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -2989,7 +2916,7 @@ button, a { font: inherit; }
 }
 
 .footer-whatsapp-link-text {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   color: #94a3b8;
 }
@@ -2999,7 +2926,7 @@ button, a { font: inherit; }
   background: rgba(37, 211, 102, 0.1);
   padding: 0.2rem 0.45rem;
   border-radius: 2px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-body);
   font-size: 0.78rem;
 }
 
@@ -3042,7 +2969,7 @@ button, a { font: inherit; }
 
 .footer-qr-caption {
   margin-top: 0.55rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -3050,7 +2977,7 @@ button, a { font: inherit; }
 }
 
 .footer-qr-sub {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.72rem;
   color: #64748b;
 }
@@ -3080,16 +3007,16 @@ button, a { font: inherit; }
 
 .footer-brand-name {
   display: block;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 1.05rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: #f8fafc;
 }
 
 .footer-brand-sub {
   display: block;
-  font-family: Rajdhani, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -3098,7 +3025,7 @@ button, a { font: inherit; }
 
 .footer-brand-desc {
   margin: 0 0 1.1rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   line-height: 1.6;
   color: #94a3b8;
@@ -3112,7 +3039,7 @@ button, a { font: inherit; }
 }
 
 .footer-tag {
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -3121,22 +3048,22 @@ button, a { font: inherit; }
 }
 
 .footer-tag--cyan {
-  background: rgba(34, 211, 238, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.35);
-  color: #22d3ee;
+  background: rgba(180,138,255, 0.12);
+  border: 1px solid rgba(180,138,255, 0.35);
+  color: #b48aff;
 }
 
 .footer-tag--orange {
-  background: rgba(249, 115, 22, 0.12);
-  border: 1px solid rgba(249, 115, 22, 0.35);
+  background: rgba(239,84,166, 0.12);
+  border: 1px solid rgba(239,84,166, 0.35);
   color: #fb923c;
 }
 
 .footer-col-title {
   margin: 0 0 1.1rem;
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.12em;
   color: #f1f5f9;
 }
@@ -3152,7 +3079,7 @@ button, a { font: inherit; }
 
 .footer-links a {
   color: #94a3b8;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.2s ease, transform 0.2s ease;
@@ -3166,7 +3093,7 @@ button, a { font: inherit; }
 
 .footer-links--info li {
   color: #cbd5e1;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
   line-height: 1.5;
 }
@@ -3193,7 +3120,7 @@ button, a { font: inherit; }
 .footer-bottom-bar p {
   margin: 0;
   color: #64748b;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   font-size: 0.78rem;
 }
 
@@ -3203,7 +3130,7 @@ button, a { font: inherit; }
   color: #cbd5e1;
   cursor: pointer;
   padding: 0.35rem 0.85rem;
-  font-family: "Chakra Petch", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;

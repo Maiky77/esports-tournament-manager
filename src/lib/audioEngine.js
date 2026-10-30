@@ -5,6 +5,7 @@ class AudioEngine {
     this.music = null
     this.sfx = null
     this.muted = false
+    this.volume = 0.6
     this.stepTimer = null
     this.oscillators = []
   }
@@ -21,8 +22,8 @@ class AudioEngine {
     this.music = this.context.createGain()
     this.sfx = this.context.createGain()
 
-    this.master.gain.value = 0.48
-    this.music.gain.value = 0.16
+    this.master.gain.value = this.muted ? 0 : this.volume
+    this.music.gain.value = 0.18
     this.sfx.gain.value = 0.7
     this.music.connect(this.master)
     this.sfx.connect(this.master)
@@ -73,10 +74,20 @@ class AudioEngine {
     this.tone(1400, 0.05, 0.05, this.sfx, 'square')
   }
 
+  setVolume(value) {
+    const nextVolume = Number(value)
+    if (!Number.isFinite(nextVolume)) return this.volume
+    this.volume = Math.min(1, Math.max(0, nextVolume))
+    if (this.master && this.context && !this.muted) {
+      this.master.gain.setTargetAtTime(this.volume, this.context.currentTime, 0.08)
+    }
+    return this.volume
+  }
+
   toggleMute() {
     this.muted = !this.muted
     if (this.master && this.context) {
-      this.master.gain.setTargetAtTime(this.muted ? 0 : 0.48, this.context.currentTime, 0.08)
+      this.master.gain.setTargetAtTime(this.muted ? 0 : this.volume, this.context.currentTime, 0.08)
     }
     return this.muted
   }
