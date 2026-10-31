@@ -1,0 +1,41 @@
+/* Equipos confirmados y llaves publicadas (datos desde Supabase) */
+.pd-empty { text-align: center; color: #94a3b8; padding: 2.5rem 1rem; font-family: var(--font-body); }
+.pd-team-grid { list-style: none; margin: 1.6rem auto 0; padding: 0; max-width: 1240px; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.pd-team-card { position: relative; display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid rgba(255,255,255,.09); border-left: 3px solid var(--a1); border-radius: 10px; }
+.pd-team-card strong { display: block; font-family: var(--font-display); letter-spacing: .04em; }
+.pd-team-card small { color: #94a3b8; font-family: var(--font-body); }
+.pd-team-index { position: absolute; top: .4rem; right: .7rem; color: rgba(255,255,255,.18); font-family: var(--font-display); font-size: .8rem; }
+.pd-team-logo { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex: none; }
+.pd-team-logo--empty { display: grid; place-items: center; background: rgba(255,255,255,.07); font-family: var(--font-display); font-size: 1.3rem; }
+
+.pd-stage { max-width: 1240px; margin: 2rem auto 0; }
+.pd-stage h2 { font-family: var(--font-display); letter-spacing: .06em; margin-bottom: 1rem; }
+.pd-bracket { display: flex; gap: 1.6rem; overflow-x: auto; padding-bottom: .6rem; }
+.pd-round { display: flex; flex-direction: column; justify-content: space-around; gap: .8rem; min-width: 220px; }
+.pd-round h4 { margin: 0; color: #94a3b8; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-family: var(--font-body); }
+.pd-match { background: var(--panel); border: 1px solid rgba(255,255,255,.09); border-radius: 8px; overflow: hidden; }
+.pd-match-team { display: flex; justify-content: space-between; gap: .6rem; padding: .45rem .7rem; font-family: var(--font-body); font-size: .85rem; }
+.pd-match-team + .pd-match-team { border-top: 1px solid rgba(255,255,255,.08); }
+.pd-match-team--win { background: rgba(52,211,153,.12); font-weight: 700; }
+.pd-groups { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.pd-card { background: var(--panel); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; padding: 1.1rem; }
+.pd-card h3 { margin: 0 0 .8rem; font-family: var(--font-display); letter-spacing: .06em; }
+.pd-table { width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: .85rem; margin-bottom: .9rem; }
+.pd-table th { text-align: left; color: #94a3b8; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; padding: .4rem .5rem; }
+.pd-table td { padding: .45rem .5rem; border-top: 1px solid rgba(255,255,255,.07); }
+.pd-match-list { display: grid; gap: .5rem; }
+
+.game-choice-slots { display: block; margin-top: .35rem; font-family: var(--font-display); font-size: .7rem; letter-spacing: .12em; opacity: .85; }
+
+/* Lista con buscador (institución y escuela profesional) */
+.ss { position: relative; }
+.ss > input { padding-right: 2rem; cursor: text; }
+.ss-chevron { position: absolute; right: .8rem; bottom: .62rem; color: #94a3b8; pointer-events: none; font-size: .8rem; }
+.ss-list { z-index: 2147483000; overflow-y: auto; box-sizing: border-box; margin: 0; padding: .3rem; list-style: none; background: #0d0913; border: 1px solid rgba(178, 153, 207, .35); border-radius: 4px; box-shadow: 0 18px 40px rgba(0, 0, 0, .6); }
+.ss-group { padding: .55rem .6rem .25rem; font-family: var(--font-display); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: #94a3b8; position: sticky; top: -.3rem; background: #0d0913; }
+.ss-option { padding: .55rem .6rem; font-family: var(--font-body); font-size: .88rem; color: #e4e4e7; border-radius: 3px; cursor: pointer; line-height: 1.35; }
+.ss-option--active { background: rgba(157, 92, 255, .22); color: #fff; }
+.ss-option--selected { font-weight: 700; }
+.ss-empty { padding: .8rem .6rem; color: #94a3b8; font-family: var(--font-body); font-size: .85rem; }
+
+.footer-music-credit a { color: inherit; text-decoration: underline; }

@@ -3,8 +3,14 @@ import { audio } from '../lib/audioEngine'
 import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
 import ragnarokCrest from '../assets/ragnarok-crest.svg'
+import { useTournament } from '../context/TournamentContext'
+import { formatSoles } from '../lib/money'
+import { publicUrl, submitRegistration, validateUpload } from '../lib/tournamentApi'
+import SearchSelect from '../components/SearchSelect'
+import { institutionGroups, OTHER_INSTITUTION } from '../lib/institutions'
+import { careerGroups, OTHER_CAREER } from '../lib/careers'
 
-const games = {
+const baseGames = {
   mlbb: {
     name: 'Mobile Legends: Bang Bang',
     shortName: 'MOBA MLBB',
@@ -13,18 +19,7 @@ const games = {
     pdfUrl: '/docs/Bases_MOBA.pdf',
     pdfName: 'Bases_MOBA.pdf',
     accent: '#b48aff',
-    price: 20,
-    priceFormatted: 'S/ 20.00',
-    detail: 'Capitán + 4 titulares · Hasta 2 suplentes',
-    slots: [
-      { label: 'CAPITÁN', required: true },
-      { label: 'TITULAR 02', required: true },
-      { label: 'TITULAR 03', required: true },
-      { label: 'TITULAR 04', required: true },
-      { label: 'TITULAR 05', required: true },
-      { label: 'SUPLENTE 01', required: false },
-      { label: 'SUPLENTE 02', required: false },
-    ],
+    feeNote: 'Tarifa oficial MOBA',
   },
   ff: {
     name: 'Free Fire',
@@ -34,17 +29,17 @@ const games = {
     pdfUrl: '/docs/Bases_FF.pdf',
     pdfName: 'Bases_FF.pdf',
     accent: '#ef54a6',
-    price: 15,
-    priceFormatted: 'S/ 15.00',
-    detail: 'Capitán + 3 titulares · 1 suplente opcional',
-    slots: [
-      { label: 'CAPITÁN', required: true },
-      { label: 'TITULAR 02', required: true },
-      { label: 'TITULAR 03', required: true },
-      { label: 'TITULAR 04', required: true },
-      { label: 'SUPLENTE', required: false },
-    ],
+    feeNote: 'Tarifa oficial Battle Royale',
   },
+}
+
+const MAX_SLOTS = 15
+
+function buildSlots(starters, substitutes) {
+  const slots = []
+  for (let i = 0; i < starters; i++) slots.push({ label: i === 0 ? 'CAPITÁN' : `TITULAR 0${i + 1}`, required: true })
+  for (let i = 0; i < substitutes; i++) slots.push({ label: substitutes === 1 ? 'SUPLENTE' : `SUPLENTE 0${i + 1}`, required: false })
+  return slots
 }
 
 const professionalSchoolGroups = [
@@ -110,8 +105,6 @@ const professionalSchoolGroups = [
   },
 ]
 
-const professionalSchools = professionalSchoolGroups.flatMap((group) => group.schools)
-
 const STEPS = [
   { num: 1, label: 'Torneo y Equipo', short: 'Equipo' },
   { num: 2, label: 'Roster Oficial', short: 'Roster' },
@@ -120,6 +113,8 @@ const STEPS = [
 
 function Inscription({ modal = false }) {
   const { registrationGame, setActiveGame } = useRegistration()
+  const { games: gameConfig, settings, deadline, availability } = useTournament()
+  const [openedAt] = useState(() => Date.now())
   const [step, setStep] = useState(1)
   const [game, setGame] = useState(() => registrationGame || 'mlbb')
 
@@ -128,13 +123,14 @@ function Inscription({ modal = false }) {
   const [teamLogo, setTeamLogo] = useState(null)
   const [captainName, setCaptainName] = useState('')
   const [captainWhatsapp, setCaptainWhatsapp] = useState('')
-  const [institution, setInstitution] = useState('UNAP')
+  const [institutionChoice, setInstitutionChoice] = useState('UNAP')
   const [professionalSchool, setProfessionalSchool] = useState('')
-  const [otherInstitution, setOtherInstitution] = useState('')
+  const [customInstitution, setCustomInstitution] = useState('')
+  const [customCareer, setCustomCareer] = useState('')
 
   // Datos Etapa 2 (Roster)
   const [players, setPlayers] = useState(() =>
-    Array.from({ length: 7 }, () => ({ nickname: '', id: '', server: '' }))
+    Array.from({ length: MAX_SLOTS }, () => ({ nickname: '', id: '', server: '' }))
   )
 
   // Datos Etapa 3
@@ -142,6 +138,9 @@ function Inscription({ modal = false }) {
   const [termsAccepted, setTermsAccepted] = useState(false)
 
   const [stepError, setStepError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [honeypot, setHoneypot] = useState('')
   const [notice, setNotice] = useState(null)
 
   useEffect(() => {
@@ -150,8 +149,45 @@ function Inscription({ modal = false }) {
     }
   }, [registrationGame])
 
+  const games = useMemo(() => Object.fromEntries(Object.entries(baseGames).map(([key, base]) => {
+    const cfg = gameConfig[key]
+    const slots = buildSlots(cfg.starters, cfg.substitutes)
+    return [key, {
+      ...base,
+      name: cfg.name || base.name,
+      modeBadge: cfg.badge || base.modeBadge,
+      slots,
+      price: cfg.price,
+      priceFormatted: formatSoles(cfg.price, 2),
+      isOpen: cfg.is_open,
+      detail: `Capitán + ${cfg.starters - 1} titulares · ${cfg.substitutes ? `Hasta ${cfg.substitutes} suplente${cfg.substitutes > 1 ? 's' : ''}` : 'Sin suplentes'}`,
+      pdfUrl: publicUrl('public-assets', cfg.rules_pdf_path) || base.pdfUrl,
+    }]
+  })), [gameConfig])
+
+  // UNAP se guarda como institución propia (con escuela); cualquier otra, por nombre.
+  const institution = institutionChoice === 'UNAP' ? 'UNAP' : 'Otra'
+  const otherInstitution = institutionChoice === OTHER_INSTITUTION ? customInstitution : institutionChoice
+  // La carrera se pide siempre: escuelas de la UNAP o una lista general para otras instituciones.
+  const career = professionalSchool === OTHER_CAREER ? customCareer.trim() : professionalSchool
+  const changeInstitution = (next) => {
+    if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) {
+      setProfessionalSchool('')
+      setCustomCareer('')
+    }
+    setInstitutionChoice(next)
+  }
+  const schoolGroups = useMemo(() => [
+    ...professionalSchoolGroups.map((g) => ({ group: `Área de ${g.area}`, items: g.schools.map((name) => ({ value: name, label: name })) })),
+    { group: 'Otra', items: [{ value: 'Otra escuela profesional', label: 'Otra escuela profesional / Facultad' }] },
+  ], [])
+
   const gameInfo = games[game]
-  const playerSlots = useMemo(() => gameInfo.slots, [gameInfo])
+  const playerSlots = gameInfo.slots
+  const qrUrl = publicUrl('public-assets', settings.yape_qr_path)
+  const slotInfo = availability?.[game]
+  const soldOut = Boolean(slotInfo && slotInfo.taken >= slotInfo.max)
+  const registrationClosed = !settings.registration_open || openedAt > deadline || !gameInfo.isOpen || soldOut
 
   const changeGame = (nextGame) => {
     setGame(nextGame)
@@ -166,6 +202,22 @@ function Inscription({ modal = false }) {
       copy[index] = { ...copy[index], [field]: value }
       return copy
     })
+  }
+
+  const pickFile = async (event, setter, allowPdf) => {
+    const input = event.target
+    const file = input.files?.[0] || null
+    if (file) {
+      const problem = await validateUpload(file, { allowPdf })
+      if (problem) {
+        setStepError(problem)
+        input.value = ''
+        setter(null)
+        return
+      }
+    }
+    setStepError(null)
+    setter(file)
   }
 
   // Validaciones por etapa
@@ -185,8 +237,8 @@ function Inscription({ modal = false }) {
       audio.click()
       return false
     }
-    if (institution === 'UNAP' && !professionalSchool) {
-      setStepError('Selecciona tu escuela profesional de la UNAP.')
+    if (!career) {
+      setStepError(institution === 'UNAP' ? 'Selecciona tu escuela profesional de la UNAP.' : 'Selecciona o escribe tu carrera profesional.')
       audio.click()
       return false
     }
@@ -253,14 +305,45 @@ function Inscription({ modal = false }) {
     audio.click()
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!validateStep3()) return
+    if (submitting || submitted) return
+    if (registrationClosed) {
+      setStepError('Las inscripciones de esta disciplina están cerradas.')
+      return
+    }
+    if (!validateStep1() || !validateStep2() || !validateStep3()) return
 
-    setNotice({
-      type: 'warning',
-      text: 'Tu información está completa. El envío de inscripciones está pendiente de habilitación.',
-    })
+    setSubmitting(true)
+    setNotice(null)
+    try {
+      await submitRegistration({
+        gameKey: game,
+        team: teamName.trim(),
+        captain: captainName.trim(),
+        whatsapp: captainWhatsapp,
+        institution,
+        school: career,
+        otherInstitution: otherInstitution.trim(),
+        players: playerSlots.map((_, i) => ({
+          nickname: players[i]?.nickname?.trim() || '',
+          game_player_id: players[i]?.id || '',
+          server_id: game === 'mlbb' ? players[i]?.server || '' : '',
+        })),
+        receipt: paymentReceipt,
+        logo: teamLogo,
+        honeypot,
+      })
+      setSubmitted(true)
+      setNotice({
+        type: 'success',
+        text: '¡Inscripción enviada! La organización verificará tu comprobante y te contactará por WhatsApp.',
+      })
+    } catch (err) {
+      setNotice({ type: 'warning', text: err.message })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -310,7 +393,10 @@ function Inscription({ modal = false }) {
         })}
       </div>
 
-      <form className="registration-form" onSubmit={handleSubmit}>
+      <form className="registration-form" onSubmit={handleSubmit} autoComplete="off">
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>No llenar este campo<input tabIndex={-1} autoComplete="off" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
+        </div>
         {/* ================= ETAPA 1: TORNEO Y EQUIPO ================= */}
         {step === 1 && (
           <div className="wizard-stage-content">
@@ -339,6 +425,11 @@ function Inscription({ modal = false }) {
                       <span>Tarifa:</span>
                       <b>{item.priceFormatted}</b>
                     </div>
+                    {availability?.[key] && (
+                      <small className="game-choice-slots">
+                        {availability[key].taken >= availability[key].max ? 'CUPOS AGOTADOS' : `QUEDAN ${availability[key].max - availability[key].taken} CUPOS`}
+                      </small>
+                    )}
                   </span>
                   {game === key && <span className="game-choice-status">SELECCIONADO</span>}
                 </button>
@@ -351,6 +442,7 @@ function Inscription({ modal = false }) {
                 <input
                   name="teamName"
                   minLength="3"
+                  maxLength="40"
                   placeholder="Ej.: Ragnarok Wolves"
                   value={teamName}
                   onChange={(e) => setTeamName(e.target.value)}
@@ -363,7 +455,7 @@ function Inscription({ modal = false }) {
                   accept="image/png,image/jpeg,image/webp"
                   name="teamLogo"
                   type="file"
-                  onChange={(e) => setTeamLogo(e.target.files?.[0] || null)}
+                  onChange={(e) => pickFile(e, setTeamLogo, false)}
                 />
                 <small>{teamLogo ? `Seleccionado: ${teamLogo.name}` : 'PNG, JPG o WEBP · máx. 5 MB (Opcional)'}</small>
               </label>
@@ -374,6 +466,7 @@ function Inscription({ modal = false }) {
                 <span>NOMBRES Y APELLIDOS DEL CAPITÁN *</span>
                 <input
                   name="captainName"
+                  maxLength="80"
                   placeholder="Nombre completo del capitán"
                   value={captainName}
                   onChange={(e) => setCaptainName(e.target.value)}
@@ -384,6 +477,7 @@ function Inscription({ modal = false }) {
                 <span>WHATSAPP DEL CAPITÁN *</span>
                 <input
                   inputMode="tel"
+                  maxLength="20"
                   name="captainWhatsapp"
                   placeholder="999 999 999"
                   value={captainWhatsapp}
@@ -392,45 +486,37 @@ function Inscription({ modal = false }) {
                   type="tel"
                 />
               </label>
-              <label className="form-field">
-                <span>INSTITUCIÓN DE PROCEDENCIA *</span>
-                <select name="institution" onChange={(e) => setInstitution(e.target.value)} value={institution}>
-                  <option value="UNAP">UNAP (Universidad Nacional del Altiplano)</option>
-                  <option value="Otra">Otra universidad o institución</option>
-                </select>
-              </label>
-              {institution === 'UNAP' ? (
-                <label className="form-field">
-                  <span>ESCUELA PROFESIONAL (UNAP) *</span>
-                  <select
-                    name="professionalSchool"
-                    value={professionalSchool}
-                    onChange={(e) => setProfessionalSchool(e.target.value)}
-                    required
-                  >
-                    <option value="">Selecciona tu escuela profesional (45 escuelas)</option>
-                    {professionalSchoolGroups.map((group) => (
-                      <optgroup key={group.area} label={`── ÁREA DE ${group.area.toUpperCase()} ──`}>
-                        {group.schools.map((school) => (
-                          <option key={school} value={school}>
-                            {school}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                    <option value="Otra escuela profesional">Otra escuela profesional / Facultad</option>
-                  </select>
-                </label>
-              ) : (
+              <SearchSelect
+                label="INSTITUCIÓN DE PROCEDENCIA *"
+                groups={institutionGroups}
+                value={institutionChoice}
+                onChange={changeInstitution}
+                placeholder="Busca tu universidad o instituto…"
+                emptyText="No aparece. Elige “Otra institución” y escribe el nombre."
+              />
+              <SearchSelect
+                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) *' : 'CARRERA PROFESIONAL *'}
+                groups={institution === 'UNAP' ? schoolGroups : careerGroups}
+                value={professionalSchool}
+                onChange={setProfessionalSchool}
+                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional…' : 'Busca tu carrera…'}
+              />
+              {institutionChoice === OTHER_INSTITUTION && (
                 <label className="form-field">
                   <span>NOMBRE DE LA INSTITUCIÓN *</span>
                   <input
                     name="otherInstitution"
-                    placeholder="Ej.: UANCV, TECSUP, etc."
-                    value={otherInstitution}
-                    onChange={(e) => setOtherInstitution(e.target.value)}
-                    required
+                    maxLength="120"
+                    placeholder="Escribe el nombre completo"
+                    value={customInstitution}
+                    onChange={(e) => setCustomInstitution(e.target.value)}
                   />
+                </label>
+              )}
+              {professionalSchool === OTHER_CAREER && (
+                <label className="form-field">
+                  <span>NOMBRE DE LA CARRERA *</span>
+                  <input name="customCareer" maxLength="120" placeholder="Escribe el nombre de tu carrera" value={customCareer} onChange={(e) => setCustomCareer(e.target.value)} />
                 </label>
               )}
             </div>
@@ -444,9 +530,8 @@ function Inscription({ modal = false }) {
               <span className="stage-eyebrow">PASO 2 DE 3</span>
               <h3>ROSTER OFICIAL — {gameInfo.name.toUpperCase()}</h3>
               <p>
-                {game === 'mlbb'
-                  ? 'Registra a tus 5 titulares obligatorios y hasta 2 suplentes opcionales. Es obligatorio el Server ID (los 4 dígitos).'
-                  : 'Registra a tus 4 titulares obligatorios y 1 suplente opcional para las salas Battle Royale.'}
+                {`Registra a tus ${gameInfo.slots.filter((x) => x.required).length} titulares obligatorios${gameInfo.slots.length > gameInfo.slots.filter((x) => x.required).length ? ' y a tus suplentes opcionales' : ''}.`}
+                {game === 'mlbb' ? ' Es obligatorio el Server ID (los 4 dígitos).' : ''}
               </p>
             </div>
 
@@ -471,6 +556,7 @@ function Inscription({ modal = false }) {
                   </div>
                   <input
                     className="compact-input"
+                    maxLength={30}
                     name={`player-${index}-nickname`}
                     placeholder={`Nickname ${slot.required ? '*' : '(opcional)'}`}
                     value={players[index]?.nickname || ''}
@@ -480,6 +566,7 @@ function Inscription({ modal = false }) {
                   <input
                     className="compact-input compact-input--mono"
                     inputMode="numeric"
+                    maxLength={15}
                     name={`player-${index}-id`}
                     placeholder={`ID ${slot.required ? '*' : '(opcional)'}`}
                     value={players[index]?.id || ''}
@@ -490,6 +577,7 @@ function Inscription({ modal = false }) {
                     <input
                       className="compact-input compact-input--mono"
                       inputMode="numeric"
+                      maxLength={6}
                       name={`player-${index}-server`}
                       placeholder={`Server ID ${slot.required ? '*' : '(opcional)'}`}
                       value={players[index]?.server || ''}
@@ -526,17 +614,21 @@ function Inscription({ modal = false }) {
               </div>
               <div className="summary-col">
                 <span className="summary-label">INSTITUCIÓN</span>
-                <strong>{institution === 'UNAP' ? professionalSchool || 'UNAP' : otherInstitution || 'Otra'}</strong>
+                <strong>{institution === 'UNAP' ? career || 'UNAP' : [otherInstitution, career].filter(Boolean).join(' · ') || 'Otra'}</strong>
                 <small>Roster: {players.filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
               </div>
             </div>
 
             <div className="payment-panel">
               <div className="payment-qr-wrap">
-                <div className="payment-qr-pending">
+                {qrUrl ? (
+                  <img className="payment-qr-img" src={qrUrl} alt="Código QR de Yape de la organización" style={{ width: '100%', maxWidth: 220, borderRadius: 12 }} />
+                ) : (
+                  <div className="payment-qr-pending">
                   <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5" /><rect x="8" y="8" width="8" height="8" /></svg>
                   <strong>QR DE YAPE</strong><span>PENDIENTE DE PUBLICACIÓN</span>
-                </div>
+                  </div>
+                )}
                 <span className="yape-tag">PAGO POR YAPE</span>
               </div>
               <div className="payment-copy">
@@ -546,24 +638,31 @@ function Inscription({ modal = false }) {
                     <strong className="price-card-amount">{gameInfo.priceFormatted}</strong>
                   </div>
                   <span className="price-card-note">
-                    {game === 'mlbb'
-                      ? 'Tarifa oficial MOBA (5 titulares + hasta 2 suplentes)'
-                      : 'Tarifa oficial Battle Royale (4 titulares + 1 suplente)'}
+                    {gameInfo.feeNote} ({gameInfo.slots.filter((x) => x.required).length} titulares
+                    {gameInfo.slots.length > gameInfo.slots.filter((x) => x.required).length ? ` + ${gameInfo.slots.length - gameInfo.slots.filter((x) => x.required).length} suplente(s)` : ''})
                   </span>
                 </div>
 
                 <h2>REALIZA EL ABONO POR YAPE</h2>
                 <p>
-                  La organización publicará aquí el código oficial y los datos de pago.
+                  {settings.yape_number
+                    ? <>Yapea a <strong>{settings.yape_number}</strong>{settings.yape_holder ? <> a nombre de <strong>{settings.yape_holder}</strong></> : null}. </>
+                    : 'La organización publicará aquí el código oficial y los datos de pago. '}
                   La tarifa de esta disciplina es <strong>{gameInfo.priceFormatted}</strong> por equipo.
                 </p>
+                {/^\d{8,15}$/.test(settings.contact_whatsapp || '') && (
+                  <p>
+                    ¿Dudas con el pago? Escribe al{' '}
+                    <a href={`https://wa.me/${settings.contact_whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp de la organización ↗</a>.
+                  </p>
+                )}
                 <label className="form-field form-field--file">
                   <span>COMPROBANTE DE PAGO (CAPTURA DE YAPE) *</span>
                   <input
                     accept="image/png,image/jpeg,image/webp,application/pdf"
                     name="paymentReceipt"
                     type="file"
-                    onChange={(e) => setPaymentReceipt(e.target.files?.[0] || null)}
+                    onChange={(e) => pickFile(e, setPaymentReceipt, true)}
                     required
                   />
                   <small>
@@ -599,6 +698,9 @@ function Inscription({ modal = false }) {
         )}
 
         {/* Mensaje de error / validación por etapa */}
+        {registrationClosed && !submitted && (
+          <p className="wizard-step-error">⚠️ {soldOut ? 'Se agotaron los cupos de esta disciplina.' : 'Las inscripciones de esta disciplina están cerradas.'}</p>
+        )}
         {stepError && <p className="wizard-step-error">⚠️ {stepError}</p>}
         {notice && <p className={`form-notice form-notice--${notice.type}`}>{notice.text}</p>}
 
@@ -617,8 +719,8 @@ function Inscription({ modal = false }) {
               Continuar al {step === 1 ? 'Roster Oficial' : 'Pago'} ➔
             </button>
           ) : (
-            <button className="registration-submit" type="submit">
-              REVISAR INSCRIPCIÓN ({gameInfo.priceFormatted}) <span>↗</span>
+            <button className="registration-submit" type="submit" disabled={submitting || submitted || registrationClosed}>
+              {submitting ? 'ENVIANDO…' : submitted ? 'INSCRIPCIÓN ENVIADA' : registrationClosed ? (soldOut ? 'CUPOS AGOTADOS' : 'INSCRIPCIONES CERRADAS') : `ENVIAR INSCRIPCIÓN (${gameInfo.priceFormatted})`} <span>↗</span>
             </button>
           )}
         </div>

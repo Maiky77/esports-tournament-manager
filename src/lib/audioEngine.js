@@ -6,11 +6,15 @@ class AudioEngine {
     this.sfx = null
     this.muted = false
     this.volume = 0.6
-    this.stepTimer = null
-    this.oscillators = []
+    this.tracks = {}
+    this.players = {}
+    this.currentGame = null
+    this.started = false
   }
 
   start() {
+    this.started = true
+    if (this.currentGame) this.playMusic(this.currentGame)
     if (this.context) {
       this.context.resume()
       return
@@ -28,7 +32,6 @@ class AudioEngine {
     this.music.connect(this.master)
     this.sfx.connect(this.master)
     this.master.connect(this.context.destination)
-    this.startAmbient()
   }
 
   tone(frequency, duration, volume, destination = this.sfx, type = 'sine', delay = 0, slideTo) {
@@ -81,6 +84,7 @@ class AudioEngine {
     if (this.master && this.context && !this.muted) {
       this.master.gain.setTargetAtTime(this.volume, this.context.currentTime, 0.08)
     }
+    this.syncMusicLevel()
     return this.volume
   }
 
@@ -89,37 +93,77 @@ class AudioEngine {
     if (this.master && this.context) {
       this.master.gain.setTargetAtTime(this.muted ? 0 : this.volume, this.context.currentTime, 0.08)
     }
+    this.syncMusicLevel()
     return this.muted
   }
 
-  startAmbient() {
-    if (!this.context) return
-    const filter = this.context.createBiquadFilter()
-    const padGain = this.context.createGain()
-    filter.type = 'lowpass'
-    filter.frequency.value = 620
-    padGain.gain.value = 0.1
-    filter.connect(padGain).connect(this.music)
+  // Nivel de la música: el volumen general por encima de la mezcla de fondo.
+  musicLevel() {
+    return this.muted ? 0 : this.volume * 0.7
+  }
 
-    ;[65.41, 130.81, 196, 261.63].forEach((frequency, index) => {
-      const oscillator = this.context.createOscillator()
-      oscillator.type = index % 2 ? 'triangle' : 'sawtooth'
-      oscillator.frequency.value = frequency
-      oscillator.detune.value = (index - 1.5) * 5
-      oscillator.connect(filter)
-      oscillator.start()
-      this.oscillators.push(oscillator)
+  syncMusicLevel() {
+    const player = this.currentGame && this.players[this.currentGame]
+    if (player) player.volume = this.musicLevel()
+  }
+
+  // Define el archivo de música de cada juego: { mlbb: url, ff: url }. Sin url = silencio para ese juego.
+  setTracks(tracks) {
+    Object.entries(tracks).forEach(([game, url]) => {
+      if (this.tracks[game] === url) return
+      this.tracks[game] = url
+      const player = this.players[game]
+      if (!player) return
+      const wasPlaying = !player.paused
+      player.pause()
+      delete this.players[game]
+      if (wasPlaying && this.currentGame === game) this.playMusic(game)
     })
+  }
 
-    const sequence = [261.63, 329.63, 392, 329.63, 293.66, 392, 440, 392]
-    let step = 0
-    const playStep = () => {
-      if (!this.context) return
-      this.tone(sequence[step % sequence.length], 0.23, 0.025, this.music, 'triangle')
-      step += 1
-      this.stepTimer = window.setTimeout(playStep, 460)
+  getPlayer(game) {
+    const url = this.tracks[game]
+    if (!url) return null
+    if (!this.players[game]) {
+      const el = new Audio()
+      el.loop = true
+      el.preload = 'auto'
+      el.volume = 0
+      el.src = url
+      // Si el archivo no existe o no es audio, ese juego queda en silencio sin mostrar errores.
+      el.addEventListener('error', () => { if (this.players[game] === el) delete this.players[game] })
+      this.players[game] = el
     }
-    playStep()
+    return this.players[game]
+  }
+
+  fade(el, to, ms, onDone) {
+    const from = el.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const t = Math.min(1, (now - startedAt) / ms)
+      el.volume = Math.min(1, Math.max(0, from + (to - from) * t))
+      if (t < 1) requestAnimationFrame(tick)
+      else onDone?.()
+    }
+    requestAnimationFrame(tick)
+  }
+
+  // Cambia la música al tema del juego indicado, con fundido cruzado.
+  playMusic(game) {
+    this.currentGame = game
+    if (!this.started) return
+    Object.entries(this.players).forEach(([key, el]) => {
+      if (key !== game && !el.paused) this.fade(el, 0, 700, () => el.pause())
+    })
+    const next = this.getPlayer(game)
+    if (!next) return
+    if (next.paused) {
+      next.volume = 0
+      next.play().then(() => this.fade(next, this.musicLevel(), 900)).catch(() => {})
+    } else {
+      this.fade(next, this.musicLevel(), 400)
+    }
   }
 }
 

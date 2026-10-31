@@ -1,6 +1,7 @@
 import { useRegistration } from '../context/RegistrationContext'
+import { useTournament } from '../context/TournamentContext'
 
-const steps = [
+const defaultSteps = [
   { number: '01', title: 'ELIGE TU ARENA', text: 'Mobile Legends o Free Fire. Elige tu disciplina y reúne a los jugadores que representarán a tu universidad.', detail: 'DOS DISCIPLINAS / UN MISMO LEGADO' },
   { number: '02', title: 'REGISTRA TU ESCUADRA', text: 'Completa los datos del capitán, tu institución y el ID de cada jugador. Añade a tus suplentes si tu equipo los necesita.', detail: 'CAPITÁN + ROSTER + UNIVERSIDAD' },
   { number: '03', title: 'PREPARA TU INSCRIPCIÓN', text: 'Revisa el reglamento de tu juego y adjunta el comprobante de pago por Yape para la revisión de la organización.', detail: 'BASES OFICIALES / COMPROBANTE' },
@@ -8,6 +9,10 @@ const steps = [
 
 function RegistrationSteps() {
   const { openRegistration } = useRegistration()
+  const { content } = useTournament()
+  const steps = (content?.steps?.length ? content.steps : defaultSteps).map((step, index) => ({
+    ...step, number: String(index + 1).padStart(2, '0'),
+  }))
   return (
     <section className="participation-section" id="como-participar" aria-labelledby="participation-title">
       <div className="template-section-title">

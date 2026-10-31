@@ -5,10 +5,10 @@ import CharacterArt from '../components/CharacterArt'
 import RulesSection from '../components/RulesSection'
 import RegistrationSteps from '../components/RegistrationSteps'
 import useHeroRotation from '../hooks/useHeroRotation'
+import { useTournament } from '../context/TournamentContext'
+import { formatSoles } from '../lib/money'
 
-const deadline = new Date('2026-12-15T23:59:59-05:00').getTime()
-
-function getTimeLeft() {
+function getTimeLeft(deadline) {
   const time = Math.max(deadline - Date.now(), 0)
   return [
     ['DÍAS', Math.floor(time / 86400000)],
@@ -18,16 +18,22 @@ function getTimeLeft() {
   ]
 }
 
+const MONTHS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
+const formatDeadline = (ms) => {
+  const d = new Date(ms)
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} / ${d.getFullYear()}`
+}
+
 const divisions = [
   {
     key: 'mlbb', number: '01', title: 'ESTRATEGIA EN EQUIPO',
     name: 'Mobile Legends', subtitle: 'BANG BANG', image: '/img/hero-mlbb.jpg',
-    color: '#bb96ff', fee: 'S/ 20', detail: '5 titulares + hasta 2 suplentes', format: '5V5 · DRAFT PICK',
+    color: '#bb96ff', format: '5V5 · DRAFT PICK',
   },
   {
     key: 'ff', number: '02', title: 'SUPERVIVENCIA SIN LÍMITES',
     name: 'Free Fire', subtitle: 'BATTLE ROYALE', image: '/img/hero-ff.jpg',
-    color: '#f57fbd', fee: 'S/ 15', detail: '4 titulares + 1 suplente', format: 'SQUADS · BATTLE ROYALE',
+    color: '#f57fbd', format: 'SQUADS · BATTLE ROYALE',
   },
 ]
 
@@ -45,15 +51,21 @@ function resetArtwork(event) {
 
 function Home({ heroEnabled = true }) {
   const { openRegistration, activeGame, setActiveGame, isRegistrationOpen } = useRegistration()
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft)
+  const { deadline, games: gameConfig, prizes, prizeTotal, availability } = useTournament()
+  const rosterText = (key) => {
+    const { starters, substitutes } = gameConfig[key]
+    return `${starters} titulares${substitutes ? ` + ${substitutes === 1 ? '1 suplente' : `hasta ${substitutes} suplentes`}` : ''}`
+  }
+  const slotsText = (key) => (availability?.[key] ? ` · ${availability[key].taken >= availability[key].max ? 'Cupos agotados' : `Quedan ${availability[key].max - availability[key].taken} cupos`}` : '')
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(deadline))
   const isFreeFire = activeGame === 'ff'
   const { game: heroGame, autoplay, selectGame: selectHeroGame, toggleAutoplay, containerRef } = useHeroRotation(activeGame, heroEnabled && !isRegistrationOpen)
   const isHeroFreeFire = heroGame === 'ff'
 
   useEffect(() => {
-    const interval = window.setInterval(() => setTimeLeft(getTimeLeft()), 1000)
+    const interval = window.setInterval(() => setTimeLeft(getTimeLeft(deadline)), 1000)
     return () => window.clearInterval(interval)
-  }, [])
+  }, [deadline])
 
   const handleInscribe = (gameKey) => {
     audio.click()
@@ -91,7 +103,7 @@ function Home({ heroEnabled = true }) {
                 Reúne a tu equipo y entra a la arena de Mobile Legends y Free Fire.
               </p>
               <div className="hero-prize-pool">
-                <strong className="hero-prize-amount"><span>S/</span> 2,700</strong>
+                <strong className="hero-prize-amount"><span>S/</span> {prizeTotal.toLocaleString('es-PE')}</strong>
                 <div><span className="hero-prize-kicker">BOLSA DE PREMIOS</span><small className="hero-prize-note">En efectivo · Dos disciplinas</small></div>
               </div>
               <div className="hero-cta-group">
@@ -101,7 +113,7 @@ function Home({ heroEnabled = true }) {
                 <a href="#disciplinas" className="hero-explore-link" onClick={() => audio.click()}>Explorar el torneo <span aria-hidden="true">↓</span></a>
               </div>
               <div className="hero-countdown-block">
-                <p className="hero-countdown-label">CIERRE DE INSCRIPCIONES <span>15 DIC / 2026</span></p>
+                <p className="hero-countdown-label">CIERRE DE INSCRIPCIONES <span>{formatDeadline(deadline)}</span></p>
                 <div className="hero-countdown-grid" role="timer" aria-label="Tiempo restante para inscribirse">
                   {timeLeft.map(([label, value]) => (
                     <div key={label} className="countdown-box">
@@ -150,7 +162,7 @@ function Home({ heroEnabled = true }) {
             {divisions.map((division) => (
               <button
                 className={`hero-division-card hero-division-card--${division.key} ${activeGame === division.key ? 'hero-division-card--active' : ''}`}
-                key={division.key} aria-label={`Inscribir equipo en ${division.name} por ${division.fee}`} onClick={() => handleInscribe(division.key)} style={{ '--division-color': division.color }} type="button"
+                key={division.key} aria-label={`Inscribir equipo en ${division.name} por ${formatSoles(gameConfig[division.key].price)}`} onClick={() => handleInscribe(division.key)} style={{ '--division-color': division.color }} type="button"
               >
                 <img src={division.image} alt="" className="division-bg-img" loading="lazy" />
                 <span className="division-card-overlay" />
@@ -159,8 +171,8 @@ function Home({ heroEnabled = true }) {
                 <div className="division-card-content">
                   <span className="division-card-tag">{division.title}</span>
                   <strong className="division-card-name">{division.name}<small>{division.subtitle}</small></strong>
-                  <small className="division-card-detail">{division.detail}</small>
-                  <div className="division-card-bottom"><span>{division.format}</span><span className="division-card-action">{division.fee} / EQUIPO <b aria-hidden="true">↗</b></span></div>
+                  <small className="division-card-detail">{rosterText(division.key)}</small>
+                  <div className="division-card-bottom"><span>{division.format}</span><span className="division-card-action">{formatSoles(gameConfig[division.key].price)} / EQUIPO <b aria-hidden="true">↗</b></span></div>
                 </div>
               </button>
             ))}
@@ -181,7 +193,7 @@ function Home({ heroEnabled = true }) {
             <h2 id="mlbb-title">Cinco jugadores.<br /><span>Una sola jugada.</span></h2>
             <p>El talento gana duelos. Un equipo gana la partida. Lleva a tu escuadra a la Tierra del Amanecer y defiende los colores de tu universidad.</p>
             <div className="mlbb-format-grid">
-              <div><strong>5 + 2</strong><span>Titulares + suplentes</span></div>
+              <div><strong>{gameConfig.mlbb.starters} + {gameConfig.mlbb.substitutes}</strong><span>Titulares + suplentes</span></div>
               <div><strong>DRAFT</strong><span>Modo torneo 5v5</span></div>
               <div><strong>BO3</strong><span>Semifinal y final</span></div>
             </div>
@@ -189,7 +201,7 @@ function Home({ heroEnabled = true }) {
               <button className="mlbb-register-button" type="button" onClick={() => handleInscribe('mlbb')}>JUGAR EN MLBB <span aria-hidden="true">↗</span></button>
               <a href="#reglamento" onClick={() => exploreRules('mlbb')}>Conoce las reglas <span aria-hidden="true">→</span></a>
             </div>
-            <span className="mlbb-showcase-note">S/ 20 por equipo · Hasta 2 suplentes opcionales</span>
+            <span className="mlbb-showcase-note">{formatSoles(gameConfig.mlbb.price)} por equipo · Hasta {gameConfig.mlbb.substitutes} suplentes opcionales{slotsText('mlbb')}</span>
           </div>
         </section>
       )}
@@ -207,7 +219,7 @@ function Home({ heroEnabled = true }) {
             <h2 id="ff-title">Cuatro jugadores.<br /><span>Un solo Booyah.</span></h2>
             <p>Cada rotación cuenta. Cada compañero también. Aterriza con tu escuadra en Bermuda, Purgatorio y Kalahari y pelea por llevar a tu universidad hasta el último círculo.</p>
             <div className="mlbb-format-grid">
-              <div><strong>4 + 1</strong><span>Titulares + suplente</span></div>
+              <div><strong>{gameConfig.ff.starters} + {gameConfig.ff.substitutes}</strong><span>Titulares + suplente</span></div>
               <div><strong>SQUADS</strong><span>Battle Royale</span></div>
               <div><strong>+1 / KILL</strong><span>Punto por eliminación</span></div>
             </div>
@@ -215,7 +227,7 @@ function Home({ heroEnabled = true }) {
               <button className="mlbb-register-button ff-register-button" type="button" onClick={() => handleInscribe('ff')}>JUGAR EN FREE FIRE <span aria-hidden="true">↗</span></button>
               <a href="#reglamento" onClick={() => exploreRules('ff')}>Conoce las reglas <span aria-hidden="true">→</span></a>
             </div>
-            <span className="mlbb-showcase-note">S/ 15 por equipo · 1 suplente opcional</span>
+            <span className="mlbb-showcase-note">{formatSoles(gameConfig.ff.price)} por equipo · {gameConfig.ff.substitutes} suplente opcional{slotsText('ff')}</span>
           </div>
         </section>
       )}
@@ -227,9 +239,15 @@ function Home({ heroEnabled = true }) {
           <p>Compite por tu universidad. Deja tu nombre en lo más alto.</p>
         </div>
         <div className="template-prize-grid">
-          <article className="prize-card prize-card--champion"><span className="prize-card-place">01</span><span>CAMPEÓN</span><strong>S/ 1,500</strong><small>Trofeo y reconocimiento oficial</small><span className="prize-card-line" aria-hidden="true" /></article>
-          <article className="prize-card"><span className="prize-card-place">02</span><span>SUBCAMPEÓN</span><strong>S/ 800</strong><small>Medallas y reconocimiento oficial</small><span className="prize-card-line" aria-hidden="true" /></article>
-          <article className="prize-card"><span className="prize-card-place">03</span><span>TERCER LUGAR</span><strong>S/ 400</strong><small>Reconocimiento oficial</small><span className="prize-card-line" aria-hidden="true" /></article>
+          {prizes.map((prize) => (
+            <article className={`prize-card ${prize.place === 1 ? 'prize-card--champion' : ''}`} key={prize.place}>
+              <span className="prize-card-place">{String(prize.place).padStart(2, '0')}</span>
+              <span>{prize.label}</span>
+              <strong>{formatSoles(prize.amount)}</strong>
+              <small>{prize.description}</small>
+              <span className="prize-card-line" aria-hidden="true" />
+            </article>
+          ))}
         </div>
       </section>
       <RegistrationSteps />
