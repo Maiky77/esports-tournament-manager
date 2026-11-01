@@ -20,8 +20,7 @@ export function validateTeam(data) {
   return validateUpload(data.teamLogo)
 }
 
-export function validateRoster(game, players) {
-  const limit = ROSTER_LIMITS[game]
+export function validateRoster(game, players, limit = ROSTER_LIMITS[game]) {
   if (!limit) return 'Selecciona una disciplina válida.'
   const seen = new Set()
   for (let i = 0; i < limit.max; i++) {

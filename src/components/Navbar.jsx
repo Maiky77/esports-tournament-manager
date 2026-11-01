@@ -57,7 +57,7 @@ function Navbar() {
       />
       <nav className="navbar" aria-label="Navegación principal">
         <NavLink to="/" className="brand" onClick={closeMenu}>
-          <span className="brand-mark" aria-hidden="true">R//</span>
+          <img className="brand-mark" src="/images/ragnarok-principal.png" alt="" width="42" height="42" />
           <div className="brand-copy">
             <span className="brand-title">RAGNAROK <em>:</em> U-SERIES</span>
             <span className="brand-sub">ESPORTS UNIVERSITARIO 2026</span>

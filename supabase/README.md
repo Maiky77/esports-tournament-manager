@@ -48,3 +48,9 @@ Las tarifas iniciales son MLBB S/ 20 y Free Fire S/ 15, con cierre el 15/12/2026
 `npm test` ejecuta validaciones y pruebas reales de PostgreSQL con PGlite: transacciones, RLS, permisos de organizador, privacidad, duplicados, reintentos y fixture. Auth y Storage se representan con sus esquemas mínimos en estas pruebas; no sustituyen una prueba de carga/subida/autenticación contra el proyecto de Supabase. `npm run build` verifica la compilación del frontend.
 
 Prueba final en un proyecto de desarrollo: enviar una solicitud con imagen/PDF, ver el código, aprobar pago en `/admin`, comprobar que solo aparece entonces en `/equipos`, crear un encuentro en borrador, publicarlo y verificar su resultado en `/llaves`.
+
+## Compatibilidad con la integración pública existente
+
+Si el proyecto ya expone `tournament_settings`, `games`, `prizes` y las vistas `public_*`, la web conserva esa integración: lee la configuración publicada, usa su firma `submit_registration(payload)` y sus buckets `receipts` y `team-logos`. Mantiene el buscador de instituciones/carreras, los cupos y las fases de grupos/eliminación/Battle Royale. La configuración debe terminar de cargar antes de enviar una inscripción.
+
+En el esquema nuevo de esta carpeta se usa `submit_registration(p_request_id, p_data)` con `registration-files` y el panel `/admin`. La aplicación selecciona la integración antes de subir archivos; una escritura fallida nunca se reintenta automáticamente con la otra firma. El panel `/admin` corresponde a las tablas y funciones de esta migración. No apliques esta migración encima de tablas existentes con otra estructura sin preparar su migración de datos.

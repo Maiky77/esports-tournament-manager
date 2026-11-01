@@ -177,6 +177,7 @@
 .community-console>p { margin:0; padding-top:1.3rem; border-top:1px solid #a97cd333; color:#947da6; font-size:.75rem; line-height:1.75; }
 .footer-main-grid { width:100%; max-width:none; grid-template-columns:minmax(0,1.6fr) minmax(0,.8fr) minmax(0,1fr); gap:3rem; margin:0; padding:3.5rem 0; }
 .footer-brand-row { text-decoration:none; color:inherit; gap:1rem; }
+.footer-context-logo { width:min(100%,220px); height:auto; object-fit:contain; filter:drop-shadow(0 0 12px var(--a1)); }
 .footer-brand-mark { color:#b886ff; font-family:var(--font-display); font-size:2.5rem; font-weight:800; letter-spacing:-.15em; }
 .footer-brand-name { font-size:1.15rem; }
 .footer-brand-sub { font-size:.64rem; letter-spacing:.12em; }

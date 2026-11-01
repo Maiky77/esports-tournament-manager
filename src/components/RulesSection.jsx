@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import Icon from './Icon'
 import CharacterArt from './CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
+import { useTournament } from '../context/TournamentContext'
+import { publicUrl } from '../lib/tournamentApi'
 
 const RULES_DATA = {
   mlbb: {
@@ -146,6 +148,7 @@ const RULES_DATA = {
 
 function RulesSection() {
   const { activeGame, setActiveGame } = useRegistration()
+  const { games, content } = useTournament()
   const [activeTab, setActiveTab] = useState(() => (activeGame === 'ff' || activeGame === 'mlbb') ? activeGame : 'mlbb')
   const [openIndex, setOpenIndex] = useState(-1)
 
@@ -155,7 +158,22 @@ function RulesSection() {
     }
   }, [activeGame])
 
-  const activeData = RULES_DATA[activeTab]
+  const base = RULES_DATA[activeTab]
+  const remote = games[activeTab]
+  const remoteSections = content?.rules?.[activeTab]
+  const remotePdf = publicUrl('public-assets', remote?.rules_pdf_path)
+  const activeData = {
+    ...base,
+    title: remote?.name || base.title,
+    subtitle: remote?.subtitle || base.subtitle,
+    badge: remote?.badge || base.badge,
+    scoringTable: remote?.scoring_table?.length ? remote.scoring_table : base.scoringTable,
+    sections: remoteSections?.length
+      ? remoteSections.map((section, index) => ({ ...section, num: String(index + 1).padStart(2, '0') }))
+      : base.sections,
+    pdfUrl: remotePdf || base.pdfUrl,
+    pdfName: remotePdf ? `Bases_${activeTab === 'mlbb' ? 'MOBA' : 'FF'}.pdf` : base.pdfName,
+  }
 
   const switchTab = (tab) => {
     setActiveTab(tab)
@@ -260,7 +278,7 @@ function RulesSection() {
                   </ul>
 
                   {/* Tabla de puntuación si es Free Fire y la sección 04 */}
-                  {activeTab === 'ff' && section.num === '04' && activeData.scoringTable && (
+                  {activeData.scoringTable?.length > 0 && /puntuaci/i.test(section.title) && (
                     <div className="rules-table-wrap">
                       <div className="rules-table-title">TABLA OFICIAL DE PUNTOS POR SALA</div>
                       <div className="rules-table-grid">

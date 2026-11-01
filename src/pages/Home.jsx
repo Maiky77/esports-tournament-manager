@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useTournament } from '../context/TournamentContext'
+import { formatSoles } from '../lib/money'
 import { Link } from 'react-router-dom'
 import { useRegistration } from '../context/RegistrationContext'
 import CharacterArt from '../components/CharacterArt'
@@ -7,8 +9,7 @@ import RulesSection from '../components/RulesSection'
 import RegistrationSteps from '../components/RegistrationSteps'
 import useHeroRotation from '../hooks/useHeroRotation'
 
-const deadline = new Date('2026-12-15T23:59:59-05:00').getTime()
-function getTimeLeft() {
+function getTimeLeft(deadline) {
   const time = Math.max(deadline - Date.now(), 0)
   return [['DÍAS', Math.floor(time / 86400000)], ['HORAS', Math.floor(time / 3600000) % 24], ['MIN', Math.floor(time / 60000) % 60], ['SEG', Math.floor(time / 1000) % 60]]
 }
@@ -28,10 +29,12 @@ function resetArtwork(event) {
 }
 export default function Home() {
   const { openRegistration, activeGame, setActiveGame, isRegistrationOpen } = useRegistration()
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft)
+  const { deadline, games, prizes, prizeTotal } = useTournament()
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(deadline))
+  const deadlineLabel = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(deadline))
   const { game: heroGame, autoplay, selectGame, toggleAutoplay, containerRef } = useHeroRotation(activeGame, !isRegistrationOpen)
   const isFF = heroGame === 'ff'
-  useEffect(() => { const interval = window.setInterval(() => setTimeLeft(getTimeLeft()), 1000); return () => window.clearInterval(interval) }, [])
+  useEffect(() => { const interval = window.setInterval(() => setTimeLeft(getTimeLeft(deadline)), 1000); return () => window.clearInterval(interval) }, [deadline])
   return <main className="home-page home-page--template">
     <section className="template-hero-v2" id="inicio" aria-labelledby="event-title" ref={containerRef} data-hero-game={heroGame}>
       <div className="hero-backdrop" aria-hidden="true">
@@ -44,9 +47,9 @@ export default function Home() {
           <div className="hero-status-pill"><span className="hero-status-dot" /> PUNO, PERÚ <span className="hero-status-separator">/</span> TEMPORADA 2026</div>
           <div className="hero-grand-title"><span className="hero-subkicker">TU UNIVERSIDAD. TU EQUIPO. TU ARENA.</span><h1 id="event-title">RAGNAROK<span className="hero-gradient-text">U-SERIES<span className="hero-year">26</span></span></h1></div>
           <p className="hero-lead-desc">Representa a tu universidad en Mobile Legends y Free Fire. Forma tu escuadra y lleva tu juego al siguiente nivel.</p>
-          <div className="hero-prize-pool"><Icon name="trophy" size={25} /><strong className="hero-prize-amount"><span>S/</span> 2,700</strong><div><span className="hero-prize-kicker">EN PREMIOS</span><small className="hero-prize-note">Dos disciplinas. Una arena.</small></div></div>
+          <div className="hero-prize-pool"><Icon name="trophy" size={25} /><strong className="hero-prize-amount"><span>S/</span> {prizeTotal.toLocaleString('es-PE')}</strong><div><span className="hero-prize-kicker">EN PREMIOS</span><small className="hero-prize-note">Dos disciplinas. Una arena.</small></div></div>
           <div className="hero-cta-group"><button onClick={() => openRegistration(heroGame)} type="button" className="hero-btn-primary clip-corner">INSCRIBIR A MI EQUIPO <Icon name="arrow-up-right" /></button><a href="#disciplinas" className="hero-explore-link">Ver disciplinas <Icon name="arrow-down" size={16} /></a></div>
-          <div className="hero-countdown-block"><p className="hero-countdown-label">CIERRE DE INSCRIPCIONES <span>15 DIC / 2026</span></p><div className="hero-countdown-grid" role="timer" aria-label="Tiempo restante para inscribirse">{timeLeft.map(([label, value]) => <div key={label} className="countdown-box"><span className="countdown-digit">{String(value).padStart(2, '0')}</span><span className="countdown-unit">{label}</span></div>)}</div></div>
+          <div className="hero-countdown-block"><p className="hero-countdown-label">CIERRE DE INSCRIPCIONES <span>{deadlineLabel}</span></p><div className="hero-countdown-grid" role="timer" aria-label="Tiempo restante para inscribirse">{timeLeft.map(([label, value]) => <div key={label} className="countdown-box"><span className="countdown-digit">{String(value).padStart(2, '0')}</span><span className="countdown-unit">{label}</span></div>)}</div></div>
         </div>
         <div className="hero-visual-wrap"><figure className={`hero-visual ${isFF ? 'hero-visual--ff' : ''}`} onPointerMove={moveArtwork} onPointerLeave={resetArtwork}>
           <div className="arena-orbit arena-orbit--outer" aria-hidden="true" /><div className="arena-orbit arena-orbit--inner" aria-hidden="true" />
@@ -68,15 +71,15 @@ export default function Home() {
         <img className="discipline-panel-background" src={division.image} alt="" loading="lazy" />
         <CharacterArt character={division.character} className="discipline-panel-character" />
         <div className="discipline-panel-copy"><span className="discipline-panel-mode">{division.number} / {division.mode}</span><h3>{division.name}<small>{division.subtitle}</small></h3><p>{division.description}</p>
-          <ul className="discipline-facts"><li><Icon name="users" size={15} />{division.roster}</li><li><Icon name="trophy" size={15} />{division.rounds}</li></ul>
-          <div className="discipline-panel-actions"><button type="button" onClick={() => openRegistration(division.key)}>INSCRIBIR EQUIPO <Icon name="arrow-up-right" size={16} /></button><strong>{division.fee}<small>POR EQUIPO</small></strong></div>
+          <ul className="discipline-facts"><li><Icon name="users" size={15} />{`${games[division.key].starters} titulares + ${games[division.key].substitutes} suplente(s)`}</li><li><Icon name="trophy" size={15} />{division.rounds}</li></ul>
+          <div className="discipline-panel-actions"><button type="button" onClick={() => openRegistration(division.key)}>INSCRIBIR EQUIPO <Icon name="arrow-up-right" size={16} /></button><strong>{formatSoles(games[division.key].price)}<small>POR EQUIPO</small></strong></div>
           <a className="discipline-rules-link" href="#reglamento" onClick={() => setActiveGame(division.key)}>Consultar reglamento <Icon name="arrow-right" size={14} /></a>
         </div>
       </article>)}</div>
       <div className="competition-shortcuts"><span>LA COMPETENCIA, EN UN SOLO LUGAR.</span><Link to="/equipos">Equipos confirmados <Icon name="arrow-up-right" size={16} /></Link><Link to="/llaves">Fixture y resultados <Icon name="arrow-up-right" size={16} /></Link></div>
     </section>
 
-    <section className="template-prizes" id="premios" aria-labelledby="prizes-title"><div className="template-section-title"><span>02 / PREMIOS</span><h2 id="prizes-title">Juega por <em>la gloria.</em></h2><p>S/ 2,700 en premios y el orgullo de representar a tu universidad.</p></div><div className="template-prize-grid">{[['01', 'CAMPEÓN', 'S/ 1,500', 'Trofeo y reconocimiento oficial'], ['02', 'SUBCAMPEÓN', 'S/ 800', 'Medallas y reconocimiento oficial'], ['03', 'TERCER LUGAR', 'S/ 400', 'Reconocimiento oficial']].map(([place, title, amount, detail], i) => <article className={`prize-card ${i === 0 ? 'prize-card--champion' : ''}`} key={place}><span className="prize-card-place">{place}</span><span>{title}</span><strong>{amount}</strong><small>{detail}</small></article>)}</div></section>
+    <section className="template-prizes" id="premios" aria-labelledby="prizes-title"><div className="template-section-title"><span>02 / PREMIOS</span><h2 id="prizes-title">Juega por <em>la gloria.</em></h2><p>{formatSoles(prizeTotal)} en premios y el orgullo de representar a tu universidad.</p></div><div className="template-prize-grid">{prizes.map((prize, i) => <article className={`prize-card ${i === 0 ? 'prize-card--champion' : ''}`} key={prize.place}><span className="prize-card-place">{String(prize.place).padStart(2, '0')}</span><span>{prize.label}</span><strong>{formatSoles(prize.amount)}</strong><small>{prize.description}</small></article>)}</div></section>
     <RegistrationSteps />
     <RulesSection />
   </main>

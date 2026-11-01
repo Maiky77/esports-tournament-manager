@@ -10,17 +10,22 @@ import Home from './pages/Home'
 import Inscription from './pages/Inscription'
 import PagePlaceholder from './pages/PagePlaceholder'
 import Competition from './pages/Competition'
+import Teams from './pages/Teams'
+import Bracket from './pages/Bracket'
+import { TournamentProvider, useTournament } from './context/TournamentContext'
 const Admin = lazy(() => import('./pages/Admin'))
 import './App.css'
 import './styles/arena.css'
 import './styles/entry.css'
 import './styles/content.css'
 import './styles/hero-carousel.css'
+import './styles/public-data.css'
 import './styles/backend.css'
 import './styles/layout.css'
 
 function AppContent() {
   const { closeRegistration, isRegistrationOpen } = useRegistration()
+  const { fromServer } = useTournament()
 
   return (
     <BrowserRouter>
@@ -35,8 +40,8 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/inscripcion" element={<Inscription />} />
-          <Route path="/equipos" element={<Competition kind="teams" />} />
-          <Route path="/llaves" element={<Competition kind="bracket" />} />
+          <Route path="/equipos" element={fromServer ? <Teams /> : <Competition kind="teams" />} />
+          <Route path="/llaves" element={fromServer ? <Bracket /> : <Competition kind="bracket" />} />
           <Route path="/admin" element={<Suspense fallback={<main className="competition-page" role="status">Cargando panel…</main>}><Admin /></Suspense>} />
           <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
         </Routes>
@@ -51,9 +56,11 @@ function AppContent() {
 
 function App() {
   return (
+    <TournamentProvider>
     <RegistrationProvider>
       <AppContent />
     </RegistrationProvider>
+    </TournamentProvider>
   )
 }
 

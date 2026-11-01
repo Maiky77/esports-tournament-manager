@@ -1,0 +1,12 @@
+Música incluida por defecto (licencia libre con atribución)
+============================================================
+mlbb.mp3  ->  "Heroic Age"
+ff.mp3    ->  "Volatile Reaction"
+
+Autor: Kevin MacLeod (incompetech.com)
+Licencia: Creative Commons: By Attribution 4.0  https://creativecommons.org/licenses/by/4.0/
+Fuente:   https://incompetech.com/music/royalty-free/
+
+La licencia exige acreditar al autor en un lugar visible: el sitio lo muestra en el pie de página
+mientras se usen estas pistas. Se recodificaron a 112 kbps para que el sitio cargue más rápido.
+Si subes tu propia música desde el panel, el crédito de ese juego deja de mostrarse.

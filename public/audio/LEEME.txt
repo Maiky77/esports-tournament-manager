@@ -1,0 +1,10 @@
+Música de fondo (una por juego)
+================================
+Opción A (recomendada): súbela desde el panel admin -> Contenido del sitio -> Documento y textos -> "Música de fondo".
+Opción B: coloca aquí dos archivos con estos nombres exactos:
+  mlbb.mp3   (Mobile Legends)
+  ff.mp3     (Free Fire)
+
+Usa solo música que tengas derecho a usar (licencia propia, libre de derechos o autorización
+del titular). Si un juego no tiene archivo, simplemente queda sin música.
+Recomendado: MP3 de hasta unos 5 MB, en bucle limpio.

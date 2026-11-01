@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { tournament } from '../lib/tournamentService'
+import { submitForBackend } from '../lib/registrationGateway'
+import { useTournament } from '../context/TournamentContext'
+import { formatSoles } from '../lib/money'
+import { publicUrl } from '../lib/tournamentApi'
+import SearchSelect from '../components/SearchSelect'
+import { institutionGroups, OTHER_INSTITUTION } from '../lib/institutions'
+import { careerGroups, OTHER_CAREER } from '../lib/careers'
 import { validateTeam, validateRoster, validateUpload } from '../lib/registrationValidation'
 import { isSupabaseConfigured } from '../supabaseClient'
 import Turnstile from '../components/Turnstile'
@@ -10,7 +16,7 @@ import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
 import ragnarokCrest from '../assets/ragnarok-crest.svg'
 
-const games = {
+const baseGames = {
   mlbb: {
     name: 'Mobile Legends: Bang Bang',
     shortName: 'MOBA MLBB',
@@ -126,6 +132,7 @@ const STEPS = [
 
 function Inscription({ modal = false }) {
   const { registrationGame, setActiveGame, closeRegistration, setRegistrationSubmitting } = useRegistration()
+  const { games: gameConfig, settings, deadline, availability, fromServer, loading } = useTournament()
   const [step, setStep] = useState(1)
   const [game, setGame] = useState(() => registrationGame || 'mlbb')
 
@@ -134,13 +141,15 @@ function Inscription({ modal = false }) {
   const [teamLogo, setTeamLogo] = useState(null)
   const [captainName, setCaptainName] = useState('')
   const [captainWhatsapp, setCaptainWhatsapp] = useState('')
-  const [institution, setInstitution] = useState('UNAP')
+  const [institutionChoice, setInstitutionChoice] = useState('UNAP')
   const [professionalSchool, setProfessionalSchool] = useState('')
-  const [otherInstitution, setOtherInstitution] = useState('')
+  const [customInstitution, setCustomInstitution] = useState('')
+  const [customCareer, setCustomCareer] = useState('')
+  const [honeypot, setHoneypot] = useState('')
 
   // Datos Etapa 2 (Roster)
   const [players, setPlayers] = useState(() =>
-    Array.from({ length: 7 }, () => ({ nickname: '', id: '', server: '' }))
+    Array.from({ length: 15 }, () => ({ nickname: '', id: '', server: '' }))
   )
 
   // Datos Etapa 3
@@ -154,7 +163,16 @@ function Inscription({ modal = false }) {
   const [captchaToken, setCaptchaToken] = useState('')
   const requestId = useRef(crypto.randomUUID())
   const submitLock = useRef(false)
-  const formData = { game, teamName, teamLogo, captainName, captainWhatsapp, institution, professionalSchool, otherInstitution, players, paymentReceipt, termsAccepted }
+  const institution = institutionChoice === 'UNAP' ? 'UNAP' : 'Otra'
+  const otherInstitution = [OTHER_INSTITUTION, 'Otra'].includes(institutionChoice) ? customInstitution : institutionChoice
+  const career = professionalSchool === OTHER_CAREER ? customCareer.trim() : professionalSchool
+  const changeInstitution = next => {
+    if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) { setProfessionalSchool(''); setCustomCareer('') }
+    setInstitutionChoice(next)
+  }
+  const schoolGroups = useMemo(() => professionalSchoolGroups.map(group => ({ group: group.area, items: group.schools.map(name => ({ value: name, label: name })) })), [])
+  const formData = { game, teamName, teamLogo, captainName, captainWhatsapp, institution, professionalSchool: career, otherInstitution, players, paymentReceipt, termsAccepted, honeypot }
+
 
 
   useEffect(() => {
@@ -163,6 +181,20 @@ function Inscription({ modal = false }) {
     }
   }, [registrationGame])
 
+  const games = useMemo(() => Object.fromEntries(Object.entries(baseGames).map(([key, base]) => {
+    const cfg = gameConfig[key]
+    const starters = fromServer ? cfg.starters : base.slots.filter(slot => slot.required).length
+    const substitutes = fromServer ? cfg.substitutes : base.slots.length - starters
+    return [key, { ...base, name: cfg.name || base.name, modeBadge: cfg.badge || base.modeBadge,
+      price: cfg.price, priceFormatted: formatSoles(cfg.price, 2),
+      slots: Array.from({ length: starters + substitutes }, (_, index) => ({ label: index === 0 ? 'CAPITÁN' : index < starters ? `TITULAR ${String(index + 1).padStart(2, '0')}` : `SUPLENTE ${index - starters + 1}`, required: index < starters })),
+      detail: `${starters} titulares + ${substitutes} suplente(s)`,
+      pdfUrl: publicUrl('public-assets', cfg.rules_pdf_path) || base.pdfUrl,
+    }]
+  })), [gameConfig, fromServer])
+  const slotInfo = availability?.[game]
+  const soldOut = Boolean(fromServer && slotInfo && slotInfo.taken >= slotInfo.max)
+  const registrationClosed = fromServer && (!settings.registration_open || !gameConfig[game].is_open || Date.now() > deadline || soldOut)
   const gameInfo = games[game]
   const playerSlots = useMemo(() => gameInfo.slots, [gameInfo])
 
@@ -186,8 +218,8 @@ function Inscription({ modal = false }) {
 
     return !error
   }
-  const validateStep1 = () => validate(validateTeam(formData))
-  const validateStep2 = () => validate(validateRoster(game, players))
+  const validateStep1 = () => validate(validateTeam(formData) || (fromServer && !career.trim() ? 'Selecciona o escribe tu carrera profesional.' : null))
+  const validateStep2 = () => validate(validateRoster(game, players, { required: playerSlots.filter(slot => slot.required).length, max: playerSlots.length }))
   const validateStep3 = () => validate(validateUpload(paymentReceipt, true) || (!termsAccepted ? 'Debes aceptar el reglamento oficial.' : null))
 
   const nextStep = () => {
@@ -212,13 +244,14 @@ function Inscription({ modal = false }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (loading || registrationClosed || (fromServer && Date.now() > deadline)) { setStepError('Las inscripciones están cerradas o la configuración sigue cargando.'); return }
     if (submitLock.current || !validateStep1() || !validateStep2() || !validateStep3()) return
     submitLock.current = true
     setSubmitting(true)
     setRegistrationSubmitting(true)
     setNotice(null)
     try {
-      const saved = await tournament.submit(formData, requestId.current, captchaToken)
+      const saved = await submitForBackend(formData, requestId.current, captchaToken, { legacy: fromServer, maxPlayers: playerSlots.length })
       setConfirmation(saved)
     } catch (error) {
       setNotice({ type: 'warning', text: error.message })
@@ -235,8 +268,8 @@ function Inscription({ modal = false }) {
       <span className="section-eyebrow">SOLICITUD GUARDADA</span>
       <h2>¡TU EQUIPO ESTÁ EN REVISIÓN!</h2>
       <p>Recibimos los datos y el comprobante de <strong>{confirmation.team_name || teamName}</strong>. La organización verificará el pago antes de confirmar su participación.</p>
-      <strong className="registration-reference">{confirmation.reference_code}</strong>
-      <p>Guarda este código. La organización podrá localizar tu inscripción con él y contactarte por WhatsApp.</p>
+      {confirmation.reference_code && <strong className="registration-reference">{confirmation.reference_code}</strong>}
+      <p>{confirmation.reference_code ? 'Guarda este código para consultar tu inscripción con la organización.' : 'La organización te contactará por WhatsApp para confirmar la inscripción.'}</p>
       <Link to="/equipos" onClick={closeRegistration} className="competition-home-link">VER EQUIPOS CONFIRMADOS <Icon name="arrow-right" /></Link>
     </main>
   )
@@ -289,7 +322,9 @@ function Inscription({ modal = false }) {
       </div>
 
       <form className="registration-form" onSubmit={handleSubmit}>
-        <fieldset className="registration-fields" disabled={submitting}>
+        <fieldset className="registration-fields" disabled={submitting || loading}>
+        <label className="pd-honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={event => setHoneypot(event.target.value)} /></label>
+        {registrationClosed && <p className="form-notice form-notice--warning" role="status">{soldOut ? 'Se agotaron los cupos de esta disciplina.' : 'Las inscripciones de esta disciplina están cerradas.'}</p>}
         {!isSupabaseConfigured && <p className="form-notice form-notice--warning" role="status">Las inscripciones todavía no están habilitadas. Puedes preparar tus datos y enviarlos cuando la organización abra el registro.</p>}
         {/* ================= ETAPA 1: TORNEO Y EQUIPO ================= */}
         {step === 1 && (
@@ -375,9 +410,44 @@ function Inscription({ modal = false }) {
                   type="tel"
                 />
               </label>
+              {fromServer ? <>
+              <SearchSelect
+                label="INSTITUCIÓN DE PROCEDENCIA *"
+                groups={institutionGroups}
+                value={institutionChoice}
+                onChange={changeInstitution}
+                placeholder="Busca tu universidad o instituto…"
+                emptyText="No aparece. Elige “Otra institución” y escribe el nombre."
+              />
+              <SearchSelect
+                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) *' : 'CARRERA PROFESIONAL *'}
+                groups={institution === 'UNAP' ? schoolGroups : careerGroups}
+                value={professionalSchool}
+                onChange={setProfessionalSchool}
+                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional…' : 'Busca tu carrera…'}
+              />
+              {institutionChoice === OTHER_INSTITUTION && (
+                <label className="form-field">
+                  <span>NOMBRE DE LA INSTITUCIÓN *</span>
+                  <input
+                    name="otherInstitution"
+                    maxLength="120"
+                    placeholder="Escribe el nombre completo"
+                    value={customInstitution}
+                    onChange={(e) => setCustomInstitution(e.target.value)}
+                  />
+                </label>
+              )}
+              {professionalSchool === OTHER_CAREER && (
+                <label className="form-field">
+                  <span>NOMBRE DE LA CARRERA *</span>
+                  <input name="customCareer" maxLength="120" placeholder="Escribe el nombre de tu carrera" value={customCareer} onChange={(e) => setCustomCareer(e.target.value)} />
+                </label>
+              )}
+              </> : <>
               <label className="form-field">
                 <span>INSTITUCIÓN DE PROCEDENCIA *</span>
-                <select name="institution" onChange={(e) => setInstitution(e.target.value)} value={institution}>
+                <select name="institution" onChange={(e) => changeInstitution(e.target.value)} value={institution}>
                   <option value="UNAP">UNAP (Universidad Nacional del Altiplano)</option>
                   <option value="Otra">Otra universidad o institución</option>
                 </select>
@@ -412,11 +482,13 @@ function Inscription({ modal = false }) {
                     name="otherInstitution"
                     placeholder="Ej.: UANCV, TECSUP, etc."
                     value={otherInstitution}
-                    onChange={(e) => setOtherInstitution(e.target.value)}
+                    onChange={(e) => setCustomInstitution(e.target.value)}
                     required
                   />
                 </label>
               )}
+              </>}
+
             </div>
           </div>
         )}
@@ -582,7 +654,7 @@ function Inscription({ modal = false }) {
               Continuar al {step === 1 ? 'Roster Oficial' : 'Pago'} <Icon name="arrow-right" />
             </button>
           ) : (
-            <button className="registration-submit" type="submit" disabled={submitting || !isSupabaseConfigured} aria-busy={submitting}>
+            <button className="registration-submit" type="submit" disabled={submitting || loading || registrationClosed || !isSupabaseConfigured} aria-busy={submitting}>
               {submitting ? 'GUARDANDO INSCRIPCIÓN…' : `ENVIAR INSCRIPCIÓN (${gameInfo.priceFormatted})`} <Icon name="arrow-up-right" />
             </button>
           )}
