@@ -29,7 +29,7 @@ function resetArtwork(event) {
 }
 export default function Home() {
   const { openRegistration, activeGame, setActiveGame, isRegistrationOpen } = useRegistration()
-  const { deadline, games, prizes, prizeTotal } = useTournament()
+  const { deadline, games, prizes } = useTournament()
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(deadline))
   const deadlineLabel = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(deadline))
   const { game: heroGame, autoplay, selectGame, toggleAutoplay, containerRef } = useHeroRotation(activeGame, !isRegistrationOpen)
@@ -47,19 +47,18 @@ export default function Home() {
           <div className="hero-status-pill"><span className="hero-status-dot" /> PUNO, PERÚ <span className="hero-status-separator">/</span> TEMPORADA 2026</div>
           <div className="hero-grand-title"><span className="hero-subkicker">TU UNIVERSIDAD. TU EQUIPO. TU ARENA.</span><h1 id="event-title">RAGNAROK<span className="hero-gradient-text">U-SERIES<span className="hero-year">26</span></span></h1></div>
           <p className="hero-lead-desc">Representa a tu universidad en Mobile Legends y Free Fire. Forma tu escuadra y lleva tu juego al siguiente nivel.</p>
-          <div className="hero-prize-pool"><Icon name="trophy" size={25} /><strong className="hero-prize-amount"><span>S/</span> {prizeTotal.toLocaleString('es-PE')}</strong><div><span className="hero-prize-kicker">EN PREMIOS</span><small className="hero-prize-note">Dos disciplinas. Una arena.</small></div></div>
+          <div className="hero-prize-pool"><Icon name="trophy" size={25} /><strong className="hero-prize-amount">POR ANUNCIAR</strong><div><span className="hero-prize-kicker">BOLSA DE PREMIOS</span><small className="hero-prize-note">Según equipos inscritos.</small></div></div>
           <div className="hero-cta-group"><button onClick={() => openRegistration(heroGame)} type="button" className="hero-btn-primary clip-corner">INSCRIBIR A MI EQUIPO <Icon name="arrow-up-right" /></button><a href="#disciplinas" className="hero-explore-link">Ver disciplinas <Icon name="arrow-down" size={16} /></a></div>
           <div className="hero-countdown-block"><p className="hero-countdown-label">CIERRE DE INSCRIPCIONES <span>{deadlineLabel}</span></p><div className="hero-countdown-grid" role="timer" aria-label="Tiempo restante para inscribirse">{timeLeft.map(([label, value]) => <div key={label} className="countdown-box"><span className="countdown-digit">{String(value).padStart(2, '0')}</span><span className="countdown-unit">{label}</span></div>)}</div></div>
         </div>
         <div className="hero-visual-wrap"><figure className={`hero-visual ${isFF ? 'hero-visual--ff' : ''}`} onPointerMove={moveArtwork} onPointerLeave={resetArtwork}>
-          <div className="arena-orbit arena-orbit--outer" aria-hidden="true" /><div className="arena-orbit arena-orbit--inner" aria-hidden="true" />
           <span className="hero-visual-coordinate" aria-hidden="true">RAGNAROK / PUNO 2026</span>
           <div className={`hero-character-layer hero-character-layer--mlbb ${!isFF ? 'hero-character-layer--active' : ''}`} aria-hidden="true"><CharacterArt character="sora" className="hero-character" priority /></div>
           <div className={`hero-character-layer hero-character-layer--ff ${isFF ? 'hero-character-layer--active' : ''}`} aria-hidden="true"><CharacterArt character="mono" className="hero-character hero-character--ff" priority /></div>
           <figcaption className="hero-visual-caption" aria-live={autoplay ? 'off' : 'polite'} aria-atomic="true"><span className="hero-visual-index">{isFF ? '02' : '01'}</span><div><span className="eyebrow">TU PRÓXIMA ARENA</span><strong>{isFF ? 'FREE FIRE' : 'MOBILE LEGENDS'}</strong><small>{isFF ? 'SQUADS · BATTLE ROYALE' : '5V5 · DRAFT PICK'}</small></div><Icon name="arrow-up-right" size={22} /></figcaption>
         </figure><div className="hero-carousel-controls" role="group" aria-label="Controles de la portada">
-          <button type="button" className="hero-carousel-game" data-game="mlbb" aria-pressed={heroGame === 'mlbb'} onClick={() => selectGame('mlbb')}><span aria-hidden="true" />MLBB</button>
-          <button type="button" className="hero-carousel-game" data-game="ff" aria-pressed={heroGame === 'ff'} onClick={() => selectGame('ff')}><span aria-hidden="true" />FREE FIRE</button>
+          <button type="button" className="hero-carousel-game" data-game="mlbb" aria-pressed={heroGame === 'mlbb'} onClick={() => selectGame('mlbb')}><img src="/img/logomlbb.png" alt="" aria-hidden="true" />MLBB</button>
+          <button type="button" className="hero-carousel-game" data-game="ff" aria-pressed={heroGame === 'ff'} onClick={() => selectGame('ff')}><img src="/img/logoffcondondo.webp" alt="" aria-hidden="true" />FREE FIRE</button>
           <button type="button" className="hero-carousel-playback" onClick={toggleAutoplay} aria-label={autoplay ? 'Pausar alternancia automática' : 'Reanudar alternancia automática'}>{autoplay ? 'PAUSAR PORTADA' : 'ACTIVAR ROTACIÓN'}</button>
         </div></div>
       </div></div>
@@ -79,7 +78,7 @@ export default function Home() {
       <div className="competition-shortcuts"><span>LA COMPETENCIA, EN UN SOLO LUGAR.</span><Link to="/equipos">Equipos confirmados <Icon name="arrow-up-right" size={16} /></Link><Link to="/llaves">Fixture y resultados <Icon name="arrow-up-right" size={16} /></Link></div>
     </section>
 
-    <section className="template-prizes" id="premios" aria-labelledby="prizes-title"><div className="template-section-title"><span>02 / PREMIOS</span><h2 id="prizes-title">Juega por <em>la gloria.</em></h2><p>{formatSoles(prizeTotal)} en premios y el orgullo de representar a tu universidad.</p></div><div className="template-prize-grid">{prizes.map((prize, i) => <article className={`prize-card ${i === 0 ? 'prize-card--champion' : ''}`} key={prize.place}><span className="prize-card-place">{String(prize.place).padStart(2, '0')}</span><span>{prize.label}</span><strong>{formatSoles(prize.amount)}</strong><small>{prize.description}</small></article>)}</div></section>
+    <section className="template-prizes" id="premios" aria-labelledby="prizes-title"><div className="template-section-title"><span>02 / PREMIOS</span><h2 id="prizes-title">Juega por <em>la gloria.</em></h2><p>La bolsa de premios se anunciará según la cantidad de equipos inscritos en cada categoría.</p></div><div className="prize-announcement"><div className="prize-announcement-mark"><Icon name="trophy" size={30} /><span>RECOMPENSA<br />EN CONSTRUCCIÓN</span></div><div className="prize-announcement-copy"><span className="eyebrow">BOLSA DE PREMIOS</span><strong>POR ANUNCIAR</strong><p>La competencia crece con cada escuadra. Los premios finales se comunicarán cuando se cierre el registro de cada categoría.</p></div><div className="prize-ranks" aria-label="Posiciones premiadas">{prizes.map(prize => <span key={prize.place}><b>{String(prize.place).padStart(2, '0')}</b>{prize.label}</span>)}</div></div></section>
     <RegistrationSteps />
     <RulesSection />
   </main>

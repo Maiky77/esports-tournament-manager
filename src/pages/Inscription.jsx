@@ -58,6 +58,12 @@ const baseGames = {
     ],
   },
 }
+function resolveWhatsappGroup(raw) {
+  try {
+    const url = new URL(raw)
+    return url.protocol === 'https:' && url.hostname === 'chat.whatsapp.com' && url.pathname.length > 1 ? url.href : ''
+  } catch { return '' }
+}
 
 const professionalSchoolGroups = [
   {
@@ -133,6 +139,7 @@ const STEPS = [
 function Inscription({ modal = false }) {
   const { registrationGame, setActiveGame, closeRegistration, setRegistrationSubmitting } = useRegistration()
   const { games: gameConfig, settings, deadline, availability, fromServer, loading } = useTournament()
+  const whatsappGroup = resolveWhatsappGroup(settings.whatsapp_group_url || import.meta.env.VITE_WHATSAPP_GROUP_URL?.trim() || '')
   const [step, setStep] = useState(1)
   const [game, setGame] = useState(() => registrationGame || 'mlbb')
 
@@ -270,6 +277,7 @@ function Inscription({ modal = false }) {
       <p>Recibimos los datos y el comprobante de <strong>{confirmation.team_name || teamName}</strong>. La organización verificará el pago antes de confirmar su participación.</p>
       {confirmation.reference_code && <strong className="registration-reference">{confirmation.reference_code}</strong>}
       <p>{confirmation.reference_code ? 'Guarda este código para consultar tu inscripción con la organización.' : 'La organización te contactará por WhatsApp para confirmar la inscripción.'}</p>
+      {whatsappGroup && <section className="captain-whatsapp-card"><span className="section-eyebrow">COMUNICACIÓN DEL EQUIPO</span><h3>Este enlace es para el capitán</h3><p>Únete al grupo oficial de capitanes para recibir confirmaciones, horarios, salas e indicaciones de la organización.</p><a href={whatsappGroup} target="_blank" rel="noopener noreferrer" className="backend-button backend-button--primary">UNIRME AL GRUPO DE CAPITANES ↗</a><small>No compartas este enlace fuera del equipo.</small></section>}
       <Link to="/equipos" onClick={closeRegistration} className="competition-home-link">VER EQUIPOS CONFIRMADOS <Icon name="arrow-right" /></Link>
     </main>
   )

@@ -68,14 +68,8 @@ h1, h2, h3 { text-wrap: balance; }
 .countdown-digit { font-size: 1.65rem; font-weight: 500; font-variant-numeric: tabular-nums; color: #d7e4ed; line-height: 1.15; text-shadow: none; }
 .countdown-unit { font-family: var(--font-display); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em; color: #768b9d; }
 .hero-visual { position: relative; isolation: isolate; height: 590px; min-width: 0; margin: 0; }
-.hero-visual::before { content: ''; position: absolute; inset: 12% 7% 12%; border: 1px solid #ae7ee824; border-radius: 45% 45% 5px 5px; background: radial-gradient(ellipse at 50% 45%, #8e4ed326, #24153a22 55%, transparent 75%); transform: rotate(-6deg); }
-.hero-visual::after { content: ''; position: absolute; z-index: -1; inset: 0; background-image: radial-gradient(#84d7e770 1px, transparent 1px); background-size: 27px 27px; mask-image: radial-gradient(ellipse, #0005, transparent 65%); }
 .hero-character { position: absolute; z-index: 1; width: 122%; left: -10%; bottom: 35px; transform: translate3d(var(--art-x, 0px), var(--art-y, 0px), 0); transition: transform 350ms ease-out; }
 .hero-character .character-art__image { animation: character-float 7s ease-in-out infinite; }
-.arena-orbit { position: absolute; z-index: 0; width: 88%; aspect-ratio: 1; top: 46%; left: 50%; border: 1px solid #b38ee533; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-.arena-orbit--outer { border-style: dashed; border-color: #b994e529; animation: orbit-turn 70s linear infinite; }
-.arena-orbit--outer::before, .arena-orbit--inner::before { content: ''; position: absolute; width: 7px; height: 7px; top: 14%; left: 14%; border-radius: 50%; background: #d2b5ff; box-shadow: 0 0 16px #b57dff; }
-.arena-orbit--inner { width: 69%; border-color: #c99af333; }
 .hero-visual-coordinate { position: absolute; z-index: 2; top: 15%; right: -0.5rem; writing-mode: vertical-rl; color: #a18fb2; font-family: var(--font-display); font-size: 0.57rem; letter-spacing: 0.2em; }
 .hero-visual-spark { position: absolute; z-index: 2; width: 5px; height: 5px; background: #d9c4ef; box-shadow: 0 0 16px #a0dcd7; transform: rotate(45deg); }
 .hero-visual-spark--one { top: 16%; left: 8%; }
@@ -87,8 +81,6 @@ h1, h2, h3 { text-wrap: balance; }
 .hero-visual-caption small { display: block; margin-top: 0.2rem; font-size: 0.6rem; color: #ad97c0; letter-spacing: 0.1em; }
 .hero-visual-arrow { margin-left: auto; font-size: 1.8rem; color: #bd94ff; }
 .hero-visual-ff { position: absolute; inset: 3% -3% 10%; width: 106%; height: 87%; object-fit: cover; mask-image: radial-gradient(ellipse at 50% 50%, #000 28%, transparent 72%); }
-.hero-visual--ff::before { border-color: #f064b133; background: radial-gradient(ellipse, #f064b122, transparent 65%); }
-.hero-visual--ff .arena-orbit { border-color: #f064b144; }
 
 /* Two distinct game cards, with Kalea belonging only to MLBB. */
 .division-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; border-top: 1px solid #a2c0d421; padding-top: 1.7rem; margin: 1.9rem 0 1.3rem; scroll-margin-top: 7rem; }

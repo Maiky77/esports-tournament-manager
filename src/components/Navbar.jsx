@@ -100,7 +100,8 @@ function Navbar() {
             onClick={() => switchDivision('mlbb')}
             title="Cambiar a División Mobile Legends"
           >
-            MLBB
+            <img src="/img/logomlbb.png" alt="" aria-hidden="true" />
+            <span>MLBB</span>
           </button>
           <button
             type="button"
@@ -108,7 +109,8 @@ function Navbar() {
             onClick={() => switchDivision('ff')}
             title="Cambiar a División Free Fire"
           >
-            FREE FIRE
+            <img src="/img/logoffcondondo.webp" alt="" aria-hidden="true" />
+            <span>FREE FIRE</span>
           </button>
         </div>
 

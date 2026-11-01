@@ -57,14 +57,17 @@ function SplashScreen({ onEnter }) {
         <div className="entry-axis" />
         <div className="entry-grid" />
       </div>
-
       <header className="entry-topline">
         <img className="entry-logo" src="/images/ragnarok-contexto.png" alt="Ragnarok U-Series, arena universitaria" width="320" height="100" />
         <span className="entry-location">PUNO, PERÚ <i /> TEMPORADA 2026</span>
       </header>
 
       <div className="entry-content">
-        <p className="entry-kicker"><span /> EL SIGUIENTE NIVEL ES TUYO</p>
+        <div className="entry-kicker-row">
+          <img className="entry-kicker-game entry-kicker-game--mlbb" src="/img/logomlbb.png" alt="Mobile Legends" />
+          <p className="entry-kicker"><span /> EL SIGUIENTE NIVEL ES TUYO</p>
+          <img className="entry-kicker-game entry-kicker-game--ff" src="/img/logoffsindondo.png" alt="Free Fire" />
+        </div>
         <h1 className="entry-wordmark" id="entry-title">RAGNAROK</h1>
         <div className="entry-series"><span>U-SERIES</span><i /><span className="entry-edition">2026</span></div>
         <p className="entry-tagline">Tu escuadra. Tu universidad. Tu momento.</p>

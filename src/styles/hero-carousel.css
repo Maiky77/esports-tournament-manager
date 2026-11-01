@@ -11,6 +11,9 @@
 .hero-carousel-controls { display: flex; align-items: center; gap: 0.5rem; width: 92%; margin: 0.3rem auto 0; padding: 0.5rem 0 0.2rem; }
 .hero-carousel-controls button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 36px; padding: 0.55rem 0.8rem; border: 1px solid #aa7dce36; background: #120c1c9c; color: #a993bf; font-family: var(--font-body); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; transition: color 180ms ease, border-color 180ms ease, background 180ms ease; }
 .hero-carousel-game > span { width: 4px; height: 4px; background: currentColor; opacity: 0.5; }
+.hero-carousel-game img { width:28px; height:28px; object-fit:contain; filter:drop-shadow(0 1px 3px #000); }
+.hero-carousel-game[data-game="mlbb"] img { width:34px; }
+.hero-carousel-game[data-game="ff"] img { mix-blend-mode:screen; filter:drop-shadow(0 1px 3px #000) saturate(1.15); }
 .hero-carousel-controls .hero-carousel-game[aria-pressed="true"] { background: #321d4a; border-color: #b589ee80; color: #dbc4ff; }
 .hero-carousel-controls .hero-carousel-game[data-game="ff"][aria-pressed="true"] { background: #3b182e; border-color: #e582bf80; color: #f2b7da; }
 .hero-carousel-game[aria-pressed="true"] > span { opacity: 1; }

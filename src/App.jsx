@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import SplashScreen from './components/SplashScreen'
 import RouteScroll from './components/RouteScroll'
@@ -25,24 +25,30 @@ import './styles/backend.css'
 import './styles/layout.css'
 
 function AppContent() {
+  return <BrowserRouter><AppFrame /></BrowserRouter>
+}
+
+function AppFrame() {
   const [showSplash, setShowSplash] = useState(true)
   const { closeRegistration, isRegistrationOpen } = useRegistration()
   const { fromServer } = useTournament()
+  const location = useLocation()
+  const isAdminRoute = location.pathname === '/admin'
   const enterArena = () => {
     window.setTimeout(() => setShowSplash(false), 850)
   }
 
   return (
-    <BrowserRouter>
+    <>
       <RouteScroll />
       <div className="app-shell">
         <div className="site-background" aria-hidden="true">
           <div className="site-grid" />
           <div className="scanline" />
         </div>
-        <ParticleBackground />
-        {showSplash && <SplashScreen onEnter={enterArena} />}
-        <Navbar />
+        {!isAdminRoute && <ParticleBackground />}
+        {!isAdminRoute && showSplash && <SplashScreen onEnter={enterArena} />}
+        {!isAdminRoute && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/inscripcion" element={<Inscription />} />
@@ -51,12 +57,12 @@ function AppContent() {
           <Route path="/admin" element={<Suspense fallback={<main className="competition-page" role="status">Cargando panel…</main>}><Admin /></Suspense>} />
           <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
         </Routes>
-        <Footer />
-        <RegistrationModal onClose={closeRegistration} open={isRegistrationOpen}>
-          <Inscription modal />
-        </RegistrationModal>
+        {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <RegistrationModal onClose={closeRegistration} open={isRegistrationOpen}>
+            <Inscription modal />
+          </RegistrationModal>}
       </div>
-    </BrowserRouter>
+    </>
   )
 }
 

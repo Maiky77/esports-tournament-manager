@@ -2,18 +2,11 @@ import { Link } from 'react-router-dom'
 import { useTournament } from '../context/TournamentContext'
 import Icon from './Icon'
 
-function resolveGroup(raw) {
-  try {
-    const url = new URL(raw)
-    return url.protocol === 'https:' && url.hostname === 'chat.whatsapp.com' && url.pathname.length > 1 ? url.href : ''
-  } catch { return '' }
-}
 export default function Footer() {
-  const { settings, deadline } = useTournament()
-  const whatsappGroup = resolveGroup(settings.whatsapp_group_url || import.meta.env.VITE_WHATSAPP_GROUP_URL?.trim() || '')
+  const { deadline } = useTournament()
   const closingDate = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', day: 'numeric', month: 'long' }).format(new Date(deadline))
   return <footer className="site-footer" id="comunidad">
-    <section className="community-panel" aria-labelledby="community-title"><div className="community-copy"><span className="section-eyebrow">05 / COMUNIDAD RAGNAROK</span><h2 id="community-title">El torneo se vive <span>en equipo.</span></h2><p>Encuentra escuadra, sigue las novedades y conecta con la comunidad universitaria.</p></div><div className="community-action">{whatsappGroup ? <a className="community-join" href={whatsappGroup} target="_blank" rel="noopener noreferrer">UNIRME A WHATSAPP <Icon name="arrow-up-right" /></a> : <Link className="community-join" to="/#como-participar">VER CÓMO PARTICIPAR <Icon name="arrow-up-right" /></Link>}<small>{whatsappGroup ? 'El grupo oficial de la comunidad.' : 'El enlace oficial de WhatsApp se publicará aquí.'}</small></div></section>
+    <section className="community-panel" aria-labelledby="community-title"><div className="community-copy"><span className="section-eyebrow">05 / COMUNIDAD RAGNAROK</span><h2 id="community-title">El torneo se vive <span>en equipo.</span></h2><p>Encuentra escuadra, sigue las novedades y conecta con la comunidad universitaria.</p></div><div className="community-action"><Link className="community-join" to="/#como-participar">VER CÓMO PARTICIPAR <Icon name="arrow-up-right" /></Link><small>El grupo oficial de capitanes se entrega al completar la inscripción.</small></div></section>
     <div className="footer-main-grid"><div className="footer-brand-col"><Link className="footer-brand-row" to="/"><img className="footer-context-logo" src="/images/ragnarok-contexto.png" alt="Ragnarok U-Series" width="320" height="100" /><div><strong className="footer-brand-name">RAGNAROK · U-SERIES</strong><span className="footer-brand-sub">ARENA UNIVERSITARIA / PUNO 2026</span></div></Link><p className="footer-brand-desc">Mobile Legends y Free Fire. El talento de tu universidad en una misma arena.</p></div>
       <div><h3 className="footer-col-title">EL EVENTO</h3><ul className="footer-links"><li><Link to="/#disciplinas">Disciplinas</Link></li><li><Link to="/#premios">Premios</Link></li><li><Link to="/#reglamento">Reglamento</Link></li><li><Link to="/#como-participar">Inscripción y Yape</Link></li></ul></div>
       <div><h3 className="footer-col-title">LA COMPETENCIA</h3><ul className="footer-links"><li><Link to="/equipos">Equipos confirmados</Link></li><li><Link to="/llaves">Fixture y resultados</Link></li><li><span>Puno, Perú · Temporada 2026</span></li><li><span>Cierre: {closingDate}</span></li></ul></div>

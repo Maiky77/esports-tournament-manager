@@ -79,7 +79,8 @@ export function createTournamentService(getClient = requireSupabase) {
       return unwrap(await query) || []
     },
     async registrations() {
-      return unwrap(await getClient().from('registrations').select('*,registration_players(*)').order('created_at', { ascending: false }).limit(500)) || []
+      const client = getClient()
+      return withLogos(client, unwrap(await client.from('registrations').select('*,registration_players(*)').order('created_at', { ascending: false }).limit(500)) || [])
     },
     async review(id, status, note) {
       unwrap(await getClient().rpc('review_registration', { p_id: id, p_status: status, p_note: note }))
