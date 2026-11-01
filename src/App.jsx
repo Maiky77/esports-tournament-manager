@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import SplashScreen from './components/SplashScreen'
 import RouteScroll from './components/RouteScroll'
 import ParticleBackground from './components/ParticleBackground'
 import RegistrationModal from './components/RegistrationModal'
@@ -24,8 +25,12 @@ import './styles/backend.css'
 import './styles/layout.css'
 
 function AppContent() {
+  const [showSplash, setShowSplash] = useState(true)
   const { closeRegistration, isRegistrationOpen } = useRegistration()
   const { fromServer } = useTournament()
+  const enterArena = () => {
+    window.setTimeout(() => setShowSplash(false), 850)
+  }
 
   return (
     <BrowserRouter>
@@ -36,6 +41,7 @@ function AppContent() {
           <div className="scanline" />
         </div>
         <ParticleBackground />
+        {showSplash && <SplashScreen onEnter={enterArena} />}
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -65,4 +71,3 @@ function App() {
 }
 
 export default App
-

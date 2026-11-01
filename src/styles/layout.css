@@ -1,14 +1,14 @@
 /* Compact event layout: wide canvas, shorter sections, reusable line icons. */
 :root { --section-space:clamp(2.75rem,4vw,4.5rem); --page-gutter:clamp(18px,2vw,48px); }
 .ui-icon { display:inline-block; flex-shrink:0; vertical-align:middle; }
-.site-header { top:.65rem; }
+.site-header { top:.65rem; background:transparent; backdrop-filter:none; -webkit-backdrop-filter:none; box-shadow:none; }
 .navbar { min-height:66px; padding-block:.55rem; }
 .nav-link { font-size:.7rem; }
 .nav-cta { min-height:42px; padding:.75rem 1.1rem; font-size:.68rem; }
 .nav-game-switcher { padding:.2rem; }
 .nav-switch-tab { font-size:.62rem; min-height:34px; }
 .home-page--template { padding-bottom:0; }
-.template-hero-v2 { padding:7.4rem var(--page-gutter) 2rem; }
+.template-hero-v2 { padding:9.5rem var(--page-gutter) 2rem; }
 .hero-layout { grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); align-items:center; gap:2vw; }
 .hero-copy { padding:0; }
 .hero-status-pill { margin-bottom:1.1rem; font-size:.63rem; letter-spacing:.09em; }
