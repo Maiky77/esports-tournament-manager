@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import Icon from './Icon'
 import CharacterArt from './CharacterArt'
-import { audio } from '../lib/audioEngine'
 import { useRegistration } from '../context/RegistrationContext'
 
 const RULES_DATA = {
@@ -147,7 +147,7 @@ const RULES_DATA = {
 function RulesSection() {
   const { activeGame, setActiveGame } = useRegistration()
   const [activeTab, setActiveTab] = useState(() => (activeGame === 'ff' || activeGame === 'mlbb') ? activeGame : 'mlbb')
-  const [openIndex, setOpenIndex] = useState(0)
+  const [openIndex, setOpenIndex] = useState(-1)
 
   useEffect(() => {
     if (activeGame === 'ff' || activeGame === 'mlbb') {
@@ -160,24 +160,20 @@ function RulesSection() {
   const switchTab = (tab) => {
     setActiveTab(tab)
     setActiveGame(tab)
-    setOpenIndex(0)
-    audio.selectGame(tab)
+    setOpenIndex(-1)
+
   }
 
   const toggleAccordion = (index) => {
     setOpenIndex((prev) => (prev === index ? -1 : index))
-    audio.click()
   }
 
   return (
     <section id="reglamento" className="rules-section" aria-labelledby="rules-title">
       <div className="template-section-title">
         <span>04 / BASES Y NORMATIVA OFICIAL</span>
-        <h2 id="rules-title">CONOCE LAS REGLAS.<br /><em>DOMINA LA ARENA.</em></h2>
-        <p>
-          Extraído directamente de las bases aprobadas para RAGNAROK U-Series 2026.
-          Selecciona tu disciplina para revisar las reglas oficiales o descargar el PDF firmado.
-        </p>
+        <h2 id="rules-title">Reglas claras. <em>Juego limpio.</em></h2>
+        <p>Consulta los requisitos y las normas de tu disciplina. También puedes descargar las bases completas.</p>
       </div>
 
       {/* Selector de Disciplina */}
@@ -188,7 +184,7 @@ function RulesSection() {
             className={`rules-tab ${activeTab === 'mlbb' ? 'rules-tab--active rules-tab--mlbb' : ''}`}
             onClick={() => switchTab('mlbb')}
           >
-            <span>⚔️ BASES MOBILE LEGENDS</span>
+            <span>MOBILE LEGENDS</span>
             <small>5V5 DRAFT PICK</small>
           </button>
           <button
@@ -196,7 +192,7 @@ function RulesSection() {
             className={`rules-tab ${activeTab === 'ff' ? 'rules-tab--active rules-tab--ff' : ''}`}
             onClick={() => switchTab('ff')}
           >
-            <span>🔥 BASES FREE FIRE</span>
+            <span>FREE FIRE</span>
             <small>BATTLE ROYALE SQUADS</small>
           </button>
         </div>
@@ -253,7 +249,7 @@ function RulesSection() {
                   <h3>{section.title}</h3>
                   <p>{section.highlight}</p>
                 </div>
-                <span className={`rules-chevron ${isOpen ? 'rules-chevron--open' : ''}`}>▼</span>
+                <span className={`rules-chevron ${isOpen ? 'rules-chevron--open' : ''}`}><Icon name="chevron" size={18} /></span>
               </button>
               {isOpen && (
                 <div className="rules-accordion-body">
@@ -286,22 +282,6 @@ function RulesSection() {
 
       </div>
 
-      {/* Pie con llamada a descargar y nota legal */}
-      <div className="rules-footer-note">
-        <p>
-          ¿Deseas guardar o imprimir el reglamento completo firmado por la organización?
-        </p>
-        <a
-          href={activeData.pdfUrl}
-          download={activeData.pdfName}
-          className="rules-footer-download-btn"
-          style={{ '--btn-accent': activeData.accent }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          📄 DESCARGAR DOCUMENTO OFICIAL ({activeData.pdfName})
-        </a>
-      </div>
     </section>
   )
 }

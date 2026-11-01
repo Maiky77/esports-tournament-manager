@@ -1,5 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
-import { audio } from '../lib/audioEngine'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { tournament } from '../lib/tournamentService'
+import { validateTeam, validateRoster, validateUpload } from '../lib/registrationValidation'
+import { isSupabaseConfigured } from '../supabaseClient'
+import Turnstile from '../components/Turnstile'
+import Icon from '../components/Icon'
+import YapePayment from '../components/YapePayment'
 import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
 import ragnarokCrest from '../assets/ragnarok-crest.svg'
@@ -119,7 +125,7 @@ const STEPS = [
 ]
 
 function Inscription({ modal = false }) {
-  const { registrationGame, setActiveGame } = useRegistration()
+  const { registrationGame, setActiveGame, closeRegistration, setRegistrationSubmitting } = useRegistration()
   const [step, setStep] = useState(1)
   const [game, setGame] = useState(() => registrationGame || 'mlbb')
 
@@ -143,6 +149,13 @@ function Inscription({ modal = false }) {
 
   const [stepError, setStepError] = useState(null)
   const [notice, setNotice] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [confirmation, setConfirmation] = useState(null)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const requestId = useRef(crypto.randomUUID())
+  const submitLock = useRef(false)
+  const formData = { game, teamName, teamLogo, captainName, captainWhatsapp, institution, professionalSchool, otherInstitution, players, paymentReceipt, termsAccepted }
+
 
   useEffect(() => {
     if (registrationGame && (registrationGame === 'ff' || registrationGame === 'mlbb')) {
@@ -156,7 +169,7 @@ function Inscription({ modal = false }) {
   const changeGame = (nextGame) => {
     setGame(nextGame)
     setActiveGame(nextGame)
-    audio.selectGame(nextGame)
+
     setStepError(null)
   }
 
@@ -168,81 +181,25 @@ function Inscription({ modal = false }) {
     })
   }
 
-  // Validaciones por etapa
-  const validateStep1 = () => {
-    if (!teamName.trim() || teamName.trim().length < 3) {
-      setStepError('Ingresa un nombre de equipo válido (mínimo 3 caracteres).')
-      audio.click()
-      return false
-    }
-    if (!captainName.trim()) {
-      setStepError('Ingresa los nombres y apellidos del capitán.')
-      audio.click()
-      return false
-    }
-    if (!captainWhatsapp.trim() || captainWhatsapp.replace(/\D/g, '').length < 8) {
-      setStepError('Ingresa un número de WhatsApp válido del capitán (mínimo 9 dígitos).')
-      audio.click()
-      return false
-    }
-    if (institution === 'UNAP' && !professionalSchool) {
-      setStepError('Selecciona tu escuela profesional de la UNAP.')
-      audio.click()
-      return false
-    }
-    if (institution === 'Otra' && !otherInstitution.trim()) {
-      setStepError('Ingresa el nombre de tu universidad o institución.')
-      audio.click()
-      return false
-    }
-    setStepError(null)
-    return true
-  }
+  const validate = (error) => {
+    setStepError(error)
 
-  const validateStep2 = () => {
-    const requiredSlots = gameInfo.slots.filter((s) => s.required)
-    for (let i = 0; i < requiredSlots.length; i++) {
-      const p = players[i] || {}
-      if (!p.nickname?.trim() || !p.id?.trim()) {
-        setStepError(`Completa el Nickname e ID del ${requiredSlots[i].label}.`)
-        audio.click()
-        return false
-      }
-      if (game === 'mlbb' && !p.server?.trim()) {
-        setStepError(`Ingresa el Server ID (4 dígitos entre paréntesis) del ${requiredSlots[i].label}.`)
-        audio.click()
-        return false
-      }
-    }
-    setStepError(null)
-    return true
+    return !error
   }
-
-  const validateStep3 = () => {
-    if (!paymentReceipt) {
-      setStepError('Sube la captura del comprobante de pago de Yape.')
-      audio.click()
-      return false
-    }
-    if (!termsAccepted) {
-      setStepError('Debes aceptar el reglamento oficial para continuar.')
-      audio.click()
-      return false
-    }
-    setStepError(null)
-    return true
-  }
+  const validateStep1 = () => validate(validateTeam(formData))
+  const validateStep2 = () => validate(validateRoster(game, players))
+  const validateStep3 = () => validate(validateUpload(paymentReceipt, true) || (!termsAccepted ? 'Debes aceptar el reglamento oficial.' : null))
 
   const nextStep = () => {
     if (step === 1) {
       if (validateStep1()) {
         setStep(2)
-        audio.click()
+
       }
     } else if (step === 2) {
       if (validateStep2()) {
         setStep(3)
-        audio.click()
+
       }
     }
   }
@@ -250,18 +207,39 @@ function Inscription({ modal = false }) {
   const prevStep = () => {
     setStep((prev) => Math.max(1, prev - 1))
     setStepError(null)
-    audio.click()
+
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!validateStep3()) return
-
-    setNotice({
-      type: 'warning',
-      text: 'Tu información está completa. El envío de inscripciones está pendiente de habilitación.',
-    })
+    if (submitLock.current || !validateStep1() || !validateStep2() || !validateStep3()) return
+    submitLock.current = true
+    setSubmitting(true)
+    setRegistrationSubmitting(true)
+    setNotice(null)
+    try {
+      const saved = await tournament.submit(formData, requestId.current, captchaToken)
+      setConfirmation(saved)
+    } catch (error) {
+      setNotice({ type: 'warning', text: error.message })
+      setCaptchaToken('')
+    } finally {
+      submitLock.current = false
+      setSubmitting(false)
+      setRegistrationSubmitting(false)
+    }
   }
+
+  if (confirmation) return (
+    <main className="registration-success" role="status">
+      <span className="section-eyebrow">SOLICITUD GUARDADA</span>
+      <h2>¡TU EQUIPO ESTÁ EN REVISIÓN!</h2>
+      <p>Recibimos los datos y el comprobante de <strong>{confirmation.team_name || teamName}</strong>. La organización verificará el pago antes de confirmar su participación.</p>
+      <strong className="registration-reference">{confirmation.reference_code}</strong>
+      <p>Guarda este código. La organización podrá localizar tu inscripción con él y contactarte por WhatsApp.</p>
+      <Link to="/equipos" onClick={closeRegistration} className="competition-home-link">VER EQUIPOS CONFIRMADOS <Icon name="arrow-right" /></Link>
+    </main>
+  )
 
   return (
     <main className={`registration-page ${modal ? 'registration-page--modal' : ''}`}>
@@ -298,7 +276,7 @@ function Inscription({ modal = false }) {
           return (
             <div key={s.num} className={`stepper-node ${isActive ? 'stepper-node--active' : ''} ${isDone ? 'stepper-node--done' : ''}`}>
               <div className="stepper-circle">
-                {isDone ? '✓' : s.num}
+                {isDone ? <Icon name="check" size={17} /> : s.num}
               </div>
               <div className="stepper-label-wrap">
                 <span className="stepper-stage">ETAPA 0{s.num}</span>
@@ -311,6 +289,8 @@ function Inscription({ modal = false }) {
       </div>
 
       <form className="registration-form" onSubmit={handleSubmit}>
+        <fieldset className="registration-fields" disabled={submitting}>
+        {!isSupabaseConfigured && <p className="form-notice form-notice--warning" role="status">Las inscripciones todavía no están habilitadas. Puedes preparar tus datos y enviarlos cuando la organización abra el registro.</p>}
         {/* ================= ETAPA 1: TORNEO Y EQUIPO ================= */}
         {step === 1 && (
           <div className="wizard-stage-content">
@@ -349,6 +329,7 @@ function Inscription({ modal = false }) {
               <label className="form-field">
                 <span>NOMBRE DEL EQUIPO *</span>
                 <input
+                  maxLength={60}
                   name="teamName"
                   minLength="3"
                   placeholder="Ej.: Ragnarok Wolves"
@@ -373,6 +354,7 @@ function Inscription({ modal = false }) {
               <label className="form-field">
                 <span>NOMBRES Y APELLIDOS DEL CAPITÁN *</span>
                 <input
+                  maxLength={100}
                   name="captainName"
                   placeholder="Nombre completo del capitán"
                   value={captainName}
@@ -384,6 +366,7 @@ function Inscription({ modal = false }) {
                 <span>WHATSAPP DEL CAPITÁN *</span>
                 <input
                   inputMode="tel"
+                  maxLength={24}
                   name="captainWhatsapp"
                   placeholder="999 999 999"
                   value={captainWhatsapp}
@@ -425,6 +408,7 @@ function Inscription({ modal = false }) {
                 <label className="form-field">
                   <span>NOMBRE DE LA INSTITUCIÓN *</span>
                   <input
+                    maxLength={120}
                     name="otherInstitution"
                     placeholder="Ej.: UANCV, TECSUP, etc."
                     value={otherInstitution}
@@ -527,36 +511,16 @@ function Inscription({ modal = false }) {
               <div className="summary-col">
                 <span className="summary-label">INSTITUCIÓN</span>
                 <strong>{institution === 'UNAP' ? professionalSchool || 'UNAP' : otherInstitution || 'Otra'}</strong>
-                <small>Roster: {players.filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
+                <small>Roster: {players.slice(0, gameInfo.slots.length).filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
               </div>
             </div>
 
             <div className="payment-panel">
-              <div className="payment-qr-wrap">
-                <div className="payment-qr-pending">
-                  <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5" /><rect x="8" y="8" width="8" height="8" /></svg>
-                  <strong>QR DE YAPE</strong><span>PENDIENTE DE PUBLICACIÓN</span>
-                </div>
-                <span className="yape-tag">PAGO POR YAPE</span>
-              </div>
+              <YapePayment amount={gameInfo.priceFormatted} />
               <div className="payment-copy">
-                <div className="payment-price-card">
-                  <div className="price-card-main">
-                    <span className="price-card-label">MONTO TOTAL A ABONAR · {gameInfo.shortName}</span>
-                    <strong className="price-card-amount">{gameInfo.priceFormatted}</strong>
-                  </div>
-                  <span className="price-card-note">
-                    {game === 'mlbb'
-                      ? 'Tarifa oficial MOBA (5 titulares + hasta 2 suplentes)'
-                      : 'Tarifa oficial Battle Royale (4 titulares + 1 suplente)'}
-                  </span>
-                </div>
-
-                <h2>REALIZA EL ABONO POR YAPE</h2>
-                <p>
-                  La organización publicará aquí el código oficial y los datos de pago.
-                  La tarifa de esta disciplina es <strong>{gameInfo.priceFormatted}</strong> por equipo.
-                </p>
+                <span className="section-eyebrow">CONFIRMA TU PAGO</span>
+                <h2>ADJUNTA EL COMPROBANTE</h2>
+                <p>Yapea el importe de tu disciplina al número indicado, verifica el nombre del destinatario y sube la captura. La organización revisará el pago antes de confirmar a tu equipo.</p>
                 <label className="form-field form-field--file">
                   <span>COMPROBANTE DE PAGO (CAPTURA DE YAPE) *</span>
                   <input
@@ -590,7 +554,7 @@ function Inscription({ modal = false }) {
                     rel="noopener noreferrer"
                     className="terms-rule-link"
                   >
-                    Reglamento Oficial {gameInfo.name} (Descargar PDF ↗)
+                    Reglamento Oficial {gameInfo.name} (Descargar PDF)
                   </a>.
                 </span>
               </label>
@@ -598,15 +562,16 @@ function Inscription({ modal = false }) {
           </div>
         )}
 
+        {step === 3 && <Turnstile token={captchaToken} onToken={setCaptchaToken} />}
         {/* Mensaje de error / validación por etapa */}
-        {stepError && <p className="wizard-step-error">⚠️ {stepError}</p>}
-        {notice && <p className={`form-notice form-notice--${notice.type}`}>{notice.text}</p>}
+        {stepError && <p className="wizard-step-error" role="alert">{stepError}</p>}
+        {notice && <p role="alert" className={`form-notice form-notice--${notice.type}`}>{notice.text}</p>}
 
         {/* Barra de navegación de etapas */}
         <div className="wizard-actions">
           {step > 1 ? (
             <button type="button" onClick={prevStep} className="wizard-btn-prev">
-              ← Atrás
+              <Icon name="arrow-left" size={16} /> Atrás
             </button>
           ) : (
             <div />
@@ -614,14 +579,15 @@ function Inscription({ modal = false }) {
 
           {step < 3 ? (
             <button type="button" onClick={nextStep} className="wizard-btn-next">
-              Continuar al {step === 1 ? 'Roster Oficial' : 'Pago'} ➔
+              Continuar al {step === 1 ? 'Roster Oficial' : 'Pago'} <Icon name="arrow-right" />
             </button>
           ) : (
-            <button className="registration-submit" type="submit">
-              REVISAR INSCRIPCIÓN ({gameInfo.priceFormatted}) <span>↗</span>
+            <button className="registration-submit" type="submit" disabled={submitting || !isSupabaseConfigured} aria-busy={submitting}>
+              {submitting ? 'GUARDANDO INSCRIPCIÓN…' : `ENVIAR INSCRIPCIÓN (${gameInfo.priceFormatted})`} <Icon name="arrow-up-right" />
             </button>
           )}
         </div>
+        </fieldset>
       </form>
     </main>
   )

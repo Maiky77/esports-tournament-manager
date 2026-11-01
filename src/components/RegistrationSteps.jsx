@@ -1,31 +1,16 @@
 import { useRegistration } from '../context/RegistrationContext'
+import Icon from './Icon'
+import YapePayment from './YapePayment'
 
 const steps = [
-  { number: '01', title: 'ELIGE TU ARENA', text: 'Mobile Legends o Free Fire. Elige tu disciplina y reúne a los jugadores que representarán a tu universidad.', detail: 'DOS DISCIPLINAS / UN MISMO LEGADO' },
-  { number: '02', title: 'REGISTRA TU ESCUADRA', text: 'Completa los datos del capitán, tu institución y el ID de cada jugador. Añade a tus suplentes si tu equipo los necesita.', detail: 'CAPITÁN + ROSTER + UNIVERSIDAD' },
-  { number: '03', title: 'PREPARA TU INSCRIPCIÓN', text: 'Revisa el reglamento de tu juego y adjunta el comprobante de pago por Yape para la revisión de la organización.', detail: 'BASES OFICIALES / COMPROBANTE' },
+  { number: '01', title: 'Arma tu escuadra', text: 'Elige MLBB o Free Fire y reúne a los titulares y suplentes de tu universidad.' },
+  { number: '02', title: 'Registra a tus jugadores', text: 'Completa los datos del capitán, institución, nicknames e IDs del roster.' },
+  { number: '03', title: 'Yapea y envía el comprobante', text: 'Paga la tarifa de tu disciplina y adjunta la captura. Tu equipo aparecerá cuando se apruebe el pago.' },
 ]
-
-function RegistrationSteps() {
+export default function RegistrationSteps() {
   const { openRegistration } = useRegistration()
-  return (
-    <section className="participation-section" id="como-participar" aria-labelledby="participation-title">
-      <div className="template-section-title">
-        <span>03 / TU CAMINO A LA ARENA</span>
-        <h2 id="participation-title">DE LA ESCUADRA<br /><em>A LA COMPETENCIA.</em></h2>
-        <p>Tres pasos para preparar a tu equipo. Ten a mano los datos de tus jugadores y consulta las bases antes de inscribirte.</p>
-      </div>
-      <div className="participation-grid">
-        {steps.map((step) => (
-          <article className="participation-step" key={step.number}>
-            <span className="participation-number">{step.number}</span>
-            <h3>{step.title}</h3><p>{step.text}</p><span className="participation-detail">{step.detail}</span>
-          </article>
-        ))}
-      </div>
-      <button className="participation-action" type="button" onClick={() => openRegistration()}>PREPARAR MI INSCRIPCIÓN <span aria-hidden="true">↗</span></button>
-    </section>
-  )
+  return <section className="participation-section" id="como-participar" aria-labelledby="participation-title">
+    <div className="template-section-title"><span>03 / INSCRIPCIÓN Y PAGO</span><h2 id="participation-title">Tu equipo, <em>en tres pasos.</em></h2><p>Ten a mano los datos del roster y el comprobante de pago por Yape.</p></div>
+    <div className="participation-layout"><div className="participation-guide"><ol className="participation-grid">{steps.map(step => <li className="participation-step" key={step.number}><span className="participation-number">{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}</ol><button className="participation-action" type="button" onClick={() => openRegistration()}>INICIAR MI INSCRIPCIÓN <Icon name="arrow-up-right" /></button></div><YapePayment /></div>
+  </section>
 }
-
-export default RegistrationSteps

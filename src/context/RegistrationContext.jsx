@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { audio } from '../lib/audioEngine'
 
 const RegistrationContext = createContext(null)
 
 export function RegistrationProvider({ children }) {
   const [isRegistrationOpen, setRegistrationOpen] = useState(false)
+  const [registrationSubmitting, setRegistrationSubmitting] = useState(false)
   const [activeGame, setActiveGameState] = useState('all')
   const [registrationGame, setRegistrationGame] = useState('mlbb')
 
@@ -28,18 +28,18 @@ export function RegistrationProvider({ children }) {
     setRegistrationGame(targetGame)
     setActiveGame(targetGame)
     setRegistrationOpen(true)
-    audio.modalOpen()
   }
 
   const closeRegistration = () => {
+    if (registrationSubmitting) return
     setRegistrationOpen(false)
-    audio.modalClose()
   }
 
   return (
     <RegistrationContext.Provider
       value={{
         isRegistrationOpen,
+        setRegistrationSubmitting,
         activeGame,
         registrationGame,
         setActiveGame,

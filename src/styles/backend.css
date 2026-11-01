@@ -1,0 +1,77 @@
+.registration-fields,.backend-form fieldset { border:0; padding:0; margin:0; min-width:0; }
+button:disabled { cursor:wait; opacity:.55; }
+.registration-success { padding:clamp(2rem,5vw,5rem); max-width:850px; margin:auto; }
+.registration-success h2 { font-family:var(--font-display); font-size:clamp(1.8rem,4vw,3rem); line-height:1.15; }
+.registration-success p { color:#b7abc9; line-height:1.7; }
+.registration-reference { display:block; font-family:var(--font-display); font-size:clamp(1rem,3vw,2rem); color:#d2b0ff; letter-spacing:.08em; padding:1.5rem 0; overflow-wrap:anywhere; }
+.registration-reference-small { color:#c8a7ef; letter-spacing:.08em; font-size:.8rem; }
+.registration-verification { margin:1.5rem 0; max-width:100%; }
+.competition-toolbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
+.competition-toolbar .competition-filters { margin:0; }
+.backend-button { display:inline-flex; justify-content:center; align-items:center; gap:.6rem; padding:.85rem 1rem; border:1px solid #9879bb70; background:#21152f; color:#e6d5fc; font-family:var(--font-body); font-size:.68rem; font-weight:700; letter-spacing:.04em; min-height:42px; cursor:pointer; text-align:center; }
+.backend-button:hover { background:#372044; border-color:#bf8df9; }
+.backend-button--primary { background:#7731d1; border-color:#a572ee; color:white; }
+.backend-button--danger { color:#ffa8cb; border-color:#ad386274; }
+.backend-empty { padding:3rem clamp(1.25rem,3vw,3rem); background:#160e20c9; border:1px solid #72508c55; }
+.backend-empty h2 { font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.7rem); margin-block:1.25rem; }
+.backend-empty p { color:#bbadcb; line-height:1.7; }
+.backend-empty button { margin-top:1rem; }
+.backend-error { border:1px solid #e57db475; background:#3a152a; color:#ffc8e1; line-height:1.6; padding:1rem; overflow-wrap:anywhere; }
+.competition-count { color:#a48cbf; font-size:.75rem; letter-spacing:.06em; margin-block:2rem; }
+.confirmed-teams-grid,.match-grid,.admin-registration-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,350px),1fr)); gap:1.2rem; }
+.confirmed-team,.match-card,.admin-registration { background:linear-gradient(145deg,#241532,#120d1d); border:1px solid #8762a44d; padding:1.5rem; min-width:0; overflow-wrap:anywhere; }
+.confirmed-team-header { display:flex; align-items:center; gap:1rem; }
+.confirmed-team-header img { width:72px; height:72px; object-fit:contain; background:#100a19; border:1px solid #8754b14a; }
+.team-initials { display:grid; place-content:center; width:72px; height:72px; flex-shrink:0; background:#59337c; font-family:var(--font-display); font-size:1.6rem; }
+.confirmed-team h2,.match-card h2,.admin-registration h2 { font-family:var(--font-display); font-size:1.3rem; margin:.65rem 0; line-height:1.2; }
+.confirmed-team p,.match-date { color:#af9bbf; font-size:.85rem; line-height:1.7; }
+.confirmed-team ul { padding:1rem 0 0; list-style:none; border-top:1px solid #7e5f983d; }
+.confirmed-team li { padding:.4rem 0; display:flex; gap:.85rem; }
+.confirmed-team li span { font-size:.6rem; color:#b28bd9; min-width:25px; align-content:center; }
+.status-tag { display:inline-flex; font-size:.6rem; font-weight:700; letter-spacing:.04em; color:#b9a1d0; }
+.status-tag--approved,.status-tag--finished { color:#a0e6be; }
+.status-tag--live { color:#ff9ad2; }
+.status-tag--rejected { color:#ff8caa; }
+.match-card-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#c2a5df; font-size:.68rem; }
+.match-participants { list-style:none; padding:0; margin:1.4rem 0 0; }
+.match-participants li { display:flex; justify-content:space-between; gap:1.25rem; align-items:center; padding:.85rem 0; border-top:1px solid #9974b236; font-size:.85rem; }
+.match-participants li>span { flex-shrink:0; color:#d4b8ee; }
+.backend-form { background:#1a1026; border:1px solid #71508e70; padding:clamp(1.2rem,2vw,2rem); }
+.backend-form label,.admin-review-note { display:flex; flex-direction:column; gap:.6rem; color:#c0aace; font-size:.8rem; }
+.backend-form input,.backend-form select,.admin-review-note textarea,.admin-status-filter select { width:100%; min-width:0; border:1px solid #84629765; background:#100a19; padding:.85rem; color:#efe4fa; font:inherit; border-radius:0; }
+.backend-form input:focus,.backend-form select:focus,.admin-review-note textarea:focus { outline:2px solid #b980f5; outline-offset:2px; }
+.backend-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.backend-form h2 { font-family:var(--font-display); font-size:1.3rem; margin:0 0 1.5rem; }
+.backend-form h3 { font-size:.95rem; margin:2rem 0 1rem; }
+.backend-form p { color:#b3a0c6; font-size:.85rem; line-height:1.6; }
+.admin-login { max-width:500px; display:flex; flex-direction:column; gap:1.5rem; }
+.admin-session,.admin-status-filter,.admin-section-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.admin-session { padding-block:1rem; border-bottom:1px solid #84629844; }
+.admin-session span { color:#bda8d0; overflow-wrap:anywhere; }
+.admin-status-filter label { display:flex; align-items:center; gap:1rem; }
+.admin-status-filter select { width:auto; }
+.admin-registration dl { display:grid; grid-template-columns:auto 1fr; gap:.5rem 1rem; font-size:.83rem; line-height:1.6; }
+.admin-registration dt { color:#a38cb6; }
+.admin-registration dd { margin:0; }
+.admin-registration details { margin-block:1.5rem; }
+.admin-registration summary { cursor:pointer; font-size:.72rem; color:#cfb0ed; }
+.admin-roster { list-style:none; padding:0; }
+.admin-roster li { display:flex; flex-direction:column; gap:.2rem; padding:.7rem 0; border-bottom:1px solid #9875ab35; font-size:.85rem; }
+.admin-roster span { color:#af9bbf; font-size:.75rem; }
+.receipt-link { display:block; margin-block:1rem; color:#ddb8ff; font-size:.75rem; text-decoration:underline; }
+.admin-review-note { margin:1.5rem 0 1rem; }
+.admin-review-actions { display:flex; flex-wrap:wrap; gap:.75rem; }
+.admin-fixtures { display:grid; grid-template-columns:minmax(240px,.7fr) minmax(0,2fr); gap:1.5rem; }
+.admin-match-list h2 { font-family:var(--font-display); font-size:1.2rem; }
+.admin-match-item { width:100%; display:flex; flex-direction:column; align-items:flex-start; gap:.65rem; padding:1.25rem; margin-bottom:.75rem; background:#1a1127; border:1px solid #6c467d70; color:#ecdcf8; cursor:pointer; text-align:left; }
+.admin-match-item--active { border-color:#bb81ef; background:#352046; }
+.admin-match-item span,.admin-match-item small { font-size:.68rem; color:#b69ac9; }
+.admin-fixture-teams { margin-block:1.5rem; }
+.admin-fixture-team { border-bottom:1px solid #9b6fb337; padding:1rem 0; }
+.backend-form .backend-checkbox { display:flex; flex-direction:row; align-items:center; gap:.75rem; line-height:1.5; }
+.backend-checkbox input { width:18px; height:18px; accent-color:#a46aee; flex-shrink:0; }
+.entry-result-inputs { display:flex; gap:1rem; margin-top:1rem; }
+.entry-result-inputs label { max-width:130px; }
+.backend-form>fieldset>.backend-button { margin-top:1.5rem; }
+@media(max-width:850px) { .admin-fixtures { grid-template-columns:1fr; } }
+@media(max-width:500px) { .backend-form-grid { grid-template-columns:1fr; } .match-participants li { align-items:flex-start; } .admin-registration dl { grid-template-columns:1fr; gap:.25rem; } .admin-registration dd { margin-bottom:.7rem; } .admin-status-filter { align-items:flex-start; } }

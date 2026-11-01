@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useRegistration } from '../context/RegistrationContext'
-import { audio } from '../lib/audioEngine'
 
 const links = [
   { label: 'Inicio', to: '/' },
   { label: 'Reglamento', to: '#reglamento' },
   { label: 'Equipos confirmados', to: '/equipos' },
-  { label: 'Llaves del torneo', to: '/llaves' },
+  { label: 'Fixture y resultados', to: '/llaves' },
 ]
 
 function Navbar() {
@@ -28,19 +27,19 @@ function Navbar() {
 
   const showRegistration = () => {
     closeMenu()
-    audio.click()
+
     openRegistration()
   }
 
   const switchDivision = (gameKey) => {
     setActiveGame(gameKey)
-    audio.selectGame(gameKey)
+
     closeMenu()
   }
 
   const goToRules = () => {
     closeMenu()
-    audio.click()
+
     const el = document.getElementById('reglamento')
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' })
@@ -72,7 +71,7 @@ function Navbar() {
           aria-controls="main-navigation"
           aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           onClick={() => {
-            audio.click()
+
             setIsOpen((open) => !open)
           }}
         >
@@ -101,7 +100,7 @@ function Navbar() {
             onClick={() => switchDivision('mlbb')}
             title="Cambiar a División Mobile Legends"
           >
-            ⚔️ MLBB
+            MLBB
           </button>
           <button
             type="button"
@@ -109,7 +108,7 @@ function Navbar() {
             onClick={() => switchDivision('ff')}
             title="Cambiar a División Free Fire"
           >
-            🔥 FREE FIRE
+            FREE FIRE
           </button>
         </div>
 
