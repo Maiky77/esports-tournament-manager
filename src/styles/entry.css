@@ -110,29 +110,52 @@
   .entry-impact::before { border-width:2px; }
   .entry-impact::after { height:2px; }
   .entry-topline,.entry-footer { width:calc(100% - 2.5rem); }
-  .entry-topline { padding:1.2rem 0; }
-  .entry-logo { width:132px; }
-  .entry-location { max-width:105px; display:block; font-size:.43rem; text-align:right; line-height:1.8; }
+  .entry-topline { padding:.85rem 0; }
+  .entry-logo { width:116px; }
+  .entry-location { max-width:92px; display:block; font-size:.4rem; text-align:right; line-height:1.7; }
   .entry-location i { display:none; }
-  .entry-content { top:-1.5vh; width:calc(100% - 2.5rem); padding:2rem 0; }
-  .entry-kicker-row { gap:.45rem; }
-  .entry-kicker-game { width:58px; height:30px; opacity:.72; }
-  .entry-kicker-game--mlbb { height:36px; transform:translateX(28px); }
-  .entry-kicker-game--ff { width:132px; height:58px; }
-  .entry-kicker { gap:.35rem; font-size:.43rem; letter-spacing:.1em; white-space:nowrap; }
-  .entry-series>i { width:42px; height:9px; }
-  .entry-wordmark { font-size:clamp(2.3rem,14vw,5.5rem); }
-  .entry-tagline { max-width:260px; margin:1.3rem 0 1.5rem; font-size:.75rem; }
+  .entry-content { top:0; width:calc(100% - 2.5rem); padding:1rem 0 1.5rem; }
+  .entry-kicker-row { display:grid; grid-template-columns:58px minmax(0,1fr) 104px; gap:.35rem; width:100%; align-items:center; }
+  .entry-kicker-game { width:100%; height:32px; opacity:.78; }
+  .entry-kicker-game--mlbb { height:38px; transform:none; }
+  .entry-kicker-game--ff { width:100%; height:48px; }
+  .entry-kicker-row .entry-kicker { position:static; transform:none; justify-content:center; min-width:0; margin:0; }
+  .entry-kicker { gap:.28rem; font-size:.39rem; letter-spacing:.08em; line-height:1.3; white-space:normal; }
+  .entry-kicker>span { width:4px; height:4px; flex-shrink:0; }
+  .entry-series { gap:.65rem; margin-top:.4rem; }
+  .entry-series>span:first-child { font-size:.78rem; letter-spacing:.28em; }
+  .entry-series>i { width:34px; height:8px; }
+  .entry-edition { padding:.2rem .38rem; font-size:.52rem; }
+  .entry-wordmark { font-size:clamp(2.35rem,12.5vw,4.7rem); line-height:1.05; letter-spacing:-.08em; }
+  .entry-tagline { max-width:230px; margin:.9rem 0 1.1rem; font-size:.68rem; line-height:1.5; }
   .entry-division { min-height:76px; padding:.85rem .65rem; }
   .entry-division-index,.entry-division>svg { display:none; }
   .entry-division-copy strong { font-size:.65rem; }
   .entry-division-copy small { font-size:.4rem; }
-  .entry-actions { margin-top:1.4rem; width:100%; }
-  .entry-enter-button { min-width:0; width:100%; min-height:57px; font-size:.7rem; gap:2rem; }
-  .entry-character--mlbb { width:110vw; left:-65vw; bottom:-3%; opacity:.53; }
-  .entry-character--ff { width:82vw; height:80%; right:-38vw; bottom:-11%; opacity:.53; }
-  .entry-footer { justify-content:center; font-size:.4rem; }
+  .entry-actions { margin-top:.8rem; width:100%; }
+  .entry-enter-button { min-width:0; width:min(100%,290px); min-height:52px; padding:.85rem 1rem; font-size:.62rem; gap:1.2rem; }
+  .entry-character { opacity:.64; mask-image:linear-gradient(#000 24%,#000 88%,transparent); }
+  .entry-character--mlbb { width:118vw; left:-44vw; bottom:-5%; }
+  .entry-character--ff { width:84vw; height:78%; right:-29vw; bottom:-10%; }
+  .entry-footer { justify-content:center; padding:.8rem 0; font-size:.36rem; }
   .entry-footer>span:last-child { display:none; }
+}
+@media (max-width:600px) and (max-height:740px) {
+  .entry-topline { padding:.55rem 0; }
+  .entry-logo { width:100px; }
+  .entry-content { padding:.4rem 0 .8rem; }
+  .entry-kicker-row { grid-template-columns:48px minmax(0,1fr) 88px; }
+  .entry-kicker-game { height:27px; }
+  .entry-kicker-game--mlbb { height:31px; }
+  .entry-kicker-game--ff { height:40px; }
+  .entry-wordmark { font-size:clamp(2.15rem,11.5vw,4rem); }
+  .entry-tagline { margin:.65rem 0 .8rem; }
+  .entry-actions { margin-top:.55rem; }
+  .entry-enter-button { min-height:48px; }
+  .entry-character { opacity:.58; }
+  .entry-character--mlbb { width:112vw; left:-40vw; bottom:-6%; }
+  .entry-character--ff { width:78vw; height:76%; right:-26vw; bottom:-11%; }
+  .entry-footer { padding:.55rem 0; }
 }
 @media (prefers-reduced-motion:reduce) {
   .arena-entry,.arena-entry * { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }

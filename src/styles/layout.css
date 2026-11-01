@@ -360,7 +360,11 @@ h1, h2, h3, p, a, button, label, th, td { overflow-wrap:anywhere; }
  .payment-panel,.backend-form-grid { grid-template-columns:1fr; }
  .pd-team-grid,.pd-groups { grid-template-columns:minmax(0,1fr); }
  .pd-stage { max-width:100%; overflow-x:auto; }
+ .pd-card { overflow-x:auto; }
+ .pd-table { min-width:500px; }
+ .pd-match-team { min-width:205px; }
  .footer-bottom-bar { flex-wrap:wrap; gap:.8rem; }
+ input, select, textarea { font-size:16px; }
 }
 
 @media(max-width:380px) {
