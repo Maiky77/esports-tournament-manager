@@ -35,7 +35,7 @@ function AppFrame() {
   const location = useLocation()
   const isAdminRoute = location.pathname === '/admin'
   const enterArena = () => {
-    window.setTimeout(() => setShowSplash(false), 850)
+    window.setTimeout(() => setShowSplash(false), 1050)
   }
 
   return (

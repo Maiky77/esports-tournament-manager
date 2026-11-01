@@ -57,6 +57,7 @@ function SplashScreen({ onEnter }) {
         <div className="entry-axis" />
         <div className="entry-grid" />
       </div>
+      <div className="entry-impact" aria-hidden="true" />
       <header className="entry-topline">
         <img className="entry-logo" src="/images/ragnarok-contexto.png" alt="Ragnarok U-Series, arena universitaria" width="320" height="100" />
         <span className="entry-location">PUNO, PERÚ <i /> TEMPORADA 2026</span>
