@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { FALLBACK_CONFIG, fetchAvailability, fetchConfig, fetchContent } from '../lib/tournamentApi'
+import { FALLBACK_CONFIG, fetchAvailability, fetchConfig, fetchContent, fetchPublicTeams, fetchPublishedStages, fetchSchedule } from '../lib/tournamentApi'
 
 const TournamentContext = createContext(null)
 
@@ -8,6 +8,11 @@ export function TournamentProvider({ children }) {
   const [fromServer, setFromServer] = useState(false)
   const [content, setContent] = useState(null)
   const [availability, setAvailability] = useState(null)
+
+  // Prefetch de paginas internas: se cargan en paralelo al inicio del app
+  const [teams, setTeams] = useState(null)
+  const [stages, setStages] = useState(null)
+  const [schedule, setSchedule] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -22,14 +27,20 @@ export function TournamentProvider({ children }) {
       })
     fetchContent().then((next) => active && setContent(next)).catch(() => {})
     fetchAvailability().then((next) => active && setAvailability(next)).catch(() => {})
+
+    // Prefetch paginas: errores silenciosos, cada pagina sigue mostrando su placeholder si falla
+    fetchPublicTeams().then((d) => active && setTeams(d)).catch(() => active && setTeams([]))
+    fetchPublishedStages().then((d) => active && setStages(d)).catch(() => active && setStages({ stages: [] }))
+    fetchSchedule().then((d) => active && setSchedule(d)).catch(() => active && setSchedule({ matches: [], stages: [], events: [] }))
+
     return () => { active = false }
   }, [])
 
   const value = useMemo(() => {
     const deadline = new Date(config.settings.registration_deadline).getTime()
     const prizeTotal = config.prizes.reduce((sum, p) => sum + p.amount, 0)
-    return { ...config, deadline, prizeTotal, fromServer, content, availability }
-  }, [config, fromServer, content, availability])
+    return { ...config, deadline, prizeTotal, fromServer, content, availability, teams, stages, schedule }
+  }, [config, fromServer, content, availability, teams, stages, schedule])
 
   return <TournamentContext.Provider value={value}>{children}</TournamentContext.Provider>
 }
