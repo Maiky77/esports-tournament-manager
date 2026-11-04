@@ -4,14 +4,27 @@ import { useLocation } from 'react-router-dom'
 function RouteScroll() {
   const { pathname, hash } = useLocation()
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      if (hash) {
-        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
-      } else {
-        window.scrollTo({ top: 0, behavior: 'instant' })
+    if (hash) {
+      const id = hash.slice(1)
+      const scrollToHash = () => {
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+            block: 'start',
+          })
+          return true
+        }
+        return false
       }
-    })
-    return () => window.cancelAnimationFrame(frame)
+
+      if (!scrollToHash()) {
+        const timer = setTimeout(scrollToHash, 100)
+        return () => clearTimeout(timer)
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
   }, [pathname, hash])
   return null
 }

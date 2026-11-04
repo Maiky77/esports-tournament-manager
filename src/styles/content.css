@@ -526,7 +526,8 @@
 
 /* One anchor offset and dark scrollbars for the complete canvas. */
 html { color-scheme: dark; scrollbar-color: #68448d #100b18; scrollbar-width: thin; }
-#inicio, #disciplinas, #premios, #como-participar, #reglamento, #comunidad { scroll-margin-top: 0; }
+#inicio { scroll-margin-top: 0; }
+#disciplinas, #premios, #como-participar, #reglamento, #comunidad { scroll-margin-top: 5.5rem; }
 .registration-modal { scrollbar-color: #775099 #130b1f; scrollbar-width: thin; }
 .registration-modal::-webkit-scrollbar { width: 8px; }
 .registration-modal::-webkit-scrollbar-track { background: #130b1f; }

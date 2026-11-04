@@ -65,7 +65,18 @@ function AppContent() {
     audio.start()
     audio.arenaEnter()
     setAudioStarted(true)
-    window.setTimeout(() => setShowSplash(false), 1050)
+    window.setTimeout(() => {
+      setShowSplash(false)
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1)
+        const el = document.getElementById(id)
+        if (el) {
+          window.requestAnimationFrame(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          })
+        }
+      }
+    }, 1050)
   }
 
   return (
