@@ -363,7 +363,7 @@
 @media(max-width:900px) {
  .site-header { top:0; left:0; width:100%; transform:none; }
  .navbar { min-height:64px; }
- .template-hero-v2 { padding-top:7rem; }
+ .template-hero-v2 { padding-top:7.8rem; }
  .template-section-title { gap:1rem 2rem; }
  .template-section-title>p { font-size:.9rem; }
  .participation-grid { gap:1.25rem; }
@@ -489,7 +489,7 @@
  .footer-brand-sub { font-size:.56rem; }
  .footer-bottom-bar { flex-direction:column-reverse; align-items:center; gap:1.25rem; text-align:center; padding-bottom:5.5rem; }
  .footer-top-btn { width:100%; justify-content:center; }
- .competition-page { padding-top:7rem; }
+ .competition-page { padding-top:7.8rem; }
  .competition-heading h1 { font-size:clamp(2.3rem,10vw,4rem); }
  .competition-filters button { padding:.8rem .9rem; font-size:.64rem; }
  .competition-publication { grid-template-columns:1fr; padding:1.5rem 0; gap:.5rem; }

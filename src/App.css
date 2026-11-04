@@ -281,6 +281,7 @@ img.brand-mark {
   background: transparent;
   cursor: pointer;
   font-family: inherit;
+  text-align: left;
 }
 
 .nav-link--active::after {
