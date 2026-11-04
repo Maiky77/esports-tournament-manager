@@ -27,7 +27,11 @@ export default function RoomList({ teams, logoOf }) {
                   <button type="button" className="pd-room-row" aria-expanded={open} onClick={() => setOpenId(open ? null : team.id)}>
                     <b className="pd-room-num" title="Lugar en la sala">{team.slot ?? '·'}</b>
                     {logo ? <img src={logo} alt="" loading="lazy" className="pd-room-logo" /> : <span className="pd-room-logo pd-room-logo--empty" aria-hidden="true">{team.team_name[0]}</span>}
-                    <span className="pd-room-name"><strong>{team.team_name}</strong>{team.institution && <small>{team.institution}</small>}</span>
+                    <span className="pd-room-name">
+                      <strong>{team.team_name}</strong>
+                      {team.institution && <small>{team.institution}</small>}
+                      {team.professional_school && <small className="pd-room-career-sub">{team.professional_school}</small>}
+                    </span>
                     <span className="pd-room-caret" aria-hidden="true">{open ? '▾' : '▸'}</span>
                   </button>
                   {open && (

@@ -84,6 +84,7 @@ const STAGE_LABEL = { groups: 'Fase de grupos', single_elim: 'Eliminación direc
 
 function StageView({ stage, data, teams }) {
   const matches = data.matches.filter((m) => m.stage_id === stage.id)
+  const teamMap = useMemo(() => new Map(teams.map((t) => [t.id, t])), [teams])
   if (stage.type === 'single_elim') {
     const total = matches.reduce((max, m) => Math.max(max, m.round), 0)
     const numbers = numberMatches(matches)
@@ -190,10 +191,39 @@ function StageView({ stage, data, teams }) {
             <h3>{rooms > 1 ? `Sala ${room}` : 'Tabla general'}</h3>
             {qualify > 0 && <p className="pd-qualify-note">{rooms > 1 ? `Pasan los ${qualify} primeros de la sala` : `Pasan los ${qualify} primeros a la siguiente fase`}</p>}
             {rows.length === 0 ? <p className="pd-empty">Aún no hay partidas jugadas.</p> : (
-              <table className="pd-table">
-                <thead><tr><th title="Posición">Pos.</th>{Object.keys(slotOf).length > 0 && <th title="Lugar del equipo en la sala">Lugar en la sala</th>}<th>Equipo</th><th>PJ</th><th>Kills</th><th>Pts</th></tr></thead>
-                <tbody>{rows.map((r, i) => <tr key={r.id} className={r.id === champion ? 'pd-row--champion' : qualify && i < qualify ? 'pd-row--qualify' : undefined}><td>{i + 1}</td>{Object.keys(slotOf).length > 0 && <td><b>{slotOf[r.id] ?? '·'}</b></td>}<td>{r.name}</td><td>{r.played}</td><td>{r.kills}</td><td><b>{r.points}</b></td></tr>)}</tbody>
-              </table>
+              <div className="pd-table-wrap">
+                <table className="pd-table">
+                  <thead>
+                    <tr>
+                      <th title="Posición">Pos.</th>
+                      {Object.keys(slotOf).length > 0 && <th title="Lugar del equipo en la sala">Lugar en la sala</th>}
+                      <th>Equipo</th>
+                      <th>Institución</th>
+                      <th>Carrera</th>
+                      <th>PJ</th>
+                      <th>Kills</th>
+                      <th>Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((r, i) => {
+                      const team = teamMap.get(r.id)
+                      return (
+                        <tr key={r.id} className={r.id === champion ? 'pd-row--champion' : qualify && i < qualify ? 'pd-row--qualify' : undefined}>
+                          <td>{i + 1}</td>
+                          {Object.keys(slotOf).length > 0 && <td><b>{slotOf[r.id] ?? '·'}</b></td>}
+                          <td><strong>{r.name}</strong></td>
+                          <td className="pd-col-institution">{team?.institution || '—'}</td>
+                          <td className="pd-col-career">{team?.professional_school || '—'}</td>
+                          <td>{r.played}</td>
+                          <td>{r.kills}</td>
+                          <td><b>{r.points}</b></td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )

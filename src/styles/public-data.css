@@ -194,3 +194,35 @@
   flex-direction: column;
   gap: 0.9rem;
 }
+
+/* Ajustes para institución y carrera en salas y resultados */
+.pd-room-name .pd-room-career-sub {
+  color: #c084fc;
+  font-size: 0.72rem;
+  margin-top: 1px;
+}
+
+.pd-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 0.9rem;
+}
+
+.pd-table th {
+  white-space: nowrap;
+}
+
+.pd-table td {
+  white-space: nowrap;
+}
+
+.pd-table .pd-col-institution {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.pd-table .pd-col-career {
+  color: #c084fc;
+  font-size: 0.8rem;
+}
