@@ -10,6 +10,52 @@ class AudioEngine {
     this.players = {}
     this.currentGame = null
     this.started = false
+    this.pausedByVisibility = false
+
+    this.bindVisibility()
+  }
+
+  bindVisibility() {
+    if (typeof document === 'undefined') return
+
+    const handleHide = () => {
+      const player = this.currentGame && this.players[this.currentGame]
+      if (player && !player.paused) {
+        player.pause()
+        this.pausedByVisibility = true
+      }
+      if (this.context && this.context.state === 'running') {
+        this.context.suspend().catch(() => {})
+      }
+    }
+
+    const handleShow = () => {
+      if (this.pausedByVisibility && this.started && !this.muted) {
+        const player = this.currentGame && this.players[this.currentGame]
+        if (player) {
+          player.play()
+            .then(() => {
+              this.fade(player, this.musicLevel(), 600)
+            })
+            .catch(() => {})
+        }
+        if (this.context && this.context.state === 'suspended') {
+          this.context.resume().catch(() => {})
+        }
+      }
+      this.pausedByVisibility = false
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        handleHide()
+      } else {
+        handleShow()
+      }
+    })
+
+    window.addEventListener('pagehide', handleHide)
+    window.addEventListener('pageshow', handleShow)
   }
 
   start() {
@@ -158,6 +204,10 @@ class AudioEngine {
     })
     const next = this.getPlayer(game)
     if (!next) return
+    if (typeof document !== 'undefined' && document.hidden) {
+      this.pausedByVisibility = true
+      return
+    }
     if (next.paused) {
       next.volume = 0
       next.play().then(() => this.fade(next, this.musicLevel(), 900)).catch(() => {})
@@ -168,4 +218,3 @@ class AudioEngine {
 }
 
 export const audio = new AudioEngine()
-
