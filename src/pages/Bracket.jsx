@@ -202,6 +202,25 @@ function StageView({ stage, data, teams }) {
   )
 }
 
+
+function BracketStageSkeleton() {
+  return (
+    <div className="pd-stage pd-stage--skeleton" aria-hidden="true">
+      <div className="pd-stage-card-skeleton">
+        <div className="pd-stage-head-skeleton">
+          <div className="pd-shimmer" style={{ width: '180px', height: '22px' }} />
+          <div className="pd-shimmer" style={{ width: '130px', height: '16px' }} />
+        </div>
+        <div className="pd-stage-grid-skeleton">
+          <div className="pd-shimmer" style={{ height: '90px', borderRadius: '8px' }} />
+          <div className="pd-shimmer" style={{ height: '90px', borderRadius: '8px' }} />
+          <div className="pd-shimmer" style={{ height: '90px', borderRadius: '8px' }} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Bracket() {
   const { activeGame, setActiveGame } = useRegistration()
   const game = activeGame === 'ff' ? 'ff' : 'mlbb'
@@ -217,9 +236,12 @@ function Bracket() {
 
   const stages = useMemo(() => (data?.stages ?? []).filter((s) => s.game_key === game), [data, game])
 
-  if (!data || data.stages.length === 0) {
+  // Solo si ya cargó y efectivamente no hay fases publicadas
+  if (data !== null && data.stages.length === 0) {
     return <PagePlaceholder title="Llaves del torneo" description={description} kind="bracket" />
   }
+
+  const isLoading = data === null
 
   return (
     <main className="competition-page">
@@ -231,7 +253,12 @@ function Bracket() {
         <button type="button" aria-pressed={game === 'mlbb'} onClick={() => setActiveGame('mlbb')}>MOBILE LEGENDS</button>
         <button type="button" aria-pressed={game === 'ff'} onClick={() => setActiveGame('ff')}>FREE FIRE</button>
       </div>
-      {stages.length === 0 ? (
+      {isLoading ? (
+        <>
+          <BracketStageSkeleton />
+          <BracketStageSkeleton />
+        </>
+      ) : stages.length === 0 ? (
         <p className="pd-empty">La organización aún no publica el fixture de esta disciplina.</p>
       ) : stages.map((stage, index) => {
         const stageMatches = data.matches.filter((m) => m.stage_id === stage.id)

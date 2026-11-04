@@ -128,3 +128,69 @@
 .cl--sub > .cl-panel > .cl-inner { padding-top: .4rem; }
 .pd-stage + .pd-stage { margin-top: 1rem; }
 @media (prefers-reduced-motion: reduce) { .cl-panel, .cl-head svg { transition: none; } }
+
+/* =========================================================
+   SKELETON GAMER & SHIMMER LOADING STYLES
+   ========================================================= */
+@keyframes pd-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pd-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(168, 85, 247, 0.12) 50%,
+    rgba(255, 255, 255, 0.03) 80%
+  );
+  background-size: 200% 100%;
+  animation: pd-shimmer 1.8s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Skeleton para tarjetas de equipos */
+.tc--skeleton { pointer-events: none; user-select: none; }
+.tc-skeleton-avatar { grid-column: 1; grid-row: 1 / span 3; width: 56px; height: 56px; border-radius: 14px; }
+.tc-skeleton-lines { grid-column: 2; display: flex; flex-direction: column; gap: 0.45rem; }
+.tc-skeleton-lines .line-eyebrow { height: 10px; width: 45%; }
+.tc-skeleton-lines .line-title { height: 18px; width: 80%; }
+.tc-skeleton-lines .line-school { height: 12px; width: 60%; }
+.tc-skeleton-foot { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.15rem; border-top: 1px solid #ffffff12; background: #ffffff05; }
+.tc-skeleton-foot .sk-stack { display: flex; gap: 4px; }
+.tc-skeleton-foot .sk-dot { width: 22px; height: 22px; border-radius: 50%; }
+.tc-skeleton-foot .sk-pill { width: 95px; height: 16px; border-radius: 12px; }
+
+/* Skeleton para llaves / brackets */
+.pd-stage--skeleton { pointer-events: none; user-select: none; margin-bottom: 1rem; }
+.pd-stage-card-skeleton {
+  background: var(--panel, #120c1d);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.pd-stage-head-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.pd-stage-grid-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Skeleton para cronograma */
+.sc-day-skeleton {
+  background: var(--panel, #120c1d);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}

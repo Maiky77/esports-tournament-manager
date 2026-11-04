@@ -9,6 +9,22 @@ const GAME = { mlbb: 'Mobile Legends', ff: 'Free Fire' }
 const FILTERS = [['all', 'TODO'], ['mlbb', 'MOBILE LEGENDS'], ['ff', 'FREE FIRE']]
 const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
+
+function ScheduleDaySkeleton() {
+  return (
+    <div className="sc-day-skeleton" aria-hidden="true">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="pd-shimmer" style={{ width: '160px', height: '20px' }} />
+        <div className="pd-shimmer" style={{ width: '90px', height: '16px' }} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.2rem' }}>
+        <div className="pd-shimmer" style={{ height: '52px', borderRadius: '6px' }} />
+        <div className="pd-shimmer" style={{ height: '52px', borderRadius: '6px' }} />
+      </div>
+    </div>
+  )
+}
+
 function Schedule() {
   const [raw, setRaw] = useState(null)
   const [filter, setFilter] = useState('all')
@@ -26,9 +42,12 @@ function Schedule() {
       .filter((day) => day.items.length > 0)
   }, [raw, filter])
 
-  if (!raw || (raw.matches.length === 0 && raw.events.length === 0)) {
+  // Solo si ya cargó y efectivamente no hay partidos ni eventos
+  if (raw !== null && (raw.matches.length === 0 && raw.events.length === 0)) {
     return <PagePlaceholder title="Cronograma" description={description} kind="schedule" />
   }
+
+  const isLoading = raw === null
 
   // Abre el día de hoy; si hoy no hay nada, el próximo día con partidos (o el último).
   const todayKey = days.find((d) => d.isToday)?.key
@@ -45,7 +64,12 @@ function Schedule() {
         {FILTERS.map(([key, label]) => <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}
       </div>
 
-      {days.length === 0 ? (
+      {isLoading ? (
+        <div className="sc-days" aria-hidden="true">
+          <ScheduleDaySkeleton />
+          <ScheduleDaySkeleton />
+        </div>
+      ) : days.length === 0 ? (
         <p className="pd-empty">Aún no hay horarios publicados para esta disciplina.</p>
       ) : (
         <div className="sc-days">
