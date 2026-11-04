@@ -115,16 +115,22 @@ export default function RoomList({ teams, logoOf }) {
                       <div className="pd-room-detail-head">
                         <span className="pd-room-detail-title">Integrantes de {team.team_name}</span>
                         {team.players?.length > 0 && (
-                          <small className="pd-room-detail-meta">{team.players.length} jugadores</small>
+                          <small className="pd-room-detail-meta">
+                            {(() => {
+                              const tit = team.players.filter((p) => !p.is_substitute).length
+                              const sup = team.players.filter((p) => p.is_substitute).length
+                              return sup > 0 ? `${tit} titulares + ${sup} ${sup > 1 ? 'suplentes' : 'suplente'}` : `${tit} jugadores`
+                            })()}
+                          </small>
                         )}
                       </div>
                       {team.players?.length > 0 ? (
-                        <ul className="tm-players" aria-label={`Integrantes de ${team.team_name}`}>
+                        <ul className="pd-room-players-chips" aria-label={`Integrantes de ${team.team_name}`}>
                           {team.players.map((player) => (
-                            <li key={player.slot}>
-                              <span className="tm-nick">{player.nickname}</span>
-                              {player.slot === 1 && <em>CAP</em>}
-                              {player.is_substitute && <em>SUP</em>}
+                            <li key={player.slot} className="pd-room-player-chip">
+                              <span className="pd-player-nick">{player.nickname}</span>
+                              {player.slot === 1 && <em className="cap">CAP</em>}
+                              {player.is_substitute && <em className="sup">SUP</em>}
                             </li>
                           ))}
                         </ul>

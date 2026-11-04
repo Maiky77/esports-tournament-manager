@@ -304,7 +304,9 @@
 .pd-room-detail-meta {
   font-size: 0.72rem;
   color: #ec4899;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .pd-room-empty-players {
   margin: 0;
@@ -312,12 +314,56 @@
   font-size: 0.78rem;
 }
 
+/* Chips horizontales de integrantes */
+.pd-room-players-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.pd-room-player-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0.28rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.pd-player-nick {
+  font-weight: 600;
+  color: #f8fafc;
+}
+.pd-room-player-chip em {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 0.68rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.pd-room-player-chip em.cap {
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.18);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+.pd-room-player-chip em.sup {
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
 @media (max-width: 768px) {
   .pd-room-colhead-3 {
     display: none;
   }
   .pd-room-row-3 {
-    grid-template-columns: 2.2rem 42px 1fr auto;
+    grid-template-columns: 2.2rem 1fr auto;
     gap: 0.65rem;
     padding: 0.45rem 0.6rem;
   }
@@ -333,6 +379,10 @@
   .pd-room-col-inst,
   .pd-room-col-career {
     display: none;
+  }
+  .pd-room-team-info {
+    min-width: 0;
+    flex: 1;
   }
   .pd-room-mobile-sub {
     display: flex;
