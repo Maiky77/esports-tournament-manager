@@ -19,6 +19,36 @@ function roundName(round, total) {
 const isBye = (m) => m.status === 'completed' && Boolean(m.winner_id) && !m.team_a !== !m.team_b
 const isDead = (m) => m.status === 'completed' && !m.winner_id && !m.team_a && !m.team_b
 
+// Resuelve número de casilla (slot) de cada equipo en su sala para Battle Royale.
+// Conserva los slots ya asignados y asigna el menor número libre a los equipos nuevos pendientes.
+function resolveSlots(stageTeams, roomOf, slotOf = {}) {
+  const out = {}
+  const byRoom = new Map()
+  stageTeams.forEach((t) => {
+    const room = roomOf(t.id)
+    if (!byRoom.has(room)) byRoom.set(room, [])
+    byRoom.get(room).push(t)
+  })
+  for (const list of byRoom.values()) {
+    const used = new Set()
+    list.forEach((t) => {
+      const n = slotOf?.[t.id]
+      if (Number.isInteger(n) && n >= 1 && !used.has(n)) {
+        out[t.id] = n
+        used.add(n)
+      }
+    })
+    let next = 1
+    ;[...list].sort((a, b) => (a.team_name || '').localeCompare(b.team_name || '')).forEach((t) => {
+      if (out[t.id]) return
+      while (used.has(next)) next++
+      out[t.id] = next
+      used.add(next)
+    })
+  }
+  return out
+}
+
 // Numera los cruces reales (sin byes): M1, M2…
 function numberMatches(matches) {
   const map = new Map()
@@ -213,10 +243,15 @@ function StageView({ stage, data, teams }) {
   const roomOf = (id) => (rooms > 1 ? Math.min(stage.config?.room_of?.[id] ?? 1, rooms) : 1)
   const champion = stage.config?.champion
   const slotOf = stage.config?.slot_of ?? {} // número fijo de cada equipo en su sala
-  // Equipos de esta fase con su sala y su lugar en ella (solo si ya se asignaron).
-  const roomTeams = Object.keys(slotOf).length === 0 ? [] : teams
-    .filter((team) => team.game_key === stage.game_key && slotOf[team.id] && (!stage.config?.participants || stage.config.participants.includes(team.id)))
-    .map((team) => ({ ...team, slot: slotOf[team.id], room: rooms > 1 ? Math.min(stage.config?.room_of?.[team.id] ?? 1, rooms) : 1 }))
+  const hasConfiguredSlots = Object.keys(slotOf).length > 0
+  const stageTeams = teams.filter(
+    (team) => team.game_key === stage.game_key && (!stage.config?.participants || stage.config.participants.includes(team.id))
+  )
+  const effectiveSlotOf = hasConfiguredSlots ? resolveSlots(stageTeams, roomOf, slotOf) : {}
+  // Equipos de esta fase con su sala y su lugar en ella (incluye slots resueltos dinámicamente si falta asignar)
+  const roomTeams = !hasConfiguredSlots ? [] : stageTeams
+    .map((team) => ({ ...team, slot: effectiveSlotOf[team.id], room: roomOf(team.id) }))
+    .filter((team) => team.slot)
   const championName = champion ? totals.get(champion)?.name : null
   return (
     <section className="pd-card">
@@ -240,7 +275,7 @@ function StageView({ stage, data, teams }) {
                   <thead>
                     <tr>
                       <th title="Posición">Pos.</th>
-                      {Object.keys(slotOf).length > 0 && <th title="Lugar del equipo en la sala">Lugar en la sala</th>}
+                      {hasConfiguredSlots && <th title="Lugar del equipo en la sala">Lugar en la sala</th>}
                       <th>Equipo</th>
                       <th>Institución</th>
                       <th>Carrera</th>
@@ -255,7 +290,7 @@ function StageView({ stage, data, teams }) {
                       return (
                         <tr key={r.id} className={r.id === champion ? 'pd-row--champion' : qualify && i < qualify ? 'pd-row--qualify' : undefined}>
                           <td>{i + 1}</td>
-                          {Object.keys(slotOf).length > 0 && <td><b>{slotOf[r.id] ?? '·'}</b></td>}
+                          {hasConfiguredSlots && <td><b>{effectiveSlotOf[r.id] ?? slotOf[r.id] ?? '·'}</b></td>}
                           <td><strong>{r.name}</strong></td>
                           <td className="pd-col-institution">{team?.institution || '—'}</td>
                           <td className="pd-col-career">{team?.professional_school || '—'}</td>
