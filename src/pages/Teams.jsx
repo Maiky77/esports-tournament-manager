@@ -1,20 +1,25 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRegistration } from '../context/RegistrationContext'
-import { useTournament } from '../context/TournamentContext'
-import { publicUrl } from '../lib/tournamentApi'
+import { fetchPublicTeams, publicUrl } from '../lib/tournamentApi'
 import PagePlaceholder from './PagePlaceholder'
 import TeamCard from '../components/TeamCard'
 
-const description = 'Las escuadras que representar\u00e1n a su universidad en RAGNAROK U-Series.'
+const description = 'Las escuadras que representarán a su universidad en RAGNAROK U-Series.'
 
-// B\u00fasqueda sin distinguir may\u00fasculas ni tildes.
-const fold = (text) => String(text ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+// Búsqueda sin distinguir mayúsculas ni tildes.
+const fold = (text) => String(text ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
 function Teams() {
   const { activeGame, setActiveGame } = useRegistration()
-  const { teams } = useTournament()
   const game = activeGame === 'ff' ? 'ff' : 'mlbb'
+  const [teams, setTeams] = useState(null)
   const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    let active = true
+    fetchPublicTeams().then((data) => active && setTeams(data)).catch(() => active && setTeams([]))
+    return () => { active = false }
+  }, [])
 
   const inGame = useMemo(() => (teams ?? []).filter((team) => team.game_key === game), [teams, game])
   const visible = useMemo(() => {
@@ -43,15 +48,15 @@ function Teams() {
           <p className="tm-count"><b>{visible.length}</b> {visible.length === 1 ? 'equipo' : 'equipos'}</p>
           <label className="tm-search">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar equipo o jugador\u2026" aria-label="Buscar equipos" />
+            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar equipo o jugador…" aria-label="Buscar equipos" />
           </label>
         </div>
       )}
 
       {inGame.length === 0 ? (
-        <p className="pd-empty">A\u00fan no hay equipos confirmados en esta disciplina.</p>
+        <p className="pd-empty">Aún no hay equipos confirmados en esta disciplina.</p>
       ) : visible.length === 0 ? (
-        <p className="pd-empty">Ning\u00fan equipo coincide con \u00ab{query}\u00bb.</p>
+        <p className="pd-empty">Ningún equipo coincide con «{query}».</p>
       ) : (
         <ul className="tc-grid">
           {visible.map((team) => <TeamCard key={team.id} team={team} logo={publicUrl('team-logos', team.logo_path)} />)}

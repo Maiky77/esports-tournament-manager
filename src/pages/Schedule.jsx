@@ -1,17 +1,23 @@
-import { useMemo, useState } from 'react'
-import { useTournament } from '../context/TournamentContext'
+import { useEffect, useMemo, useState } from 'react'
+import { fetchSchedule } from '../lib/tournamentApi'
 import { buildSchedule, dayLabel, timeLabel } from '../lib/schedule'
 import PagePlaceholder from './PagePlaceholder'
 import Collapse from '../components/Collapse'
 
-const description = 'Fechas y horarios de cada partido de RAGNAROK U-Series. Horario de Lima, Per\u00fa.'
+const description = 'Fechas y horarios de cada partido de RAGNAROK U-Series. Horario de Lima, Perú.'
 const GAME = { mlbb: 'Mobile Legends', ff: 'Free Fire' }
 const FILTERS = [['all', 'TODO'], ['mlbb', 'MOBILE LEGENDS'], ['ff', 'FREE FIRE']]
 const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
 function Schedule() {
-  const { schedule: raw } = useTournament()
+  const [raw, setRaw] = useState(null)
   const [filter, setFilter] = useState('all')
+
+  useEffect(() => {
+    let active = true
+    fetchSchedule().then((d) => active && setRaw(d)).catch(() => active && setRaw({ matches: [], stages: [], events: [] }))
+    return () => { active = false }
+  }, [])
 
   const days = useMemo(() => {
     if (!raw) return []
@@ -24,7 +30,7 @@ function Schedule() {
     return <PagePlaceholder title="Cronograma" description={description} kind="schedule" />
   }
 
-  // Abre el d\u00eda de hoy; si hoy no hay nada, el pr\u00f3ximo d\u00eda con partidos (o el \u00faltimo).
+  // Abre el día de hoy; si hoy no hay nada, el próximo día con partidos (o el último).
   const todayKey = days.find((d) => d.isToday)?.key
   const upcoming = days.find((d) => d.items.some((i) => i.isNext))?.key
   const openKey = todayKey ?? upcoming ?? days.at(-1)?.key
@@ -40,7 +46,7 @@ function Schedule() {
       </div>
 
       {days.length === 0 ? (
-        <p className="pd-empty">A\u00fan no hay horarios publicados para esta disciplina.</p>
+        <p className="pd-empty">Aún no hay horarios publicados para esta disciplina.</p>
       ) : (
         <div className="sc-days">
           {days.map((day) => (

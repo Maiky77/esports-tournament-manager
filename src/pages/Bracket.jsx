@@ -1,7 +1,6 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRegistration } from '../context/RegistrationContext'
-import { useTournament } from '../context/TournamentContext'
-import { publicUrl } from '../lib/tournamentApi'
+import { fetchPublishedStages, fetchPublicTeams, publicUrl } from '../lib/tournamentApi'
 import RoomList from '../components/RoomList'
 import Collapse from '../components/Collapse'
 import PagePlaceholder from './PagePlaceholder'
@@ -205,10 +204,16 @@ function StageView({ stage, data, teams }) {
 
 function Bracket() {
   const { activeGame, setActiveGame } = useRegistration()
-  const { stages: stagesData, teams } = useTournament()
-  // stagesData es el objeto completo de fetchPublishedStages; teams es el array de fetchPublicTeams
-  const data = stagesData
   const game = activeGame === 'ff' ? 'ff' : 'mlbb'
+  const [data, setData] = useState(null)
+  const [teams, setTeams] = useState([])
+
+  useEffect(() => {
+    let active = true
+    fetchPublishedStages().then((d) => active && setData(d)).catch(() => active && setData({ stages: [] }))
+    fetchPublicTeams().then((t) => active && setTeams(t)).catch(() => {})
+    return () => { active = false }
+  }, [])
 
   const stages = useMemo(() => (data?.stages ?? []).filter((s) => s.game_key === game), [data, game])
 
