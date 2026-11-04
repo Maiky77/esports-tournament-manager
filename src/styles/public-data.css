@@ -226,3 +226,27 @@
   color: #c084fc;
   font-size: 0.8rem;
 }
+
+/* Subtítulo de institución y carrera en los cruces de bracket */
+.pd-match-team-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.pd-match-team-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pd-match-team-sub {
+  color: #c084fc;
+  font-size: 0.68rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}

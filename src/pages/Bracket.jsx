@@ -46,11 +46,19 @@ function shortWhen(iso) {
   return `${d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short' }).replace('.', '')} ${time}`
 }
 
-function MatchBox({ match, label, nameA, nameB }) {
+function MatchBox({ match, label, nameA, nameB, teamAInfo, teamBInfo }) {
   const done = match.status === 'completed'
-  const row = (id, name, score) => (
+  const row = (id, name, score, teamInfo) => (
     <div className={`pd-match-team ${done && match.winner_id === id ? 'pd-match-team--win' : ''} ${id ? '' : 'pd-match-team--empty'}`}>
-      <span>{id ? name : (name || 'Por definir')}</span><b>{done ? score : ''}</b>
+      <div className="pd-match-team-copy">
+        <span className="pd-match-team-name">{id ? name : (name || 'Por definir')}</span>
+        {id && teamInfo && (teamInfo.institution || teamInfo.professional_school) && (
+          <small className="pd-match-team-sub">
+            {teamInfo.institution}{teamInfo.professional_school ? ` · ${teamInfo.professional_school}` : ''}
+          </small>
+        )}
+      </div>
+      <b>{done ? score : ''}</b>
     </div>
   )
   return (
@@ -60,8 +68,8 @@ function MatchBox({ match, label, nameA, nameB }) {
         <span className="pd-bo">BO{match.best_of}</span>
         {match.scheduled_at && <span className="pd-match-when">{shortWhen(match.scheduled_at)}</span>}
       </div>
-      {row(match.team_a, nameA ?? match.team_a_name, match.score_a)}
-      {row(match.team_b, nameB ?? match.team_b_name, match.score_b)}
+      {row(match.team_a, nameA ?? match.team_a_name, match.score_a, teamAInfo)}
+      {row(match.team_b, nameB ?? match.team_b_name, match.score_b, teamBInfo)}
     </div>
   )
 }
@@ -112,7 +120,9 @@ function StageView({ stage, data, teams }) {
                     ) : (
                       <MatchBox match={m} label={`M${numbers.get(m.id)}`}
                         nameA={m.team_a ? m.team_a_name : pendingLabel(m, 'a', matches, numbers)}
-                        nameB={m.team_b ? m.team_b_name : pendingLabel(m, 'b', matches, numbers)} />
+                        nameB={m.team_b ? m.team_b_name : pendingLabel(m, 'b', matches, numbers)}
+                        teamAInfo={m.team_a ? teamMap.get(m.team_a) : null}
+                        teamBInfo={m.team_b ? teamMap.get(m.team_b) : null} />
                     )}
                     {ri > 0 && <i className="pd-c pd-c--in" aria-hidden="true" />}
                     {ri < total - 1 && <i className="pd-c pd-c--out" aria-hidden="true" />}
@@ -138,16 +148,50 @@ function StageView({ stage, data, teams }) {
             <section className="pd-card" key={group.id}>
               <h3>{group.name}</h3>
               {qualify > 0 && <p className="pd-qualify-note">{qualify === 1 ? 'Clasifica el primero' : `Clasifican los ${qualify} primeros`}</p>}
-              <table className="pd-table">
-                <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>G</th><th>Dif</th><th>Pts</th></tr></thead>
-                <tbody>
-                  {standings([...names.keys()], names, gm).map((r, i) => (
-                    <tr key={r.id} className={i < qualify ? 'pd-row--qualify' : undefined}><td>{i + 1}</td><td>{r.name}</td><td>{r.played}</td><td>{r.wins}</td><td>{r.diff}</td><td><b>{r.points}</b></td></tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="pd-table-wrap">
+                <table className="pd-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Equipo</th>
+                      <th>Institución</th>
+                      <th>Carrera</th>
+                      <th>PJ</th>
+                      <th>G</th>
+                      <th>Dif</th>
+                      <th>Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {standings([...names.keys()], names, gm).map((r, i) => {
+                      const team = teamMap.get(r.id)
+                      return (
+                        <tr key={r.id} className={i < qualify ? 'pd-row--qualify' : undefined}>
+                          <td>{i + 1}</td>
+                          <td><strong>{r.name}</strong></td>
+                          <td className="pd-col-institution">{team?.institution || '—'}</td>
+                          <td className="pd-col-career">{team?.professional_school || '—'}</td>
+                          <td>{r.played}</td>
+                          <td>{r.wins}</td>
+                          <td>{r.diff}</td>
+                          <td><b>{r.points}</b></td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
               <Collapse title="Partidos" meta={`${gm.filter((m) => m.status === 'completed').length}/${gm.length} jugados`}>
-                <div className="pd-match-list">{gm.map((m) => <MatchBox match={m} key={m.id} />)}</div>
+                <div className="pd-match-list">
+                  {gm.map((m) => (
+                    <MatchBox
+                      match={m}
+                      key={m.id}
+                      teamAInfo={m.team_a ? teamMap.get(m.team_a) : null}
+                      teamBInfo={m.team_b ? teamMap.get(m.team_b) : null}
+                    />
+                  ))}
+                </div>
               </Collapse>
             </section>
           )
