@@ -89,13 +89,19 @@ export default function RoomList({ teams, logoOf }) {
                         </span>
                       )}
                       <div className="pd-room-team-info">
-                        <strong className="pd-room-team-title">{team.team_name}</strong>
-                        <div className="pd-room-mobile-sub">
-                          {team.institution && <span className="pd-room-sub-inst">{shortInst(team.institution)}</span>}
+                        <div className="pd-room-mobile-top">
+                          <strong className="pd-room-team-title">{team.team_name}</strong>
                           {team.professional_school && (
-                            <span className="pd-room-sub-career">{team.professional_school}</span>
+                            <span className="pd-room-mobile-career" title={team.professional_school}>
+                              {team.professional_school}
+                            </span>
                           )}
                         </div>
+                        {team.institution && (
+                          <span className="pd-room-mobile-inst" title={team.institution}>
+                            {shortInst(team.institution)}
+                          </span>
+                        )}
                       </div>
                     </div>
 

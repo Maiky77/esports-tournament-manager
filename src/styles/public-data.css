@@ -255,7 +255,12 @@
   text-overflow: ellipsis;
   line-height: 1.25;
 }
-.pd-room-mobile-sub {
+.pd-room-mobile-top {
+  display: block;
+  min-width: 0;
+}
+.pd-room-mobile-career,
+.pd-room-mobile-inst {
   display: none;
 }
 
@@ -384,32 +389,43 @@
     min-width: 0;
     flex: 1;
   }
-  .pd-room-mobile-sub {
+  .pd-room-mobile-top {
     display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.72rem;
-    line-height: 1.2;
-    margin-top: 2px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+  .pd-room-team-title {
+    font-size: 0.88rem;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pd-room-mobile-career {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #d8b4fe;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: right;
+    flex: 0 1 auto;
+    max-width: 52%;
   }
-  .pd-room-sub-inst {
-    color: #cbd5e1;
-    font-weight: 700;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 0.05rem 0.35rem;
-    border-radius: 3px;
-    flex-shrink: 0;
-    max-width: 85px;
+  .pd-room-mobile-inst {
+    display: block;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 1px;
+    line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .pd-room-sub-career {
-    color: #d8b4fe;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
