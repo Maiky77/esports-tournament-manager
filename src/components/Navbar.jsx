@@ -68,8 +68,8 @@ function Navbar() {
             className="brand-logo"
             src="/images/ragnarok-principal.png"
             alt="Ragnarok U-Series"
-            width="40"
-            height="40"
+            width="44"
+            height="44"
           />
           <div className="brand-copy">
             <span className="brand-title">RAGNAROK <em>:</em> U-SERIES</span>
