@@ -4,7 +4,7 @@ import { buildSchedule, dayLabel, timeLabel } from '../lib/schedule'
 import PagePlaceholder from './PagePlaceholder'
 import Collapse from '../components/Collapse'
 
-const description = 'Fechas y horarios de cada partido de RAGNAROK U-Series. Horario de Lima, Perú.'
+const description = 'Fechas y horarios de cada partido de RAGNAROK U-Series. Horario oficial del torneo.'
 const GAME = { mlbb: 'Mobile Legends', ff: 'Free Fire' }
 const FILTERS = [['all', 'TODO'], ['mlbb', 'MOBILE LEGENDS'], ['ff', 'FREE FIRE']]
 const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1)
