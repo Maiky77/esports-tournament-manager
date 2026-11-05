@@ -251,6 +251,7 @@
 .registration-modal { width:min(1200px,calc(100vw - 3rem)); max-height:calc(100svh - 3rem); background:#120c1d; border-color:#b58ae35c; }
 .registration-page--modal { max-width:none; padding:1.4rem 2rem 2rem; }
 .registration-page--modal .modal-hero-banner { margin:-1.4rem -2rem 1.7rem; padding:2.2rem 2rem; min-height:225px; }
+.modal-hero-crest { width:48px; height:48px; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 0 10px rgba(168, 85, 247, 0.4)); }
 .modal-hero-left h2 { font-size:clamp(1.5rem,2.3vw,2.8rem); }
 .modal-hero-kicker { font-size:.76rem; }
 .modal-hero-price-badge { padding:.85rem 1.2rem; background:#140c1ded; }
@@ -465,6 +466,7 @@
  .registration-modal { width:calc(100vw - 1rem); max-height:calc(100svh - 1rem); }
  .registration-page--modal { padding:1.1rem; }
  .registration-page--modal .modal-hero-banner { margin:-1.1rem -1.1rem 1.25rem; padding:1.6rem 1.1rem; min-height:220px; }
+ .modal-hero-crest { width:38px; height:38px; }
  .modal-hero-left h2 { font-size:1.4rem; }
  .modal-hero-kicker { font-size:.6rem; }
  .price-badge-val { font-size:1.7rem; }

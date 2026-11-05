@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { audio } from '../lib/audioEngine'
 import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
-import ragnarokCrest from '../assets/ragnarok-crest.svg'
 import { useTournament } from '../context/TournamentContext'
 import { formatSoles } from '../lib/money'
 import { publicUrl, submitRegistration, validateUpload } from '../lib/tournamentApi'
@@ -385,7 +384,7 @@ function Inscription({ modal = false }) {
         <CharacterArt character={game === 'mlbb' ? 'zetian' : 'moco'} className={`registration-character ${game === 'ff' ? 'registration-character--ff' : ''}`} />
         <div className="modal-hero-content">
           <div className="modal-hero-left">
-            <img className="modal-hero-crest" src={ragnarokCrest} alt="Crest" />
+            <img className="modal-hero-crest" src="/images/ragnarok-principal.png" alt="Ragnarok U-Series" width="48" height="48" />
             <div>
               <span className="modal-hero-kicker">// RAGNAROK U-SERIES 2026</span>
               <h2>INSCRIBE A TU EQUIPO</h2>
