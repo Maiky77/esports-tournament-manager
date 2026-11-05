@@ -376,8 +376,8 @@ function Podium({ top3, teamMap }) {
   return (
     <div className="pd-podium-section">
       <div className="pd-podium-head">
-        <span className="pd-podium-kicker">CUADRO DE HONOR</span>
-        <h3 className="pd-podium-title">PODIO DEL TORNEO</h3>
+        <span className="pd-podium-kicker">GANADORES</span>
+        <h3 className="pd-podium-title">FELICIDADES!!!</h3>
       </div>
 
       <div className="pd-podium-grid">
