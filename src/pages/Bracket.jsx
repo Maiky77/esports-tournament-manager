@@ -127,43 +127,117 @@ function StageView({ stage, data, teams }) {
   if (stage.type === 'single_elim') {
     const total = matches.reduce((max, m) => Math.max(max, m.round), 0)
     const numbers = numberMatches(matches)
+
+    // Podio Top 3 para eliminación directa cuando la final concluye
+    const finalMatch = matches.find((m) => m.round === total && m.position === 0)
+    const hasFinished = Boolean(finalMatch?.status === 'completed' && finalMatch?.winner_id)
+
+    let podiumTop3 = null
+    if (hasFinished) {
+      const firstId = stage.config?.champion || finalMatch.winner_id
+      const firstTeam = teamMap.get(firstId)
+      const firstName = firstTeam?.team_name || firstTeam?.name || (finalMatch.winner_id === finalMatch.team_a ? finalMatch.team_a_name : finalMatch.team_b_name)
+      const firstWins = matches.filter((m) => m.winner_id === firstId).length
+
+      const secondId = stage.config?.podium?.[1] || (finalMatch.winner_id === finalMatch.team_a ? finalMatch.team_b : finalMatch.team_a)
+      const secondTeam = teamMap.get(secondId)
+      const secondName = secondTeam?.team_name || secondTeam?.name || (finalMatch.winner_id === finalMatch.team_a ? finalMatch.team_b_name : finalMatch.team_a_name)
+      const secondWins = matches.filter((m) => m.winner_id === secondId).length
+
+      let thirdId = stage.config?.podium?.[2] || null
+      let thirdName = null
+
+      if (!thirdId) {
+        const thirdMatch = matches.find((m) => m.round === total && m.position === 1)
+        if (thirdMatch?.status === 'completed' && thirdMatch?.winner_id) {
+          thirdId = thirdMatch.winner_id
+          thirdName = thirdMatch.winner_id === thirdMatch.team_a ? thirdMatch.team_a_name : thirdMatch.team_b_name
+        }
+      }
+
+      if (!thirdId) {
+        const semiMatches = matches.filter((m) => m.round === total - 1 && m.status === 'completed')
+        const semiLosers = semiMatches.map((m) => {
+          const loserId = m.winner_id === m.team_a ? m.team_b : m.team_a
+          const loserName = m.winner_id === m.team_a ? m.team_b_name : m.team_a_name
+          const loserScore = m.winner_id === m.team_a ? (m.score_b ?? 0) : (m.score_a ?? 0)
+          const totalWins = matches.filter((x) => x.winner_id === loserId).length
+          return { id: loserId, name: loserName, loserScore, totalWins }
+        }).filter((x) => Boolean(x.id))
+
+        semiLosers.sort((a, b) => b.loserScore - a.loserScore || b.totalWins - a.totalWins)
+        if (semiLosers[0]) {
+          thirdId = semiLosers[0].id
+          thirdName = semiLosers[0].name
+        }
+      }
+
+      const thirdTeam = teamMap.get(thirdId)
+      const thirdWins = matches.filter((m) => m.winner_id === thirdId).length
+
+      if (firstId && secondId && thirdId) {
+        podiumTop3 = [
+          {
+            id: firstId,
+            name: firstName,
+            statsText: `${firstWins} ${firstWins === 1 ? 'VICTORIA' : 'VICTORIAS'}`,
+          },
+          {
+            id: secondId,
+            name: secondName,
+            statsText: `${secondWins} ${secondWins === 1 ? 'VICTORIA' : 'VICTORIAS'}`,
+          },
+          {
+            id: thirdId,
+            name: thirdTeam?.team_name || thirdTeam?.name || thirdName,
+            statsText: `${thirdWins} ${thirdWins === 1 ? 'VICTORIA' : 'VICTORIAS'}`,
+          },
+        ]
+      }
+    }
+
     return (
-      <div className="pd-bracket">
-        {Array.from({ length: total }, (_, i) => i + 1).map((round, ri) => {
-          const list = matches.filter((m) => m.round === round)
-          return (
-            <div className="pd-round" key={round}>
-              <header className="pd-round-head"><h4>{roundName(round, total)}</h4>{list[0] && <span className="pd-bo">BO{list[0].best_of}</span>}</header>
-              <div className="pd-round-list">
-                {list.map((m, i) => (
-                  <div className={`pd-slot ${i % 2 === 0 ? 'pd-slot--even' : 'pd-slot--odd'}`} key={m.id}>
-                    {isDead(m) ? (
-                      <div className="pd-match pd-match--bye">
-                        <div className="pd-match-head"><span className="pd-match-num">Sin equipos</span></div>
-                        <div className="pd-match-team pd-match-team--empty"><span>Vacío</span></div>
-                      </div>
-                    ) : isBye(m) ? (
-                      <div className="pd-match pd-match--bye">
-                        <div className="pd-match-head"><span className="pd-match-num">Bye</span></div>
-                        <div className="pd-match-team"><span>{m.team_a_name ?? m.team_b_name}</span></div>
-                        <div className="pd-match-team pd-match-team--empty"><span>Pasa directo</span></div>
-                      </div>
-                    ) : (
-                      <MatchBox match={m} label={`M${numbers.get(m.id)}`}
-                        nameA={m.team_a ? m.team_a_name : pendingLabel(m, 'a', matches, numbers)}
-                        nameB={m.team_b ? m.team_b_name : pendingLabel(m, 'b', matches, numbers)}
-                        teamAInfo={m.team_a ? teamMap.get(m.team_a) : null}
-                        teamBInfo={m.team_b ? teamMap.get(m.team_b) : null} />
-                    )}
-                    {ri > 0 && <i className="pd-c pd-c--in" aria-hidden="true" />}
-                    {ri < total - 1 && <i className="pd-c pd-c--out" aria-hidden="true" />}
-                    {ri < total - 1 && <i className="pd-c pd-c--join" aria-hidden="true" />}
-                  </div>
-                ))}
+      <div className="pd-stage-single-elim">
+        <div className="pd-bracket">
+          {Array.from({ length: total }, (_, i) => i + 1).map((round, ri) => {
+            const list = matches.filter((m) => m.round === round)
+            return (
+              <div className="pd-round" key={round}>
+                <header className="pd-round-head"><h4>{roundName(round, total)}</h4>{list[0] && <span className="pd-bo">BO{list[0].best_of}</span>}</header>
+                <div className="pd-round-list">
+                  {list.map((m, i) => (
+                    <div className={`pd-slot ${i % 2 === 0 ? 'pd-slot--even' : 'pd-slot--odd'}`} key={m.id}>
+                      {isDead(m) ? (
+                        <div className="pd-match pd-match--bye">
+                          <div className="pd-match-head"><span className="pd-match-num">Sin equipos</span></div>
+                          <div className="pd-match-team pd-match-team--empty"><span>Vacío</span></div>
+                        </div>
+                      ) : isBye(m) ? (
+                        <div className="pd-match pd-match--bye">
+                          <div className="pd-match-head"><span className="pd-match-num">Bye</span></div>
+                          <div className="pd-match-team"><span>{m.team_a_name ?? m.team_b_name}</span></div>
+                          <div className="pd-match-team pd-match-team--empty"><span>Pasa directo</span></div>
+                        </div>
+                      ) : (
+                        <MatchBox match={m} label={`M${numbers.get(m.id)}`}
+                          nameA={m.team_a ? m.team_a_name : pendingLabel(m, 'a', matches, numbers)}
+                          nameB={m.team_b ? m.team_b_name : pendingLabel(m, 'b', matches, numbers)}
+                          teamAInfo={m.team_a ? teamMap.get(m.team_a) : null}
+                          teamBInfo={m.team_b ? teamMap.get(m.team_b) : null} />
+                      )}
+                      {ri > 0 && <i className="pd-c pd-c--in" aria-hidden="true" />}
+                      {ri < total - 1 && <i className="pd-c pd-c--out" aria-hidden="true" />}
+                      {ri < total - 1 && <i className="pd-c pd-c--join" aria-hidden="true" />}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+        {podiumTop3 && (
+          <Podium top3={podiumTop3} teamMap={teamMap} />
+        )}
       </div>
     )
   }
@@ -342,7 +416,7 @@ function Podium({ top3, teamMap }) {
           />
         </div>
 
-        <h4 className="pd-podium-team-name">{r.name}</h4>
+        <h4 className="pd-podium-team-name">{r.name || team?.team_name || team?.name}</h4>
 
         {team?.institution && (
           <span className="pd-podium-inst">{team.institution}</span>
@@ -352,9 +426,15 @@ function Podium({ top3, teamMap }) {
         )}
 
         <div className="pd-podium-stats">
-          <span>{r.points} PTS</span>
-          <span className="pd-podium-dot">·</span>
-          <span>{r.kills} KILLS</span>
+          {r.points !== undefined && r.kills !== undefined ? (
+            <>
+              <span>{r.points} PTS</span>
+              <span className="pd-podium-dot">·</span>
+              <span>{r.kills} KILLS</span>
+            </>
+          ) : (
+            <span>{r.statsText || label}</span>
+          )}
         </div>
 
         {players.length > 0 && (
