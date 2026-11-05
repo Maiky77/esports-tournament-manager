@@ -46,7 +46,7 @@
 
 .game-choice-slots { display: block; margin-top: .35rem; font-family: var(--font-display); font-size: .7rem; letter-spacing: .12em; opacity: .85; }
 
-/* Lista con buscador (institución y escuela profesional) */
+/* Lista con buscador (instituciÃ³n y escuela profesional) */
 .ss { position: relative; }
 .ss > input { padding-right: 2rem; cursor: text; }
 .ss-chevron { position: absolute; right: .8rem; bottom: .62rem; color: #94a3b8; pointer-events: none; font-size: .8rem; }
@@ -67,7 +67,7 @@
 
 .pd-room-table + .pd-room-table { margin-top: 1.2rem; }
 
-/* Free Fire: pestañas por sala y 3 columnas con logo grande (44px) */
+/* Free Fire: pestaÃ±as por sala y 3 columnas con logo grande (44px) */
 .pd-rooms-block { margin-bottom: 1.4rem; }
 .pd-rooms-block > h3 { margin: 0 0 .8rem; font-family: var(--font-display); letter-spacing: .06em; }
 
@@ -227,6 +227,14 @@
   border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
+}
+.pd-room-logo-3--default {
+  object-fit: contain;
+  padding: 3px;
+  background: #090e18;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0.5;
+  filter: grayscale(1) brightness(1.2);
 }
 .pd-room-logo-3--empty {
   width: 44px;
@@ -429,7 +437,7 @@
   }
 }
 
-/* EN VIVO: aviso fijo con los enlaces de transmisión de cada juego */
+/* EN VIVO: aviso fijo con los enlaces de transmisiÃ³n de cada juego */
 .lv-dock { position: fixed; z-index: 70; left: 1.1rem; bottom: 1.1rem; display: grid; gap: .6rem; max-width: min(340px, calc(100vw - 2.2rem)); }
 .lv-card { padding: .7rem .9rem; border: 1px solid #ffffff26; border-left: 4px solid #ef4444; border-radius: 8px; background: #0b0f17f2; backdrop-filter: blur(12px); box-shadow: 0 10px 30px #0006; }
 .lv-card--mlbb { border-left-color: #b48aff; }
@@ -529,7 +537,7 @@
   gap: 0.9rem;
 }
 
-/* Ajustes para institución y carrera en salas y resultados */
+/* Ajustes para instituciÃ³n y carrera en salas y resultados */
 .pd-room-name .pd-room-career-sub {
   color: #c084fc;
   font-size: 0.72rem;
@@ -561,7 +569,7 @@
   font-size: 0.8rem;
 }
 
-/* Subtítulo de institución y carrera en los cruces de bracket */
+/* SubtÃ­tulo de instituciÃ³n y carrera en los cruces de bracket */
 .pd-match-team-copy {
   display: flex;
   flex-direction: column;

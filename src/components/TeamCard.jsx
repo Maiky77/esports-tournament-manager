@@ -1,9 +1,10 @@
 import { useId, useState } from 'react'
 import { initialOf } from '../lib/text'
+import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
 const STACK = 3
 
-// Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño), nombre del equipo, carrera.
+// Tarjeta de un equipo confirmado. JerarquÃ­a: instituciÃ³n (tÃ­tulo pequeÃ±o), nombre del equipo, carrera.
 // Abajo, los integrantes se muestran como una pila de avatares y se despliegan con "Ver integrantes".
 export default function TeamCard({ team, logo }) {
   const [open, setOpen] = useState(false)
@@ -12,9 +13,12 @@ export default function TeamCard({ team, logo }) {
   return (
     <li className={`tc ${open ? 'tc--open' : ''}`}>
       <div className="tc-body">
-        {logo
-          ? <img src={logo} alt="" loading="lazy" className="tc-logo" />
-          : <span className="tc-logo tc-logo--empty" aria-hidden="true">{team.team_name[0]}</span>}
+        <img
+          src={logo || defaultLogo}
+          alt=""
+          loading="lazy"
+          className={`tc-logo ${!logo ? 'tc-logo--default' : ''}`}
+        />
         {team.institution && <p className="tc-eyebrow">{team.institution}</p>}
         <h3 className="tc-name">{team.team_name}</h3>
         {team.professional_school && <p className="tc-career">{team.professional_school}</p>}

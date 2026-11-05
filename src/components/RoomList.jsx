@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
+import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
 function shortInst(str) {
   if (!str) return ''
-  if (str.includes('·')) return str.split('·')[0].trim()
+  if (str.includes('Â·')) return str.split('Â·')[0].trim()
   return str
 }
 
-// Llaves del torneo (Free Fire): pestañas horizontales por sala y 3 columnas con logo grande (44px).
+// Llaves del torneo (Free Fire): pestaÃ±as horizontales por sala y 3 columnas con logo grande (44px).
 // Al tocar un equipo, se despliegan exclusivamente sus integrantes.
 export default function RoomList({ teams, logoOf }) {
   const [openId, setOpenId] = useState(null)
@@ -60,7 +61,7 @@ export default function RoomList({ teams, logoOf }) {
         <div className="pd-room-colhead-3" aria-hidden="true">
           <span className="pd-colhead-slot">Slot</span>
           <span>Equipo</span>
-          <span>Institución</span>
+          <span>InstituciÃ³n</span>
           <span>Carrera</span>
           <span />
         </div>
@@ -79,15 +80,14 @@ export default function RoomList({ teams, logoOf }) {
                     aria-expanded={open}
                     onClick={() => setOpenId(open ? null : team.id)}
                   >
-                    <b className="pd-room-num-3" title="Lugar en la sala">{team.slot ?? '·'}</b>
+                    <b className="pd-room-num-3" title="Lugar en la sala">{team.slot ?? 'Â·'}</b>
                     <div className="pd-room-team-cell">
-                      {logo ? (
-                        <img src={logo} alt="" loading="lazy" className="pd-room-logo-3" />
-                      ) : (
-                        <span className="pd-room-logo-3 pd-room-logo-3--empty" aria-hidden="true">
-                          {team.team_name[0]}
-                        </span>
-                      )}
+                      <img
+                        src={logo || defaultLogo}
+                        alt=""
+                        loading="lazy"
+                        className={`pd-room-logo-3 ${!logo ? 'pd-room-logo-3--default' : ''}`}
+                      />
                       <div className="pd-room-team-info">
                         <div className="pd-room-mobile-top">
                           <strong className="pd-room-team-title">{team.team_name}</strong>
@@ -106,14 +106,14 @@ export default function RoomList({ teams, logoOf }) {
                     </div>
 
                     <div className="pd-room-col-inst" title={team.institution || ''}>
-                      {team.institution || '—'}
+                      {team.institution || 'â€”'}
                     </div>
 
                     <div className="pd-room-col-career" title={team.professional_school || ''}>
-                      {team.professional_school || '—'}
+                      {team.professional_school || 'â€”'}
                     </div>
 
-                    <span className="pd-room-caret-3" aria-hidden="true">{open ? '▾' : '▸'}</span>
+                    <span className="pd-room-caret-3" aria-hidden="true">{open ? 'â–¾' : 'â–¸'}</span>
                   </button>
 
                   {open && (
