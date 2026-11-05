@@ -244,9 +244,14 @@ function StageView({ stage, data, teams }) {
   const champion = stage.config?.champion
   const slotOf = stage.config?.slot_of ?? {} // número fijo de cada equipo en su sala
   const hasConfiguredSlots = Object.keys(slotOf).length > 0
-  const stageTeams = teams.filter(
-    (team) => team.game_key === stage.game_key && (!stage.config?.participants || stage.config.participants.includes(team.id))
-  )
+  const stageTeams = teams.filter((team) => {
+    if (team.game_key !== stage.game_key) return false
+    if (stage.config?.participants) return stage.config.participants.includes(team.id)
+    if (stage.config?.room_of && Object.keys(stage.config.room_of).length > 0) {
+      return Boolean(stage.config.room_of[team.id])
+    }
+    return true
+  })
   const effectiveSlotOf = hasConfiguredSlots ? resolveSlots(stageTeams, roomOf, slotOf) : {}
   // Equipos de esta fase con su sala y su lugar en ella (incluye slots resueltos dinámicamente si falta asignar)
   const roomTeams = !hasConfiguredSlots ? [] : stageTeams
