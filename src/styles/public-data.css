@@ -601,3 +601,228 @@
   white-space: nowrap;
   margin-top: 1px;
 }
+
+/* Podio de Ganadores (Top 3 del Torneo) */
+.pd-podium-section {
+  margin-top: 2.2rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pd-podium-head {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+.pd-podium-kicker {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  display: block;
+}
+.pd-podium-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin: 0.3rem 0 0;
+}
+.pd-podium-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr 1fr;
+  gap: 1.2rem;
+  align-items: end;
+}
+.pd-podium-card {
+  border-radius: 18px;
+  padding: 1.5rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pd-podium-card--gold {
+  order: 2;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.16) 0%, rgba(15, 21, 35, 0.98) 100%);
+  border: 2px solid rgba(245, 158, 11, 0.55);
+  box-shadow: 0 16px 40px -12px rgba(245, 158, 11, 0.25);
+  transform: translateY(-12px);
+}
+.pd-podium-card--silver {
+  order: 1;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(15, 21, 35, 0.95) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+}
+.pd-podium-card--bronze {
+  order: 3;
+  background: linear-gradient(180deg, rgba(180, 83, 9, 0.12) 0%, rgba(15, 21, 35, 0.95) 100%);
+  border: 1px solid rgba(180, 83, 9, 0.35);
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+}
+.pd-podium-badge {
+  position: absolute;
+  top: -12px;
+  padding: 0.22rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.pd-podium-card--gold .pd-podium-badge {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #0f172a;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+}
+.pd-podium-card--silver .pd-podium-badge {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+.pd-podium-card--bronze .pd-podium-badge {
+  background: #b45309;
+  color: #fef3c7;
+}
+.pd-podium-logo-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0 0.8rem;
+  background: #090e18;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.pd-podium-card--gold .pd-podium-logo-wrap {
+  width: 72px;
+  height: 72px;
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+.pd-podium-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.pd-podium-logo--default {
+  object-fit: contain;
+  padding: 5px;
+  opacity: 0.55;
+  filter: grayscale(1) brightness(1.2);
+}
+.pd-podium-team-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.pd-podium-card--gold .pd-podium-team-name {
+  font-size: 1.2rem;
+}
+.pd-podium-inst {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-top: 0.25rem;
+}
+.pd-podium-career {
+  display: block;
+  font-size: 0.74rem;
+  color: #d8b4fe;
+  margin-top: 0.1rem;
+}
+.pd-podium-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+}
+.pd-podium-card--gold .pd-podium-stats {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fde68a;
+}
+.pd-podium-dot {
+  opacity: 0.5;
+}
+.pd-podium-players-wrap {
+  width: 100%;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pd-podium-players-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.45rem;
+  text-align: center;
+}
+.pd-podium-players-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.pd-podium-player {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .pd-podium-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .pd-podium-card--gold {
+    order: 1;
+    transform: none;
+  }
+  .pd-podium-card--silver {
+    order: 2;
+  }
+  .pd-podium-card--bronze {
+    order: 3;
+  }
+  .pd-podium-card {
+    padding: 1.4rem 1rem;
+    width: 100%;
+  }
+  .pd-podium-logo-wrap {
+    width: 56px;
+    height: 56px;
+  }
+  .pd-podium-card--gold .pd-podium-logo-wrap {
+    width: 64px;
+    height: 64px;
+  }
+}

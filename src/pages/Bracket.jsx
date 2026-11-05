@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRegistration } from '../context/RegistrationContext'
 import { fetchPublishedStages, fetchPublicTeams, publicUrl } from '../lib/tournamentApi'
+import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 import RoomList from '../components/RoomList'
 import Collapse from '../components/Collapse'
 import PagePlaceholder from './PagePlaceholder'
@@ -312,7 +313,79 @@ function StageView({ stage, data, teams }) {
           </div>
         )
       })}
+      {champion && ranking.length >= 3 && (
+        <Podium top3={ranking.slice(0, 3)} teamMap={teamMap} />
+      )}
     </section>
+  )
+}
+
+function Podium({ top3, teamMap }) {
+  if (!top3 || top3.length < 3) return null
+  const [first, second, third] = top3
+
+  const renderCard = (r, place, label, toneClass) => {
+    const team = teamMap.get(r.id)
+    const logo = publicUrl('team-logos', team?.logo_path)
+    const players = team?.players ?? []
+
+    return (
+      <div className={`pd-podium-card ${toneClass}`}>
+        <div className="pd-podium-badge">{label}</div>
+
+        <div className="pd-podium-logo-wrap">
+          <img
+            src={logo || defaultLogo}
+            alt=""
+            loading="lazy"
+            className={`pd-podium-logo ${!logo ? 'pd-podium-logo--default' : ''}`}
+          />
+        </div>
+
+        <h4 className="pd-podium-team-name">{r.name}</h4>
+
+        {team?.institution && (
+          <span className="pd-podium-inst">{team.institution}</span>
+        )}
+        {team?.professional_school && (
+          <span className="pd-podium-career">{team.professional_school}</span>
+        )}
+
+        <div className="pd-podium-stats">
+          <span>{r.points} PTS</span>
+          <span className="pd-podium-dot">·</span>
+          <span>{r.kills} KILLS</span>
+        </div>
+
+        {players.length > 0 && (
+          <div className="pd-podium-players-wrap">
+            <span className="pd-podium-players-label">Integrantes</span>
+            <div className="pd-podium-players-list">
+              {players.map((p) => (
+                <span key={p.slot} className="pd-podium-player">
+                  {p.nickname}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="pd-podium-section">
+      <div className="pd-podium-head">
+        <span className="pd-podium-kicker">CUADRO DE HONOR</span>
+        <h3 className="pd-podium-title">PODIO DEL TORNEO</h3>
+      </div>
+
+      <div className="pd-podium-grid">
+        {renderCard(second, 2, '2° SUBCAMPEÓN', 'pd-podium-card--silver')}
+        {renderCard(first, 1, '1° CAMPEÓN', 'pd-podium-card--gold')}
+        {renderCard(third, 3, '3° TERCER LUGAR', 'pd-podium-card--bronze')}
+      </div>
+    </div>
   )
 }
 
