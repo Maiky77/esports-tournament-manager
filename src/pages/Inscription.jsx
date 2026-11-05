@@ -8,6 +8,7 @@ import { formatSoles } from '../lib/money'
 import { publicUrl, submitRegistration, validateUpload } from '../lib/tournamentApi'
 import SearchSelect from '../components/SearchSelect'
 import RegistrationSuccess from '../components/RegistrationSuccess'
+import Icon from '../components/Icon'
 import { communityLink } from '../lib/whatsapp'
 import { institutionGroups, OTHER_INSTITUTION } from '../lib/institutions'
 import { careerGroups, OTHER_CAREER } from '../lib/careers'
@@ -138,6 +139,38 @@ function Inscription({ modal = false }) {
   // Datos Etapa 3
   const [paymentReceipt, setPaymentReceipt] = useState(null)
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [copiedYape, setCopiedYape] = useState(false)
+
+  const handleCopyYapeNumber = () => {
+    if (!settings.yape_number) return
+    audio.click()
+    const cleanNumber = String(settings.yape_number).replace(/\s+/g, '')
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(cleanNumber).then(() => {
+        setCopiedYape(true)
+        setTimeout(() => setCopiedYape(false), 2000)
+      }).catch(() => fallbackCopy(cleanNumber))
+    } else {
+      fallbackCopy(cleanNumber)
+    }
+  }
+
+  const fallbackCopy = (text) => {
+    try {
+      const ta = document.createElement('textarea')
+      ta.value = text
+      ta.style.position = 'fixed'
+      ta.style.opacity = '0'
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+      setCopiedYape(true)
+      setTimeout(() => setCopiedYape(false), 2000)
+    } catch (e) {
+      console.warn('Fallback copy failed', e)
+    }
+  }
 
   const [stepError, setStepError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
@@ -631,10 +664,29 @@ function Inscription({ modal = false }) {
                 </div>
 
                 <h2>REALIZA EL ABONO POR YAPE</h2>
+                {settings.yape_number ? (
+                  <div className="yape-info-box">
+                    <div className="yape-info-text">
+                      <span className="yape-info-kicker">NÚMERO OFICIAL DE YAPE</span>
+                      <strong className="yape-info-number">{settings.yape_number}</strong>
+                      {settings.yape_holder && (
+                        <span className="yape-info-holder">Titular: <b>{settings.yape_holder}</b></span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      className={`yape-copy-btn ${copiedYape ? 'yape-copy-btn--copied' : ''}`}
+                      onClick={handleCopyYapeNumber}
+                      title="Copiar número de Yape"
+                    >
+                      <Icon name={copiedYape ? 'check' : 'copy'} size={15} />
+                      <span>{copiedYape ? '¡Copiado!' : 'Copiar número'}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <p>La organización publicará aquí el código oficial y los datos de pago.</p>
+                )}
                 <p>
-                  {settings.yape_number
-                    ? <>Yapea a <strong>{settings.yape_number}</strong>{settings.yape_holder ? <> a nombre de <strong>{settings.yape_holder}</strong></> : null}. </>
-                    : 'La organización publicará aquí el código oficial y los datos de pago. '}
                   La tarifa de esta disciplina es <strong>{gameInfo.priceFormatted}</strong> por equipo.
                 </p>
                 {/^\d{8,15}$/.test(settings.contact_whatsapp || '') && (
