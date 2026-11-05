@@ -290,8 +290,17 @@
 }
 .pd-room-caret-3 {
   color: #94a3b8;
-  font-size: 0.85rem;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.pd-room-caret-3 svg {
+  display: block;
+}
+.pd-room-item-3--open .pd-room-caret-3 {
+  transform: rotate(90deg);
+  color: #fff;
 }
 
 .pd-room-detail-3 {

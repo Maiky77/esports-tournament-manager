@@ -3,11 +3,11 @@ import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
 function shortInst(str) {
   if (!str) return ''
-  if (str.includes('Â·')) return str.split('Â·')[0].trim()
+  if (str.includes('·')) return str.split('·')[0].trim()
   return str
 }
 
-// Llaves del torneo (Free Fire): pestaÃ±as horizontales por sala y 3 columnas con logo grande (44px).
+// Llaves del torneo (Free Fire): pestañas horizontales por sala y 3 columnas con logo grande (44px).
 // Al tocar un equipo, se despliegan exclusivamente sus integrantes.
 export default function RoomList({ teams, logoOf }) {
   const [openId, setOpenId] = useState(null)
@@ -61,7 +61,7 @@ export default function RoomList({ teams, logoOf }) {
         <div className="pd-room-colhead-3" aria-hidden="true">
           <span className="pd-colhead-slot">Slot</span>
           <span>Equipo</span>
-          <span>InstituciÃ³n</span>
+          <span>Institución</span>
           <span>Carrera</span>
           <span />
         </div>
@@ -80,7 +80,7 @@ export default function RoomList({ teams, logoOf }) {
                     aria-expanded={open}
                     onClick={() => setOpenId(open ? null : team.id)}
                   >
-                    <b className="pd-room-num-3" title="Lugar en la sala">{team.slot ?? 'Â·'}</b>
+                    <b className="pd-room-num-3" title="Lugar en la sala">{team.slot ?? '·'}</b>
                     <div className="pd-room-team-cell">
                       <img
                         src={logo || defaultLogo}
@@ -106,14 +106,18 @@ export default function RoomList({ teams, logoOf }) {
                     </div>
 
                     <div className="pd-room-col-inst" title={team.institution || ''}>
-                      {team.institution || 'â€”'}
+                      {team.institution || '—'}
                     </div>
 
                     <div className="pd-room-col-career" title={team.professional_school || ''}>
-                      {team.professional_school || 'â€”'}
+                      {team.professional_school || '—'}
                     </div>
 
-                    <span className="pd-room-caret-3" aria-hidden="true">{open ? 'â–¾' : 'â–¸'}</span>
+                    <span className="pd-room-caret-3" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </span>
                   </button>
 
                   {open && (
