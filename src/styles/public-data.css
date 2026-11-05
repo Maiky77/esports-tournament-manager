@@ -688,15 +688,15 @@
 }
 .pd-podium-trophy-watermark img {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 40px;        /* <-- SUBIR O BAJAR (ej: 40px más abajo, 10px más arriba) */
+  right: -80px;      /* <-- IZQUIERDA O DERECHA (ej: 35px más izquierda, -10px más derecha) */
   width: 16rem;
   height: auto;
   object-fit: contain;
   opacity: 0.22;
   filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.5));
   transform-origin: top right;
-  transform: rotate(16deg) translate(2px, 26px) scale(1.18);
+  transform: rotate(16deg) scale(1.25); /* <-- aquí ya no necesitas translate */
   pointer-events: none;
 }
 .pd-podium-badge {

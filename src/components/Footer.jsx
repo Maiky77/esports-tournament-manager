@@ -33,7 +33,7 @@ function Footer() {
             />
             <div>
               <strong className="footer-brand-name">RAGNAROK · U-SERIES</strong>
-              <span className="footer-brand-sub">ARENA UNIVERSITARIA / PUNO 2026</span>
+              <span className="footer-brand-sub">ARENA UNIVERSITARIA 2026</span>
             </div>
           </Link>
           <p className="footer-brand-desc">
