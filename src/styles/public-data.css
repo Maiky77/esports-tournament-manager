@@ -646,9 +646,14 @@
 }
 .pd-podium-card--gold {
   order: 2;
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.16) 0%, rgba(15, 21, 35, 0.98) 100%);
-  border: 2px solid rgba(245, 158, 11, 0.55);
-  box-shadow: 0 16px 40px -12px rgba(245, 158, 11, 0.25);
+  background:
+    radial-gradient(ellipse at top right, rgba(168, 85, 247, 0.16) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(245, 158, 11, 0.18) 0%, rgba(15, 21, 35, 0.98) 100%);
+  border: 2px solid rgba(245, 158, 11, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.5),
+    0 16px 40px -12px rgba(245, 158, 11, 0.35),
+    0 0 25px rgba(168, 85, 247, 0.25);
   transform: translateY(-12px);
 }
 .pd-podium-card--silver {
@@ -662,10 +667,42 @@
   background: linear-gradient(180deg, rgba(180, 83, 9, 0.12) 0%, rgba(15, 21, 35, 0.95) 100%);
   border: 1px solid rgba(180, 83, 9, 0.35);
   box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+  transform: scale(0.96);
+  transform-origin: bottom center;
+}
+.pd-podium-card--bronze .pd-podium-players-list {
+  gap: 0.25rem;
+}
+.pd-podium-card--bronze .pd-podium-player {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.45rem;
+}
+/* Marca de agua de la Copa Ragnarok en diagonal (16°, desplazada a la derecha y abajo) */
+.pd-podium-trophy-watermark {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.pd-podium-trophy-watermark img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16rem;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.5));
+  transform-origin: top right;
+  transform: rotate(16deg) translate(2px, 26px) scale(1.18);
+  pointer-events: none;
 }
 .pd-podium-badge {
   position: absolute;
   top: -12px;
+  z-index: 3;
   padding: 0.22rem 0.85rem;
   border-radius: 999px;
   font-family: var(--font-display);
@@ -689,6 +726,8 @@
   color: #fef3c7;
 }
 .pd-podium-logo-wrap {
+  position: relative;
+  z-index: 1;
   width: 60px;
   height: 60px;
   border-radius: 14px;
@@ -720,6 +759,8 @@
   filter: grayscale(1) brightness(1.2);
 }
 .pd-podium-team-name {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 800;
@@ -727,11 +768,26 @@
   margin: 0;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
 }
 .pd-podium-card--gold .pd-podium-team-name {
   font-size: 1.2rem;
 }
+.pd-podium-title-cup {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.75));
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
 .pd-podium-inst {
+  position: relative;
+  z-index: 1;
   display: block;
   font-size: 0.76rem;
   font-weight: 700;
@@ -739,12 +795,16 @@
   margin-top: 0.25rem;
 }
 .pd-podium-career {
+  position: relative;
+  z-index: 1;
   display: block;
   font-size: 0.74rem;
   color: #d8b4fe;
   margin-top: 0.1rem;
 }
 .pd-podium-stats {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -765,6 +825,8 @@
   opacity: 0.5;
 }
 .pd-podium-players-wrap {
+  position: relative;
+  z-index: 1;
   width: 100%;
   margin-top: 1rem;
   padding-top: 0.85rem;
@@ -787,6 +849,8 @@
   gap: 0.35rem;
 }
 .pd-podium-player {
+  position: relative;
+  z-index: 1;
   font-size: 0.72rem;
   font-weight: 600;
   color: #e2e8f0;
@@ -795,6 +859,25 @@
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
   line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pd-podium-player--sub {
+  border-color: rgba(168, 85, 247, 0.3);
+  background: rgba(168, 85, 247, 0.08);
+}
+.pd-podium-sub-badge {
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  padding: 0.05rem 0.28rem;
+  border-radius: 4px;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 @media (max-width: 768px) {

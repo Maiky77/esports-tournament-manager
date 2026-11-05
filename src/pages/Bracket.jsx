@@ -402,9 +402,16 @@ function Podium({ top3, teamMap }) {
     const team = teamMap.get(r.id)
     const logo = publicUrl('team-logos', team?.logo_path)
     const players = team?.players ?? []
+    const isChampion = place === 1
 
     return (
       <div className={`pd-podium-card ${toneClass}`}>
+        {isChampion && (
+          <div className="pd-podium-trophy-watermark" aria-hidden="true">
+            <img src="/images/copa_ragnarok.png" alt="" />
+          </div>
+        )}
+
         <div className="pd-podium-badge">{label}</div>
 
         <div className="pd-podium-logo-wrap">
@@ -416,7 +423,16 @@ function Podium({ top3, teamMap }) {
           />
         </div>
 
-        <h4 className="pd-podium-team-name">{r.name || team?.team_name || team?.name}</h4>
+        <h4 className="pd-podium-team-name">
+          {isChampion && (
+            <img
+              src="/images/copa_ragnarok.png"
+              alt=""
+              className="pd-podium-title-cup"
+            />
+          )}
+          <span>{r.name || team?.team_name || team?.name}</span>
+        </h4>
 
         {team?.institution && (
           <span className="pd-podium-inst">{team.institution}</span>
@@ -442,8 +458,12 @@ function Podium({ top3, teamMap }) {
             <span className="pd-podium-players-label">Integrantes</span>
             <div className="pd-podium-players-list">
               {players.map((p) => (
-                <span key={p.slot} className="pd-podium-player">
+                <span
+                  key={p.slot}
+                  className={`pd-podium-player ${p.is_substitute ? 'pd-podium-player--sub' : ''}`}
+                >
                   {p.nickname}
+                  {p.is_substitute && <span className="pd-podium-sub-badge">SUP</span>}
                 </span>
               ))}
             </div>
