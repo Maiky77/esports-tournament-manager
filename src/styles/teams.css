@@ -32,28 +32,173 @@
 .tc-career { margin: 0; font-family: var(--font-body); font-size: .82rem; line-height: 1.35; color: #94a3b8; }
 .tc-dash { color: #64748b !important; opacity: 0.6; letter-spacing: 0.1em; }
 
-.tc-foot { width: 100%; display: flex; align-items: center; gap: .9rem; padding: .6rem 1.15rem; border: 0; border-top: 1px solid #ffffff12; background: #ffffff05; color: #cbd5e1; font: inherit; cursor: pointer; text-align: left; transition: background .2s, color .2s; }
-.tc-foot:hover { background: #ffffff0d; color: #fff; }
-.tc-foot:focus-visible { outline: 2px solid var(--a1); outline-offset: -2px; }
-.tc-stack { display: inline-flex; }
-.tc-stack i { display: grid; place-items: center; width: 26px; height: 26px; margin-left: -9px; border-radius: 50%; border: 2px solid #0f1627; background: linear-gradient(140deg, color-mix(in srgb, var(--a1) 75%, #0f1627), #1b2540); font-style: normal; font-family: var(--font-display); font-size: .74rem; color: #fff; text-transform: uppercase; }
-.tc-stack i:first-child { margin-left: 0; }
-.tc-stack .tc-more { background: #26304a; color: #cbd5e1; font-family: var(--font-body); font-weight: 700; }
-.tc-action { flex: 1; white-space: nowrap; font-family: var(--font-body); font-size: .85rem; font-weight: 600; }
-.tc-action small { margin-left: .45rem; padding: .08rem .5rem; border-radius: 999px; background: #ffffff14; font-size: .74rem; }
-.tc-foot svg { color: #94a3b8; transition: transform .25s; }
-.tc--open .tc-foot svg { transform: rotate(180deg); color: var(--a2); }
-.tc--open { border-color: color-mix(in srgb, var(--a1) 45%, #ffffff14); }
+/* Roster en una sola línea simétrica (Variante C) */
+.tc-roster-row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  gap: .3rem;
+  padding: .5rem .95rem .75rem;
+  border-top: 1px solid #ffffff12;
+  background: #00000038;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
 
-.tc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; background: #0a0f1d; }
-.tc--open .tc-panel { grid-template-rows: 1fr; }
-.tc-panel-inner { overflow: hidden; }
-.tc-roster { list-style: none; margin: 0; padding: .2rem 1.15rem .7rem; display: grid; gap: 0; }
-.tc-roster li { display: flex; align-items: center; gap: .6rem; padding: .45rem 0; border-bottom: 1px solid #ffffff0d; font-family: var(--font-body); font-size: .92rem; font-weight: 600; color: #f1f5f9; }
-.tc-roster li:last-child { border-bottom: 0; }
-.tc-roster span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tc-tag { font-style: normal; font-family: var(--font-display); font-size: .58rem; letter-spacing: .12em; padding: .15rem .45rem; border-radius: 4px; background: #ffffff1c; color: #cbd5e1; }
-.tc-tag--cap { background: var(--a1); color: #fff; }
+.tc-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  min-width: 0;
+  padding: .24rem .35rem;
+  background: #ffffff0a;
+  border: 1px solid #ffffff14;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: .76rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  text-align: center;
+  cursor: default;
+  user-select: none;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
+}
+
+.tc-cell:hover,
+.tc-cell:focus-visible {
+  background: #ffffff14;
+  border-color: #ffffff33;
+  color: #fff;
+}
+
+.tc-cell:focus-visible {
+  outline: 2px solid var(--a1);
+  outline-offset: -1px;
+}
+
+/* Celda del Capitán (Slot 1): acento violeta neón con estrella */
+.tc-cell--cap {
+  background: rgba(124, 58, 237, 0.22);
+  border-color: rgba(168, 85, 247, 0.45);
+  color: #fff;
+}
+
+.tc-cell--cap:hover,
+.tc-cell--cap:focus-visible {
+  background: rgba(124, 58, 237, 0.35);
+  border-color: rgba(168, 85, 247, 0.7);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
+}
+
+.tc-cap-star {
+  color: #facc15;
+  font-size: .68rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Celda para suplentes adicionales (+1, +2) */
+.tc-cell--more {
+  background: #ffffff06;
+  border-color: #ffffff1f;
+  color: #94a3b8;
+  font-family: var(--font-display);
+  font-size: .85rem;
+}
+
+/* Truncamiento inteligente con puntos suspensivos */
+.tc-cell-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+/* Tooltip emergente que muestra exclusivamente el nickname completo */
+.tc-cell-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #0b1120;
+  border: 1px solid rgba(168, 85, 247, 0.65);
+  border-radius: 6px;
+  padding: .35rem .65rem;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  z-index: 50;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(124, 58, 237, 0.4);
+  pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+}
+
+.tc-cell-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(168, 85, 247, 0.65) transparent transparent transparent;
+}
+
+.tc-cell:hover .tc-cell-tooltip,
+.tc-cell:focus-visible .tc-cell-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tc-cell:first-child .tc-cell-tooltip {
+  left: 0;
+  transform: translateY(4px);
+}
+.tc-cell:first-child:hover .tc-cell-tooltip,
+.tc-cell:first-child:focus-visible .tc-cell-tooltip {
+  transform: translateY(0);
+}
+.tc-cell:first-child .tc-cell-tooltip::after {
+  left: 18px;
+  transform: none;
+}
+
+.tc-cell:last-child .tc-cell-tooltip {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+.tc-cell:last-child:hover .tc-cell-tooltip,
+.tc-cell:last-child:focus-visible .tc-cell-tooltip {
+  transform: translateY(0);
+}
+.tc-cell:last-child .tc-cell-tooltip::after {
+  left: auto;
+  right: 18px;
+  transform: none;
+}
+
+@media (max-width: 480px) {
+  .tc-roster-row {
+    gap: .22rem;
+    padding: .45rem .65rem .65rem;
+  }
+  .tc-cell {
+    font-size: .70rem;
+    padding: .2rem .25rem;
+  }
+  .tc-cap-star {
+    font-size: .62rem;
+  }
+}
 
 /* Roster simple usado al desplegar un equipo en las salas de las llaves */
 .tm-players { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .1rem; }
@@ -63,4 +208,4 @@
 .tm-players em { font-style: normal; font-family: var(--font-display); font-size: .58rem; letter-spacing: .12em; padding: .12rem .4rem; border-radius: 4px; background: #ffffff1a; color: #cbd5e1; }
 
 @media (max-width: 560px) { .tm-toolbar { flex-wrap: wrap; } .tc-grid { grid-template-columns: 1fr; } }
-@media (prefers-reduced-motion: reduce) { .tc, .tc-panel, .tc-foot svg { transition: none; } .tc:hover { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tc, .tc-cell, .tc-cell-tooltip { transition: none; } .tc:hover { transform: none; } }

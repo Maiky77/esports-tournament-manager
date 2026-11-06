@@ -1,8 +1,6 @@
-import { useId, useState } from 'react'
-import { initialOf } from '../lib/text'
 import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
-const STACK = 3
+const MAX_SHOWN = 5
 
 const isBlank = (val) => {
   if (!val) return true
@@ -21,9 +19,8 @@ const isBlank = (val) => {
 
 // Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño), nombre del equipo, carrera.
 // Si no tiene institución o carrera registrada, se muestra una raya sutil ("—") para mantener la alineación de la tarjeta.
+// En la base se muestra el roster en una sola fila simétrica (hasta 5 jugadores) con truncamiento y tooltip que solo muestra el apodo completo si se corta.
 export default function TeamCard({ team, logo }) {
-  const [open, setOpen] = useState(false)
-  const panelId = useId()
   const players = team.players ?? []
 
   const rawInst = team.institution?.trim()
@@ -35,8 +32,12 @@ export default function TeamCard({ team, logo }) {
   const displayInst = hasInst ? rawInst : '—'
   const displaySchool = hasSchool ? rawSchool : '—'
 
+  const shownPlayers = players.slice(0, MAX_SHOWN)
+  const extraCount = players.length - MAX_SHOWN
+  const cols = extraCount > 0 ? shownPlayers.length + 1 : shownPlayers.length
+
   return (
-    <li className={`tc ${open ? 'tc--open' : ''}`}>
+    <li className="tc">
       <div className="tc-body">
         <img
           src={logo || defaultLogo}
@@ -50,30 +51,46 @@ export default function TeamCard({ team, logo }) {
       </div>
 
       {players.length > 0 && (
-        <>
-          <button type="button" className="tc-foot" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen(!open)}>
-            <span className="tc-stack" aria-hidden="true">
-              {players.slice(0, STACK).map((p) => <i key={p.slot}>{initialOf(p.nickname)}</i>)}
-              {players.length > STACK && <i className="tc-more">+{players.length - STACK}</i>}
-            </span>
-            <span className="tc-action">{open ? 'Ocultar' : 'Ver'} integrantes<small>{players.length}</small></span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-          <div className="tc-panel" id={panelId} role="region" aria-label={`Integrantes de ${team.team_name}`}>
-            <div className="tc-panel-inner">
-              <ol className="tc-roster">
-                {players.map((player) => (
-                  <li key={player.slot}>
-                    <span title={player.nickname}>{player.nickname}</span>
-                    {player.slot === 1 && <em className="tc-tag tc-tag--cap">CAP</em>}
-                    {player.is_substitute && <em className="tc-tag">SUP</em>}
-                  </li>
-                ))}
-              </ol>
+        <div
+          className="tc-roster-row"
+          style={{ '--cols': cols }}
+          role="list"
+          aria-label={`Integrantes de ${team.team_name}`}
+        >
+          {shownPlayers.map((player) => {
+            const isCap = player.slot === 1
+            return (
+              <div
+                key={player.slot}
+                className={`tc-cell ${isCap ? 'tc-cell--cap' : ''}`}
+                title={player.nickname}
+                tabIndex={0}
+                role="listitem"
+              >
+                {isCap && <span className="tc-cap-star" aria-hidden="true">★</span>}
+                <span className="tc-cell-text">{player.nickname}</span>
+                <span className="tc-cell-tooltip" aria-hidden="true">
+                  {player.nickname}
+                </span>
+              </div>
+            )
+          })}
+          {extraCount > 0 && (
+            <div
+              className="tc-cell tc-cell--more"
+              title={players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
+              tabIndex={0}
+              role="listitem"
+            >
+              <span className="tc-cell-text">+{extraCount}</span>
+              <span className="tc-cell-tooltip" aria-hidden="true">
+                {players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
+              </span>
             </div>
-          </div>
-        </>
+          )}
+        </div>
       )}
     </li>
   )
 }
+
