@@ -613,7 +613,7 @@ function Inscription({ modal = false }) {
                 {game === 'ff' ? (
                   <><strong>Tip:</strong> Usa Pagostore con su ID para copiar el Nickname exacto si tiene símbolos.</>
                 ) : (
-                  <><strong>Tip:</strong> En MLBB puedes copiar el Nickname exacto directamente desde el perfil del juego.</>
+                  <><strong>Tip:</strong> En MLBB entra al perfil de tus compañeros en la lista de amigos para copiar sus Nicknames, o consulta con su ID en Codashop.</>
                 )}
               </p>
             </div>
