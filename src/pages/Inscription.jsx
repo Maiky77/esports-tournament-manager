@@ -375,6 +375,7 @@ function Inscription({ modal = false }) {
 
     setSubmitting(true)
     setNotice(null)
+    const teamBase = `99${Date.now().toString().slice(-7)}`
     try {
       await submitRegistration({
         gameKey: game,
@@ -389,11 +390,11 @@ function Inscription({ modal = false }) {
           if (!nick) {
             return { nickname: '', game_player_id: '' }
           }
-          // ID numérico provisional generado al enviar, válido para las reglas de Supabase (5 a 15 dígitos)
-          const autoId = `99${Date.now().toString().slice(-7)}${Math.floor(10 + Math.random() * 90)}${i}`
+          // ID numérico ordenado y correlativo por equipo: ej. 99330683801, 99330683802...
+          const slotNum = String(i + 1).padStart(2, '0')
           return {
             nickname: nick,
-            game_player_id: autoId,
+            game_player_id: `${teamBase}${slotNum}`,
           }
         }),
         receipt: paymentReceipt,
@@ -792,7 +793,7 @@ function Inscription({ modal = false }) {
                   type="checkbox"
                 />
                 <span>
-                  Declaro bajo juramento que los datos del roster son verídicos, que los jugadores cumplen con las normas universitarias y acepto el cumplimiento estricto del{' '}
+                  Declaro bajo juramento que los datos del roster son verídicos y acepto el cumplimiento estricto del{' '}
                   <a
                     href={gameInfo.pdfUrl}
                     download={gameInfo.pdfName}
