@@ -33,10 +33,6 @@ export default function TeamCard({ team, logo }) {
   const displayInst = hasInst ? rawInst : '—'
   const displaySchool = hasSchool ? rawSchool : '—'
 
-  const shownPlayers = players.slice(0, MAX_SHOWN)
-  const extraCount = players.length - MAX_SHOWN
-  const cols = extraCount > 0 ? shownPlayers.length + 1 : shownPlayers.length
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
@@ -91,11 +87,10 @@ export default function TeamCard({ team, logo }) {
           <div className="tc-chips-inner">
             <div
               className="tc-chips-row"
-              style={{ '--cols': cols }}
               role="list"
               onClick={(e) => e.stopPropagation()}
             >
-              {shownPlayers.map((player) => {
+              {players.map((player) => {
                 const isCap = player.slot === 1
                 return (
                   <div
@@ -113,19 +108,6 @@ export default function TeamCard({ team, logo }) {
                   </div>
                 )
               })}
-              {extraCount > 0 && (
-                <div
-                  className="tc-chip tc-chip--more"
-                  title={players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
-                  tabIndex={0}
-                  role="listitem"
-                >
-                  <span className="tc-chip-text">+{extraCount}</span>
-                  <span className="tc-chip-tooltip" aria-hidden="true">
-                    {players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
