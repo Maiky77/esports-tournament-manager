@@ -7,9 +7,9 @@
 .tm-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #fff; font-family: var(--font-body); font-size: .9rem; }
 .tm-search input::placeholder { color: #94a3b8; }
 
-.tc-grid { list-style: none; margin: 0 auto; padding: 0; max-width: 1480px; display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); align-items: start; }
+.tc-grid { list-style: none; margin: 0 auto; padding: 0; max-width: 1480px; display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); align-items: start; contain: layout; }
 
-/* Tarjeta interactiva: toda la superficie es clickeable */
+/* Tarjeta interactiva: toda la superficie es clickeable con aceleración por GPU */
 .tc {
   border-radius: 16px;
   border: 1px solid #ffffff14;
@@ -18,10 +18,12 @@
   overflow: hidden;
   cursor: pointer;
   user-select: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .tc:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) translateZ(0);
   border-color: rgba(168, 85, 247, 0.5);
   background: linear-gradient(180deg, #162035, #0f1627);
   box-shadow: 0 1px 0 #ffffff0f inset, 0 24px 50px -24px rgba(157, 92, 255, 0.45);
@@ -80,9 +82,11 @@
 }
 .tc-meta-chevron {
   transition: transform .25s ease;
+  will-change: transform;
+  transform: translateZ(0);
 }
 .tc--open .tc-meta-chevron {
-  transform: rotate(180deg);
+  transform: rotate(180deg) translateZ(0);
   color: #ff4df0;
 }
 
@@ -90,19 +94,23 @@
 .tc-career { margin: 0; font-family: var(--font-body); font-size: .82rem; line-height: 1.35; color: #94a3b8; }
 .tc-dash { color: #64748b !important; opacity: 0.6; letter-spacing: 0.1em; }
 
-/* Bandeja desplegable de chips en 3 columnas */
+/* Bandeja desplegable de chips en 3 columnas acelerada por GPU */
 .tc-chips-tray {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows .25s cubic-bezier(0.4, 0, 0.2, 1);
   background: rgba(0, 0, 0, 0.28);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+  will-change: grid-template-rows;
+  transform: translateZ(0);
 }
 .tc--open .tc-chips-tray {
   grid-template-rows: 1fr;
 }
 .tc-chips-inner {
   overflow: hidden;
+  min-height: 0;
+  transform: translateZ(0);
 }
 
 .tc-chips-row {
@@ -172,6 +180,9 @@
 }
 
 @media (max-width: 480px) {
+  .tc:hover {
+    transform: translateZ(0);
+  }
   .tc-chips-row {
     gap: .22rem .22rem;
     padding: .4rem .55rem .55rem;

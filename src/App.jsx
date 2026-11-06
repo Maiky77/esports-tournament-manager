@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import RouteScroll from './components/RouteScroll'
@@ -10,12 +10,6 @@ import Footer from './components/Footer'
 import LiveDock from './components/LiveDock'
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext'
 import { audio } from './lib/audioEngine'
-import Home from './pages/Home'
-import Inscription from './pages/Inscription'
-import PagePlaceholder from './pages/PagePlaceholder'
-import Teams from './pages/Teams'
-import Bracket from './pages/Bracket'
-import Schedule from './pages/Schedule'
 import { TournamentProvider, useTournament } from './context/TournamentContext'
 import { publicUrl } from './lib/tournamentApi'
 import './App.css'
@@ -28,6 +22,13 @@ import './styles/success.css'
 import './styles/teams.css'
 import './styles/schedule.css'
 import './styles/disciplines.css'
+
+const Home = lazy(() => import('./pages/Home'))
+const Inscription = lazy(() => import('./pages/Inscription'))
+const Teams = lazy(() => import('./pages/Teams'))
+const Bracket = lazy(() => import('./pages/Bracket'))
+const Schedule = lazy(() => import('./pages/Schedule'))
+const PagePlaceholder = lazy(() => import('./pages/PagePlaceholder'))
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true)
@@ -90,19 +91,23 @@ function AppContent() {
         <ParticleBackground />
         {showSplash && <SplashScreen onEnter={enterArena} />}
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home heroEnabled={!showSplash} />} />
-          <Route path="/inscripcion" element={<Inscription />} />
-          <Route path="/equipos" element={<Teams />} />
-          <Route path="/llaves" element={<Bracket />} />
-          <Route path="/cronograma" element={<Schedule />} />
-          <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home heroEnabled={!showSplash} />} />
+            <Route path="/inscripcion" element={<Inscription />} />
+            <Route path="/equipos" element={<Teams />} />
+            <Route path="/llaves" element={<Bracket />} />
+            <Route path="/cronograma" element={<Schedule />} />
+            <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
+          </Routes>
+        </Suspense>
         <Footer />
         {audioStarted && <AudioControls />}
         {!showSplash && <LiveDock />}
         <RegistrationModal onClose={closeRegistration} open={isRegistrationOpen}>
-          <Inscription modal />
+          <Suspense fallback={null}>
+            <Inscription modal />
+          </Suspense>
         </RegistrationModal>
       </div>
     </BrowserRouter>
