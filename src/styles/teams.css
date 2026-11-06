@@ -108,8 +108,8 @@
 .tc-chips-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .35rem .45rem;
-  padding: .55rem .95rem .75rem;
+  gap: .28rem .32rem;
+  padding: .45rem .65rem .65rem;
 }
 
 .tc-chip {
@@ -117,15 +117,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .25rem;
+  gap: .2rem;
   min-width: 0;
-  padding: .3rem .45rem;
+  padding: .26rem .25rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: var(--font-body);
-  font-size: .8rem;
-  font-weight: 600;
+  font-size: .69rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: #e2e8f0;
   text-align: center;
   cursor: default;
@@ -156,9 +157,10 @@
 }
 .tc-chip-star {
   color: #facc15;
-  font-size: .68rem;
+  font-size: .62rem;
   line-height: 1;
   flex-shrink: 0;
+  margin-right: -1px;
 }
 
 .tc-chip-text {
@@ -166,17 +168,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 @media (max-width: 480px) {
   .tc-chips-row {
-    gap: .25rem .3rem;
-    padding: .45rem .65rem .65rem;
+    gap: .22rem .22rem;
+    padding: .4rem .55rem .55rem;
   }
   .tc-chip {
-    font-size: .72rem;
-    padding: .22rem .3rem;
+    font-size: .66rem;
+    padding: .22rem .18rem;
+  }
+  .tc-chip-star {
+    font-size: .56rem;
   }
 }
 
