@@ -9,7 +9,7 @@ import SearchSelect from '../components/SearchSelect'
 import RegistrationSuccess from '../components/RegistrationSuccess'
 import Icon from '../components/Icon'
 import { communityLink } from '../lib/whatsapp'
-import { institutionGroups, OTHER_INSTITUTION } from '../lib/institutions'
+import { institutionGroups, OTHER_INSTITUTION, NO_INSTITUTION } from '../lib/institutions'
 import { careerGroups, OTHER_CAREER } from '../lib/careers'
 
 const baseGames = {
@@ -125,7 +125,7 @@ function Inscription({ modal = false }) {
   const [teamLogo, setTeamLogo] = useState(null)
   const [captainName, setCaptainName] = useState('')
   const [captainWhatsapp, setCaptainWhatsapp] = useState('')
-  const [institutionChoice, setInstitutionChoice] = useState('UNAP')
+  const [institutionChoice, setInstitutionChoice] = useState('')
   const [professionalSchool, setProfessionalSchool] = useState('')
   const [customInstitution, setCustomInstitution] = useState('')
   const [customCareer, setCustomCareer] = useState('')
@@ -200,12 +200,23 @@ function Inscription({ modal = false }) {
   })), [gameConfig])
 
   // UNAP se guarda como institución propia (con escuela); cualquier otra, por nombre.
-  const institution = institutionChoice === 'UNAP' ? 'UNAP' : 'Otra'
-  const otherInstitution = institutionChoice === OTHER_INSTITUTION ? customInstitution : institutionChoice
-  // La carrera se pide siempre: escuelas de la UNAP o una lista general para otras instituciones.
-  const career = professionalSchool === OTHER_CAREER ? customCareer.trim() : professionalSchool
+  const isNone = !institutionChoice || institutionChoice === NO_INSTITUTION
+  const isUnap = institutionChoice === 'UNAP'
+  const institution = isUnap ? 'UNAP' : 'Otra'
+  const otherInstitution = isNone || isUnap
+    ? ''
+    : (institutionChoice === OTHER_INSTITUTION ? customInstitution.trim() : institutionChoice)
+
+  const career = professionalSchool === OTHER_CAREER
+    ? customCareer.trim()
+    : professionalSchool.trim()
+
   const changeInstitution = (next) => {
-    if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) {
+    if (next === NO_INSTITUTION) {
+      setProfessionalSchool('')
+      setCustomCareer('')
+      setCustomInstitution('')
+    } else if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) {
       setProfessionalSchool('')
       setCustomCareer('')
     }
@@ -268,16 +279,6 @@ function Inscription({ modal = false }) {
     }
     if (!captainWhatsapp.trim() || captainWhatsapp.replace(/\D/g, '').length < 8) {
       setStepError('Ingresa un número de WhatsApp válido del capitán (mínimo 9 dígitos).')
-      audio.click()
-      return false
-    }
-    if (!career) {
-      setStepError(institution === 'UNAP' ? 'Selecciona tu escuela profesional de la UNAP.' : 'Selecciona o escribe tu carrera profesional.')
-      audio.click()
-      return false
-    }
-    if (institution === 'Otra' && !otherInstitution.trim()) {
-      setStepError('Ingresa el nombre de tu universidad o institución.')
       audio.click()
       return false
     }
@@ -520,27 +521,27 @@ function Inscription({ modal = false }) {
                 />
               </label>
               <SearchSelect
-                label="INSTITUCIÓN DE PROCEDENCIA *"
+                label="INSTITUCIÓN DE PROCEDENCIA (OPCIONAL)"
                 groups={institutionGroups}
                 value={institutionChoice}
                 onChange={changeInstitution}
-                placeholder="Busca tu universidad o instituto…"
-                emptyText="No aparece. Elige “Otra institución” y escribe el nombre."
+                placeholder="Busca tu universidad, instituto o déjalo vacío…"
+                emptyText="No aparece. Elige “Otra institución” o déjalo vacío."
               />
               <SearchSelect
-                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) *' : 'CARRERA PROFESIONAL *'}
+                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) (OPCIONAL)' : 'CARRERA O ESCUELA (OPCIONAL)'}
                 groups={institution === 'UNAP' ? schoolGroups : careerGroups}
                 value={professionalSchool}
                 onChange={setProfessionalSchool}
-                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional…' : 'Busca tu carrera…'}
+                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional (opcional)…' : 'Busca tu carrera (opcional)…'}
               />
               {institutionChoice === OTHER_INSTITUTION && (
                 <label className="form-field">
-                  <span>NOMBRE DE LA INSTITUCIÓN *</span>
+                  <span>NOMBRE DE LA INSTITUCIÓN (OPCIONAL)</span>
                   <input
                     name="otherInstitution"
                     maxLength="120"
-                    placeholder="Escribe el nombre completo"
+                    placeholder="Escribe el nombre de tu institución"
                     value={customInstitution}
                     onChange={(e) => setCustomInstitution(e.target.value)}
                   />
@@ -548,7 +549,7 @@ function Inscription({ modal = false }) {
               )}
               {professionalSchool === OTHER_CAREER && (
                 <label className="form-field">
-                  <span>NOMBRE DE LA CARRERA *</span>
+                  <span>NOMBRE DE LA CARRERA (OPCIONAL)</span>
                   <input name="customCareer" maxLength="120" placeholder="Escribe el nombre de tu carrera" value={customCareer} onChange={(e) => setCustomCareer(e.target.value)} />
                 </label>
               )}
@@ -633,7 +634,7 @@ function Inscription({ modal = false }) {
               </div>
               <div className="summary-col">
                 <span className="summary-label">INSTITUCIÓN</span>
-                <strong>{institution === 'UNAP' ? career || 'UNAP' : [otherInstitution, career].filter(Boolean).join(' · ') || 'Otra'}</strong>
+                <strong>{institution === 'UNAP' ? ['UNAP', career].filter(Boolean).join(' · ') : [otherInstitution, career].filter(Boolean).join(' · ') || 'Sin institución / Independiente'}</strong>
                 <small>Roster: {players.filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
               </div>
             </div>
