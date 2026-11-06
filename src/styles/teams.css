@@ -30,6 +30,7 @@
 .tc-eyebrow { margin: 0; font-family: var(--font-body); font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--a2); overflow-wrap: anywhere; }
 .tc-name { margin: 0; font-family: var(--font-display); font-size: 1.15rem; line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; color: #fff; overflow-wrap: anywhere; }
 .tc-career { margin: 0; font-family: var(--font-body); font-size: .82rem; line-height: 1.35; color: #94a3b8; }
+.tc-dash { color: #64748b !important; opacity: 0.6; letter-spacing: 0.1em; }
 
 .tc-foot { width: 100%; display: flex; align-items: center; gap: .9rem; padding: .6rem 1.15rem; border: 0; border-top: 1px solid #ffffff12; background: #ffffff05; color: #cbd5e1; font: inherit; cursor: pointer; text-align: left; transition: background .2s, color .2s; }
 .tc-foot:hover { background: #ffffff0d; color: #fff; }

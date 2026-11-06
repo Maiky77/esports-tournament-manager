@@ -4,12 +4,37 @@ import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
 const STACK = 3
 
-// Tarjeta de un equipo confirmado. JerarquÃ­a: instituciÃ³n (tÃ­tulo pequeÃ±o), nombre del equipo, carrera.
-// Abajo, los integrantes se muestran como una pila de avatares y se despliegan con "Ver integrantes".
+const isBlank = (val) => {
+  if (!val) return true
+  const s = String(val).trim().toLowerCase()
+  return (
+    s === 'independiente' ||
+    s === 'otra' ||
+    s === 'otra institución' ||
+    s === 'general' ||
+    s === 'sin especificar' ||
+    s === 'no especificada' ||
+    s === '-' ||
+    s === '—'
+  )
+}
+
+// Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño), nombre del equipo, carrera.
+// Si no tiene institución o carrera registrada, se muestra una raya sutil ("—") para mantener la alineación de la tarjeta.
 export default function TeamCard({ team, logo }) {
   const [open, setOpen] = useState(false)
   const panelId = useId()
   const players = team.players ?? []
+
+  const rawInst = team.institution?.trim()
+  const rawSchool = team.professional_school?.trim()
+
+  const hasInst = !isBlank(rawInst)
+  const hasSchool = !isBlank(rawSchool) && (!hasInst || rawSchool.toLowerCase() !== rawInst.toLowerCase())
+
+  const displayInst = hasInst ? rawInst : '—'
+  const displaySchool = hasSchool ? rawSchool : '—'
+
   return (
     <li className={`tc ${open ? 'tc--open' : ''}`}>
       <div className="tc-body">
@@ -19,9 +44,9 @@ export default function TeamCard({ team, logo }) {
           loading="lazy"
           className={`tc-logo ${!logo ? 'tc-logo--default' : ''}`}
         />
-        {team.institution && <p className="tc-eyebrow">{team.institution}</p>}
+        <p className={`tc-eyebrow ${!hasInst ? 'tc-dash' : ''}`}>{displayInst}</p>
         <h3 className="tc-name">{team.team_name}</h3>
-        {team.professional_school && <p className="tc-career">{team.professional_school}</p>}
+        <p className={`tc-career ${!hasSchool ? 'tc-dash' : ''}`}>{displaySchool}</p>
       </div>
 
       {players.length > 0 && (
