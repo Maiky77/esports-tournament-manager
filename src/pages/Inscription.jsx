@@ -525,15 +525,20 @@ function Inscription({ modal = false }) {
                 groups={institutionGroups}
                 value={institutionChoice}
                 onChange={changeInstitution}
-                placeholder="Busca tu universidad, instituto o déjalo vacío…"
-                emptyText="No aparece. Elige “Otra institución” o déjalo vacío."
+                placeholder="Busca o escribe tu universidad o instituto…"
+                emptyText="Escribe el nombre de tu institución…"
+                allowCustom
+                customGroupLabel="Institución personalizada"
               />
               <SearchSelect
                 label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) (OPCIONAL)' : 'CARRERA O ESCUELA (OPCIONAL)'}
                 groups={institution === 'UNAP' ? schoolGroups : careerGroups}
                 value={professionalSchool}
                 onChange={setProfessionalSchool}
-                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional (opcional)…' : 'Busca tu carrera (opcional)…'}
+                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional (opcional)…' : 'Busca o escribe tu carrera (opcional)…'}
+                emptyText="Escribe el nombre de tu carrera…"
+                allowCustom
+                customGroupLabel="Carrera personalizada"
               />
               {institutionChoice === OTHER_INSTITUTION && (
                 <label className="form-field">

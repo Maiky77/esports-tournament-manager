@@ -56,6 +56,9 @@
 .ss-option--active { background: rgba(157, 92, 255, .22); color: #fff; }
 .ss-option--selected { font-weight: 700; }
 .ss-empty { padding: .8rem .6rem; color: #94a3b8; font-family: var(--font-body); font-size: .85rem; }
+.ss-option--custom { background: rgba(124, 58, 237, 0.16); border: 1px dashed rgba(168, 85, 247, 0.55); margin: 0.25rem 0.2rem; color: #d8b4fe; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+.ss-option--custom:hover { background: rgba(124, 58, 237, 0.32); color: #ffffff; border-color: #c084fc; }
+.ss-group--custom { color: #c084fc; letter-spacing: 0.12em; }
 
 .footer-music-credit a { color: inherit; text-decoration: underline; }
 
