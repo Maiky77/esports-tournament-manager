@@ -47,6 +47,11 @@ function SearchSelect({
   const place = () => {
     const rect = inputRef.current?.getBoundingClientRect()
     if (!rect) return
+    // Si el campo se scrolleó fuera de la vista, cerrar la lista
+    if (rect.bottom < 40 || rect.top > window.innerHeight - 40) {
+      commitRef.current?.()
+      return
+    }
     const below = window.innerHeight - rect.bottom - GAP - 12
     const above = rect.top - GAP - 12
     const up = below < 220 && above > below
@@ -67,7 +72,8 @@ function SearchSelect({
     setQuery('')
   }
 
-  const closeAndCommit = () => {
+  const commitRef = useRef()
+  commitRef.current = () => {
     if (allowCustom && query.trim()) {
       const q = query.trim()
       const match = flat.find((item) => normalize(item.label) === normalize(q) || normalize(item.value) === normalize(q))
@@ -78,23 +84,33 @@ function SearchSelect({
     }
   }
 
+  // Cierra el menú al hacer click o tap fuera, en cualquier parte de la pantalla o del modal
   useEffect(() => {
     if (!open) return undefined
+
     const onDown = (event) => {
-      if (rootRef.current?.contains(event.target) || listRef.current?.contains(event.target)) return
-      closeAndCommit()
+      // Si el click o tap ocurrió dentro de este SearchSelect o de su menú desplegable flotante, no cerrar
+      if (rootRef.current?.contains(event.target) || listRef.current?.contains(event.target)) {
+        return
+      }
+      commitRef.current?.()
     }
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('touchstart', onDown)
+
+    // Usamos capture: true para detectar el click/tap antes de que cualquier modal o contenedor llame a stopPropagation()
+    document.addEventListener('pointerdown', onDown, true)
+    document.addEventListener('touchstart', onDown, true)
+    document.addEventListener('mousedown', onDown, true)
     window.addEventListener('resize', place)
     window.addEventListener('scroll', place, true)
+
     return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('touchstart', onDown)
+      document.removeEventListener('pointerdown', onDown, true)
+      document.removeEventListener('touchstart', onDown, true)
+      document.removeEventListener('mousedown', onDown, true)
       window.removeEventListener('resize', place)
       window.removeEventListener('scroll', place, true)
     }
-  }, [open, query, allowCustom, flat])
+  }, [open])
 
   useEffect(() => {
     if (open) listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: 'nearest' })
@@ -114,12 +130,14 @@ function SearchSelect({
         if (filtered[active]) {
           choose(filtered[active].value)
         } else if (allowCustom && query.trim()) {
-          closeAndCommit()
+          commitRef.current?.()
         } else {
           setOpen(false)
         }
       }
     } else if (event.key === 'Escape') {
+      event.preventDefault()
+      event.stopPropagation()
       setOpen(false)
     }
   }
@@ -144,7 +162,23 @@ function SearchSelect({
         onClick={() => { if (!open) openList() }}
         onKeyDown={onKeyDown}
       />
-      <span className="ss-chevron" aria-hidden="true">▾</span>
+      <span
+        className="ss-chevron"
+        aria-hidden="true"
+        style={{ transform: open ? 'rotate(180deg)' : 'none' }}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          if (open) {
+            commitRef.current?.()
+          } else {
+            inputRef.current?.focus()
+            openList()
+          }
+        }}
+      >
+        ▾
+      </span>
       {open && pos && createPortal(
         <ul
           className="ss-list"
@@ -161,6 +195,7 @@ function SearchSelect({
                 role="option"
                 className="ss-option ss-option--custom"
                 onMouseDown={(e) => { e.preventDefault(); choose(query.trim()) }}
+                onClick={() => choose(query.trim())}
               >
                 <span>Usar: &ldquo;<strong>{query.trim()}</strong>&rdquo;</span>
               </div>
@@ -180,6 +215,7 @@ function SearchSelect({
                   className={`ss-option ${item.value === value ? 'ss-option--selected' : ''} ${index === active ? 'ss-option--active' : ''}`}
                   onMouseEnter={() => setActive(index)}
                   onMouseDown={(e) => { e.preventDefault(); choose(item.value) }}
+                  onClick={() => choose(item.value)}
                 >
                   {item.label}
                 </div>
