@@ -249,6 +249,35 @@ function Inscription({ modal = false }) {
     })
   }
 
+  const [pastedSlot, setPastedSlot] = useState(null)
+
+  const pasteIntoField = async (index, field) => {
+    try {
+      if (!navigator?.clipboard?.readText) return
+      const raw = await navigator.clipboard.readText()
+      if (!raw || !raw.trim()) return
+      let text = raw.trim()
+      if (field === 'id') {
+        text = text.replace(/\D/g, '')
+        if (text.length > 15) text = text.slice(0, 15)
+      } else if (field === 'nickname') {
+        text = text.normalize('NFC').replace(/\s+/g, ' ')
+        if (text.length > 50) text = text.slice(0, 50)
+      }
+      if (text) {
+        updatePlayer(index, field, text)
+        audio.click()
+        const key = `${index}-${field}`
+        setPastedSlot(key)
+        setTimeout(() => {
+          setPastedSlot((curr) => (curr === key ? null : curr))
+        }, 1200)
+      }
+    } catch (err) {
+      console.warn('No se pudo acceder al portapapeles:', err)
+    }
+  }
+
   const pickFile = async (event, setter, allowPdf) => {
     const input = event.target
     const file = input.files?.[0] || null
@@ -591,25 +620,77 @@ function Inscription({ modal = false }) {
                     </span>
                     <span className="roster-slot-label">{slot.label}</span>
                   </div>
-                  <input
-                    className="compact-input"
-                    maxLength={50}
-                    name={`player-${index}-nickname`}
-                    placeholder={`Nickname ${slot.required ? '*' : '(opcional)'}`}
-                    value={players[index]?.nickname || ''}
-                    onChange={(e) => updatePlayer(index, 'nickname', e.target.value)}
-                    required={slot.required}
-                  />
-                  <input
-                    className="compact-input compact-input--mono"
-                    inputMode="numeric"
-                    maxLength={15}
-                    name={`player-${index}-id`}
-                    placeholder={`ID ${slot.required ? '*' : '(opcional)'}`}
-                    value={players[index]?.id || ''}
-                    onChange={(e) => updatePlayer(index, 'id', e.target.value.replace(/\D/g, ''))}
-                    required={slot.required}
-                  />
+                  <div className="compact-input-wrap">
+                    <input
+                      className="compact-input compact-input--with-paste"
+                      maxLength={50}
+                      name={`player-${index}-nickname`}
+                      placeholder={`Nickname ${slot.required ? '*' : '(opcional)'}`}
+                      value={players[index]?.nickname || ''}
+                      onChange={(e) => updatePlayer(index, 'nickname', e.target.value)}
+                      required={slot.required}
+                    />
+                    <button
+                      type="button"
+                      className={`compact-paste-btn ${pastedSlot === `${index}-nickname` ? 'compact-paste-btn--success' : ''}`}
+                      onClick={() => pasteIntoField(index, 'nickname')}
+                      title="Pegar nickname del portapapeles"
+                      aria-label={`Pegar nickname del ${slot.label}`}
+                    >
+                      {pastedSlot === `${index}-nickname` ? (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          <span>Listo</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                          </svg>
+                          <span>Pegar</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <div className="compact-input-wrap">
+                    <input
+                      className="compact-input compact-input--mono compact-input--with-paste"
+                      inputMode="numeric"
+                      maxLength={15}
+                      name={`player-${index}-id`}
+                      placeholder={`ID ${slot.required ? '*' : '(opcional)'}`}
+                      value={players[index]?.id || ''}
+                      onChange={(e) => updatePlayer(index, 'id', e.target.value.replace(/\D/g, ''))}
+                      required={slot.required}
+                    />
+                    <button
+                      type="button"
+                      className={`compact-paste-btn ${pastedSlot === `${index}-id` ? 'compact-paste-btn--success' : ''}`}
+                      onClick={() => pasteIntoField(index, 'id')}
+                      title="Pegar ID del portapapeles"
+                      aria-label={`Pegar ID del ${slot.label}`}
+                    >
+                      {pastedSlot === `${index}-id` ? (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          <span>Listo</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                          </svg>
+                          <span>Pegar</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

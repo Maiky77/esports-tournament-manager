@@ -276,6 +276,13 @@
 .wizard-btn-next,.registration-submit { min-height:53px; font-size:.85rem; }
 .roster-row-compact,.roster-table-head,.stage-summary-card { background:#130c1e; border-color:#9a7bbb3b; }
 .compact-input { min-height:44px; background:#0d0913; font-size:.92rem; }
+.compact-input-wrap { position: relative; width: 100%; display: flex; align-items: center; }
+.compact-input--with-paste { padding-right: 4.8rem !important; }
+.compact-paste-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.22rem 0.55rem; height: 28px; background: rgba(124, 58, 237, 0.16); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 3px; color: #d8b4fe; font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.15s ease; user-select: none; z-index: 2; }
+.compact-paste-btn:hover { background: rgba(124, 58, 237, 0.35); border-color: #c084fc; color: #ffffff; box-shadow: 0 0 10px rgba(168, 85, 247, 0.35); }
+.compact-paste-btn:active { transform: translateY(-50%) scale(0.95); background: rgba(124, 58, 237, 0.5); }
+.compact-paste-btn svg { flex-shrink: 0; }
+.compact-paste-btn--success { background: rgba(34, 197, 94, 0.18) !important; border-color: rgba(74, 222, 128, 0.6) !important; color: #4ade80 !important; }
 .payment-panel { gap:2rem; }
 .payment-qr-pending { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; width:200px; height:200px; background:#1b102a; border:1px dashed #ae83d777; color:#d0b4ec; }
 .payment-qr-pending>strong { font-family:var(--font-display); font-size:.95rem; }
