@@ -79,15 +79,23 @@ export async function submitRegistration({ gameKey, team, captain, whatsapp, ins
   if (!isSupabaseConfigured) throw new Error('El sistema de inscripciones aún no está habilitado.')
   const receiptPath = await upload('receipts', receipt)
   const logoPath = logo ? await upload('team-logos', logo) : null
+
+  // Si no especificaron institución o carrera, se envía "Independiente" para que
+  // la base de datos actual lo acepte con total normalidad sin necesidad de modificar nada en Supabase.
+  const isUnap = institution === 'UNAP'
+  const resolvedInstitution = isUnap ? 'UNAP' : 'Otra'
+  const resolvedOther = isUnap ? null : (otherInstitution?.trim() || 'Independiente')
+  const resolvedSchool = school?.trim() || (isUnap ? 'UNAP' : 'Independiente')
+
   const { data, error } = await supabase.rpc('submit_registration', {
     payload: {
       game_key: gameKey,
       team_name: team,
       captain_name: captain,
       captain_whatsapp: whatsapp,
-      institution: institution || 'Otra',
-      professional_school: school || null,
-      other_institution: institution === 'Otra' ? (otherInstitution || null) : null,
+      institution: resolvedInstitution,
+      professional_school: resolvedSchool,
+      other_institution: resolvedOther,
       receipt_path: receiptPath,
       logo_path: logoPath,
       players,

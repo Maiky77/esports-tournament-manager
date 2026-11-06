@@ -634,7 +634,7 @@ function Inscription({ modal = false }) {
               </div>
               <div className="summary-col">
                 <span className="summary-label">INSTITUCIÓN</span>
-                <strong>{institution === 'UNAP' ? ['UNAP', career].filter(Boolean).join(' · ') : [otherInstitution, career].filter(Boolean).join(' · ') || 'Sin institución / Independiente'}</strong>
+                <strong>{institution === 'UNAP' ? ['UNAP', career].filter(Boolean).join(' · ') : [otherInstitution, career].filter(Boolean).join(' · ') || 'Independiente'}</strong>
                 <small>Roster: {players.filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
               </div>
             </div>
