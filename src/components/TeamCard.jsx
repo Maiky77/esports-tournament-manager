@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
 const MAX_SHOWN = 5
@@ -17,10 +18,10 @@ const isBlank = (val) => {
   )
 }
 
-// Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño), nombre del equipo, carrera.
-// Si no tiene institución o carrera registrada, se muestra una raya sutil ("—") para mantener la alineación de la tarjeta.
-// En la base se muestra el roster en una sola fila simétrica (hasta 5 jugadores) con truncamiento y tooltip que solo muestra el apodo completo si se corta.
+// Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño) con indicador de integrantes integrado en texto, nombre del equipo, carrera.
+// Al presionar en cualquier parte de la tarjeta se despliega la bandeja de chips compactos con los integrantes.
 export default function TeamCard({ team, logo }) {
+  const [open, setOpen] = useState(false)
   const players = team.players ?? []
 
   const rawInst = team.institution?.trim()
@@ -36,8 +37,23 @@ export default function TeamCard({ team, logo }) {
   const extraCount = players.length - MAX_SHOWN
   const cols = extraCount > 0 ? shownPlayers.length + 1 : shownPlayers.length
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      setOpen((prev) => !prev)
+    }
+  }
+
   return (
-    <li className="tc">
+    <li
+      className={`tc ${open ? 'tc--open' : ''}`}
+      onClick={() => setOpen((prev) => !prev)}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-expanded={open}
+      aria-label={`Equipo ${team.team_name}, ${players.length} integrantes. Presiona para ${open ? 'ocultar' : 'ver'} integrantes.`}
+    >
       <div className="tc-body">
         <img
           src={logo || defaultLogo}
@@ -45,52 +61,75 @@ export default function TeamCard({ team, logo }) {
           loading="lazy"
           className={`tc-logo ${!logo ? 'tc-logo--default' : ''}`}
         />
-        <p className={`tc-eyebrow ${!hasInst ? 'tc-dash' : ''}`}>{displayInst}</p>
+        <div className="tc-eyebrow-row">
+          <p className={`tc-eyebrow ${!hasInst ? 'tc-dash' : ''}`}>{displayInst}</p>
+          {players.length > 0 && (
+            <span className="tc-meta-clean" aria-hidden="true">
+              {players.length}
+              <svg
+                className="tc-meta-chevron"
+                viewBox="0 0 24 24"
+                width="13"
+                height="13"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          )}
+        </div>
         <h3 className="tc-name">{team.team_name}</h3>
         <p className={`tc-career ${!hasSchool ? 'tc-dash' : ''}`}>{displaySchool}</p>
       </div>
 
       {players.length > 0 && (
-        <div
-          className="tc-roster-row"
-          style={{ '--cols': cols }}
-          role="list"
-          aria-label={`Integrantes de ${team.team_name}`}
-        >
-          {shownPlayers.map((player) => {
-            const isCap = player.slot === 1
-            return (
-              <div
-                key={player.slot}
-                className={`tc-cell ${isCap ? 'tc-cell--cap' : ''}`}
-                title={player.nickname}
-                tabIndex={0}
-                role="listitem"
-              >
-                {isCap && <span className="tc-cap-star" aria-hidden="true">★</span>}
-                <span className="tc-cell-text">{player.nickname}</span>
-                <span className="tc-cell-tooltip" aria-hidden="true">
-                  {player.nickname}
-                </span>
-              </div>
-            )
-          })}
-          {extraCount > 0 && (
+        <div className="tc-chips-tray" aria-hidden={!open}>
+          <div className="tc-chips-inner">
             <div
-              className="tc-cell tc-cell--more"
-              title={players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
-              tabIndex={0}
-              role="listitem"
+              className="tc-chips-row"
+              style={{ '--cols': cols }}
+              role="list"
+              onClick={(e) => e.stopPropagation()}
             >
-              <span className="tc-cell-text">+{extraCount}</span>
-              <span className="tc-cell-tooltip" aria-hidden="true">
-                {players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
-              </span>
+              {shownPlayers.map((player) => {
+                const isCap = player.slot === 1
+                return (
+                  <div
+                    key={player.slot}
+                    className={`tc-chip ${isCap ? 'tc-chip--cap' : ''}`}
+                    title={player.nickname}
+                    tabIndex={0}
+                    role="listitem"
+                  >
+                    {isCap && <span className="tc-chip-star" aria-hidden="true">★</span>}
+                    <span className="tc-chip-text">{player.nickname}</span>
+                    <span className="tc-chip-tooltip" aria-hidden="true">
+                      {player.nickname}
+                    </span>
+                  </div>
+                )
+              })}
+              {extraCount > 0 && (
+                <div
+                  className="tc-chip tc-chip--more"
+                  title={players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
+                  tabIndex={0}
+                  role="listitem"
+                >
+                  <span className="tc-chip-text">+{extraCount}</span>
+                  <span className="tc-chip-tooltip" aria-hidden="true">
+                    {players.slice(MAX_SHOWN).map((p) => p.nickname).join(', ')}
+                  </span>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </li>
   )
 }
-
