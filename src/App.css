@@ -1683,7 +1683,7 @@ img.brand-mark {
 /* Roster Table Head & Compact Rows */
 .roster-table-head {
   display: grid;
-  grid-template-columns: 135px 1fr 1fr;
+  grid-template-columns: 140px 1fr;
   gap: 0.65rem;
   padding: 0.35rem 0.8rem;
   font-family: var(--font-display);
@@ -1695,12 +1695,12 @@ img.brand-mark {
 }
 
 .roster-table-head--mlbb {
-  grid-template-columns: 135px 1fr 1fr 115px;
+  grid-template-columns: 140px 1fr;
 }
 
 .roster-row-compact {
   display: grid;
-  grid-template-columns: 135px 1fr 1fr;
+  grid-template-columns: 140px 1fr;
   gap: 0.65rem;
   align-items: center;
   padding: 0.42rem 0.8rem;
@@ -1713,7 +1713,7 @@ img.brand-mark {
 }
 
 .roster-row-compact--mlbb {
-  grid-template-columns: 135px 1fr 1fr 115px;
+  grid-template-columns: 140px 1fr;
 }
 
 .roster-row-compact--opt {

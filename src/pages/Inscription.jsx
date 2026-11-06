@@ -319,8 +319,8 @@ function Inscription({ modal = false }) {
     const requiredSlots = gameInfo.slots.filter((s) => s.required)
     for (let i = 0; i < requiredSlots.length; i++) {
       const p = players[i] || {}
-      if (!p.nickname?.trim() || !p.id?.trim()) {
-        setStepError(`Completa el Nickname e ID del ${requiredSlots[i].label}.`)
+      if (!p.nickname?.trim()) {
+        setStepError(`Completa el Nickname del ${requiredSlots[i].label}.`)
         audio.click()
         return false
       }
@@ -384,11 +384,18 @@ function Inscription({ modal = false }) {
         institution,
         school: career,
         otherInstitution: otherInstitution.trim(),
-        players: playerSlots.map((_, i) => ({
-          // Los nicknames pueden llevar símbolos o letras decoradas: se conservan tal cual (solo se limpian espacios).
-          nickname: (players[i]?.nickname || '').normalize('NFC').replace(/\s+/g, ' ').trim(),
-          game_player_id: players[i]?.id || '',
-        })),
+        players: playerSlots.map((_, i) => {
+          const nick = (players[i]?.nickname || '').normalize('NFC').replace(/\s+/g, ' ').trim()
+          if (!nick) {
+            return { nickname: '', game_player_id: '' }
+          }
+          // ID numérico provisional generado al enviar, válido para las reglas de Supabase (5 a 15 dígitos)
+          const autoId = `99${Date.now().toString().slice(-7)}${Math.floor(10 + Math.random() * 90)}${i}`
+          return {
+            nickname: nick,
+            game_player_id: autoId,
+          }
+        }),
         receipt: paymentReceipt,
         logo: teamLogo,
         honeypot,
@@ -622,7 +629,6 @@ function Inscription({ modal = false }) {
               <div className="roster-table-head">
                 <span>ROL</span>
                 <span>NICKNAME EN JUEGO</span>
-                <span>ID DE JUGADOR</span>
               </div>
 
               {playerSlots.map((slot, index) => (
@@ -654,42 +660,6 @@ function Inscription({ modal = false }) {
                       aria-label={`Pegar nickname del ${slot.label}`}
                     >
                       {pastedSlot === `${index}-nickname` ? (
-                        <>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
-                          <span>Listo</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                          </svg>
-                          <span>Pegar</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <div className="compact-input-wrap">
-                    <input
-                      className="compact-input compact-input--mono compact-input--with-paste"
-                      inputMode="numeric"
-                      maxLength={15}
-                      name={`player-${index}-id`}
-                      placeholder={`ID ${slot.required ? '*' : '(opcional)'}`}
-                      value={players[index]?.id || ''}
-                      onChange={(e) => updatePlayer(index, 'id', e.target.value.replace(/\D/g, ''))}
-                      required={slot.required}
-                    />
-                    <button
-                      type="button"
-                      className={`compact-paste-btn ${pastedSlot === `${index}-id` ? 'compact-paste-btn--success' : ''}`}
-                      onClick={() => pasteIntoField(index, 'id')}
-                      title="Pegar ID del portapapeles"
-                      aria-label={`Pegar ID del ${slot.label}`}
-                    >
-                      {pastedSlot === `${index}-id` ? (
                         <>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <polyline points="20 6 9 17 4 12" />
