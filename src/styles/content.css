@@ -283,6 +283,12 @@
 .compact-paste-btn:active { transform: translateY(-50%) scale(0.95); background: rgba(124, 58, 237, 0.5); }
 .compact-paste-btn svg { flex-shrink: 0; }
 .compact-paste-btn--success { background: rgba(34, 197, 94, 0.18) !important; border-color: rgba(74, 222, 128, 0.6) !important; color: #4ade80 !important; }
+.roster-notice-box { margin: 0 0 1rem; padding: 0.85rem 1.1rem; background: linear-gradient(135deg, rgba(20, 14, 32, 0.95), rgba(13, 9, 22, 0.92)); border: 1px solid rgba(251, 191, 36, 0.25); border-left: 3px solid #fbbf24; border-radius: 4px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
+.roster-notice-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+.roster-notice-tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.5rem; font-family: var(--font-display); font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #fbbf24; background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.35); border-radius: 2px; }
+.roster-notice-text { margin: 0 0 0.35rem; color: #e2e8f0; font-family: var(--font-body); font-size: 0.85rem; line-height: 1.5; }
+.roster-notice-tip { margin: 0; color: #c084fc; font-family: var(--font-body); font-size: 0.8rem; line-height: 1.45; }
+.roster-notice-tip strong { color: #e9d5ff; font-weight: 700; }
 .payment-panel { gap:2rem; }
 .payment-qr-pending { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; width:200px; height:200px; background:#1b102a; border:1px dashed #ae83d777; color:#d0b4ec; }
 .payment-qr-pending>strong { font-family:var(--font-display); font-size:.95rem; }

@@ -602,6 +602,22 @@ function Inscription({ modal = false }) {
               </p>
             </div>
 
+            <div className="roster-notice-box">
+              <div className="roster-notice-header">
+                <span className="roster-notice-tag">AVISO IMPORTANTE</span>
+              </div>
+              <p className="roster-notice-text">
+                Asegúrate de ingresar los Nicknames reales del juego. Si el nombre de un jugador en la sala no coincide exactamente con el registrado aquí, las cuentas no serán admitidas a la partida.
+              </p>
+              <p className="roster-notice-tip">
+                {game === 'ff' ? (
+                  <><strong>Tip:</strong> Usa Pagostore con su ID para copiar el Nickname exacto si tiene símbolos.</>
+                ) : (
+                  <><strong>Tip:</strong> En MLBB puedes copiar el Nickname exacto directamente desde el perfil del juego.</>
+                )}
+              </p>
+            </div>
+
             <div className="roster-list">
               <div className="roster-table-head">
                 <span>ROL</span>
