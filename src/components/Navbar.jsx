@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useRegistration } from '../context/RegistrationContext'
 import { audio } from '../lib/audioEngine'
 
@@ -15,6 +15,8 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [progress, setProgress] = useState(0)
   const { openRegistration, activeGame, setActiveGame } = useRegistration()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,11 +44,14 @@ function Navbar() {
   const goToRules = () => {
     closeMenu()
     audio.click()
-    const el = document.getElementById('reglamento')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    if (location.pathname === '/') {
+      const el = document.getElementById('reglamento')
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        window.history.pushState(null, '', '#reglamento')
+      }
     } else {
-      window.location.href = '/#reglamento'
+      navigate('/#reglamento')
     }
   }
 

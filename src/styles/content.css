@@ -17,9 +17,14 @@
 .hero-prize-kicker { font-size:.72rem; }
 .hero-prize-note { font-size:.78rem; }
 .hero-btn-primary { min-height:58px; padding:1.1rem 1.6rem; font-size:.83rem; }
-.hero-btn-community { min-height:58px; padding:1.1rem 1.6rem; display:inline-flex; align-items:center; justify-content:center; gap:.8rem; background:rgba(124,58,237,.14); border:1px solid rgba(168,85,247,.45); color:#e2d4f8; font-family:var(--font-display); font-size:.83rem; font-weight:700; letter-spacing:.06em; text-decoration:none; backdrop-filter:blur(8px); transition:all 200ms ease; white-space:nowrap; }
-.hero-btn-community>span { font-size:1.15rem; line-height:1; }
-.hero-btn-community:hover { background:rgba(124,58,237,.28); border-color:#c084fc; color:#ffffff; transform:translateY(-2px); box-shadow:0 0 25px rgba(168,85,247,.35); }
+.hero-btn-community { min-height:58px; padding:1.1rem 1.6rem; display:inline-flex; align-items:center; justify-content:center; gap:0.65rem; background:linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(15, 23, 42, 0.92) 100%); border:1.5px solid #22c55e; color:#4ade80; font-family:var(--font-display); font-size:.83rem; font-weight:700; letter-spacing:.06em; text-decoration:none; backdrop-filter:blur(8px); transition:all 200ms ease; white-space:nowrap; box-shadow:0 0 20px rgba(34, 197, 94, 0.2), inset 0 0 15px rgba(124, 58, 237, 0.2); }
+.hero-btn-community-icon { width:18px; height:18px; flex-shrink:0; color:#22c55e; filter:drop-shadow(0 0 6px rgba(34, 197, 94, 0.6)); transition:transform 200ms ease, color 200ms ease, filter 200ms ease; }
+.hero-btn-community-text { font-size:.83rem; font-family:var(--font-display); font-weight:700; letter-spacing:.06em; line-height:1; }
+.hero-btn-community-arrow { font-size:1.1rem; line-height:1; color:#4ade80; transition:transform 200ms ease, color 200ms ease; }
+
+.hero-btn-community:hover { background:linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(124, 58, 237, 0.38) 100%); border-color:#4ade80; color:#ffffff; transform:translateY(-2px); box-shadow:0 0 28px rgba(34, 197, 94, 0.45), 0 0 22px rgba(168, 85, 247, 0.4); }
+.hero-btn-community:hover .hero-btn-community-icon { color:#ffffff; filter:drop-shadow(0 0 8px rgba(74, 222, 128, 0.8)); transform:scale(1.1); }
+.hero-btn-community:hover .hero-btn-community-arrow { color:#ffffff; transform:translate(2px, -2px); }
 .hero-countdown-block { width:min(100%,435px); }
 .hero-countdown-label { font-size:.7rem; }
 .countdown-digit { font-size:2rem; }
@@ -246,6 +251,7 @@
 .registration-modal { width:min(1200px,calc(100vw - 3rem)); max-height:calc(100svh - 3rem); background:#120c1d; border-color:#b58ae35c; }
 .registration-page--modal { max-width:none; padding:1.4rem 2rem 2rem; }
 .registration-page--modal .modal-hero-banner { margin:-1.4rem -2rem 1.7rem; padding:2.2rem 2rem; min-height:225px; }
+.modal-hero-crest { width:48px; height:48px; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 0 10px rgba(168, 85, 247, 0.4)); }
 .modal-hero-left h2 { font-size:clamp(1.5rem,2.3vw,2.8rem); }
 .modal-hero-kicker { font-size:.76rem; }
 .modal-hero-price-badge { padding:.85rem 1.2rem; background:#140c1ded; }
@@ -270,6 +276,19 @@
 .wizard-btn-next,.registration-submit { min-height:53px; font-size:.85rem; }
 .roster-row-compact,.roster-table-head,.stage-summary-card { background:#130c1e; border-color:#9a7bbb3b; }
 .compact-input { min-height:44px; background:#0d0913; font-size:.92rem; }
+.compact-input-wrap { position: relative; width: 100%; display: flex; align-items: center; }
+.compact-input--with-paste { padding-right: 4.8rem !important; }
+.compact-paste-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.22rem 0.55rem; height: 28px; background: rgba(124, 58, 237, 0.16); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 3px; color: #d8b4fe; font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.15s ease; user-select: none; z-index: 2; }
+.compact-paste-btn:hover { background: rgba(124, 58, 237, 0.35); border-color: #c084fc; color: #ffffff; box-shadow: 0 0 10px rgba(168, 85, 247, 0.35); }
+.compact-paste-btn:active { transform: translateY(-50%) scale(0.95); background: rgba(124, 58, 237, 0.5); }
+.compact-paste-btn svg { flex-shrink: 0; }
+.compact-paste-btn--success { background: rgba(34, 197, 94, 0.18) !important; border-color: rgba(74, 222, 128, 0.6) !important; color: #4ade80 !important; }
+.roster-notice-box { margin: 0 0 1rem; padding: 0.85rem 1.1rem; background: linear-gradient(135deg, rgba(20, 14, 32, 0.95), rgba(13, 9, 22, 0.92)); border: 1px solid rgba(251, 191, 36, 0.25); border-left: 3px solid #fbbf24; border-radius: 4px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
+.roster-notice-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+.roster-notice-tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.5rem; font-family: var(--font-display); font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #fbbf24; background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.35); border-radius: 2px; }
+.roster-notice-text { margin: 0 0 0.35rem; color: #e2e8f0; font-family: var(--font-body); font-size: 0.85rem; line-height: 1.5; }
+.roster-notice-tip { margin: 0; color: #c084fc; font-family: var(--font-body); font-size: 0.8rem; line-height: 1.45; }
+.roster-notice-tip strong { color: #e9d5ff; font-weight: 700; }
 .payment-panel { gap:2rem; }
 .payment-qr-pending { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; width:200px; height:200px; background:#1b102a; border:1px dashed #ae83d777; color:#d0b4ec; }
 .payment-qr-pending>strong { font-family:var(--font-display); font-size:.95rem; }
@@ -363,7 +382,7 @@
 @media(max-width:900px) {
  .site-header { top:0; left:0; width:100%; transform:none; }
  .navbar { min-height:64px; }
- .template-hero-v2 { padding-top:7rem; }
+ .template-hero-v2 { padding-top:7.8rem; }
  .template-section-title { gap:1rem 2rem; }
  .template-section-title>p { font-size:.9rem; }
  .participation-grid { gap:1.25rem; }
@@ -460,6 +479,7 @@
  .registration-modal { width:calc(100vw - 1rem); max-height:calc(100svh - 1rem); }
  .registration-page--modal { padding:1.1rem; }
  .registration-page--modal .modal-hero-banner { margin:-1.1rem -1.1rem 1.25rem; padding:1.6rem 1.1rem; min-height:220px; }
+ .modal-hero-crest { width:38px; height:38px; }
  .modal-hero-left h2 { font-size:1.4rem; }
  .modal-hero-kicker { font-size:.6rem; }
  .price-badge-val { font-size:1.7rem; }
@@ -489,7 +509,7 @@
  .footer-brand-sub { font-size:.56rem; }
  .footer-bottom-bar { flex-direction:column-reverse; align-items:center; gap:1.25rem; text-align:center; padding-bottom:5.5rem; }
  .footer-top-btn { width:100%; justify-content:center; }
- .competition-page { padding-top:7rem; }
+ .competition-page { padding-top:7.8rem; }
  .competition-heading h1 { font-size:clamp(2.3rem,10vw,4rem); }
  .competition-filters button { padding:.8rem .9rem; font-size:.64rem; }
  .competition-publication { grid-template-columns:1fr; padding:1.5rem 0; gap:.5rem; }
@@ -526,160 +546,11 @@
 
 /* One anchor offset and dark scrollbars for the complete canvas. */
 html { color-scheme: dark; scrollbar-color: #68448d #100b18; scrollbar-width: thin; }
-#inicio, #disciplinas, #premios, #como-participar, #reglamento, #comunidad { scroll-margin-top: 0; }
+#inicio { scroll-margin-top: 0; }
+#disciplinas, #premios, #como-participar, #reglamento, #comunidad { scroll-margin-top: 5.5rem; }
 .registration-modal { scrollbar-color: #775099 #130b1f; scrollbar-width: thin; }
 .registration-modal::-webkit-scrollbar { width: 8px; }
 .registration-modal::-webkit-scrollbar-track { background: #130b1f; }
 .registration-modal::-webkit-scrollbar-thumb { background: #775099; border: 2px solid #130b1f; border-radius: 8px; }
 .footer-tag--orange { color: #f198d2; border-color: #e36bb347; background: #c5488d18; }
 .brand-mark { width: 42px; font-size: 1.05rem; letter-spacing: -0.16em; }
-
-
-/* =========================================================
-   PREMIO EN INCÓGNITO / PRÓXIMAMENTE (HERO & TARJETAS)
-   ========================================================= */
-
-.hero-prize-pool--incognito {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 0.25rem 0 0.25rem 1.15rem;
-  border-left: 2px solid var(--a1, #b188ff);
-}
-
-.hero-prize-incognito-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.hero-prize-incognito-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-display);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  padding: 0.18rem 0.55rem;
-  border-radius: 2px;
-  width: fit-content;
-  text-transform: uppercase;
-}
-
-.incognito-pulse-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fbbf24;
-  box-shadow: 0 0 8px #fbbf24;
-  animation: incognitoPulse 1.8s ease-in-out infinite;
-}
-
-@keyframes incognitoPulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.25); }
-}
-
-.hero-prize-amount--incognito {
-  font-family: var(--font-display) !important;
-  font-size: clamp(1.85rem, 2.7vw, 3.2rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  background: linear-gradient(100deg, #ffffff 15%, #c4a1ff 55%, #ffffff 95%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-transform: uppercase;
-  line-height: 1.08;
-  margin: 0.1rem 0;
-}
-
-:root[data-game="ff"] .hero-prize-amount--incognito {
-  background: linear-gradient(100deg, #ffffff 15%, #ff9f1c 55%, #ffffff 95%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Tarjetas de premios en modo incógnito */
-.prize-card--incognito {
-  position: relative;
-}
-
-.prize-incognito-box {
-  margin: 1.4rem 0 0.8rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.prize-incognito-text {
-  font-family: var(--font-display) !important;
-  font-size: clamp(1.6rem, 2.4vw, 2.5rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.06em !important;
-  color: #fbbf24 !important;
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.25);
-  line-height: 1.1;
-}
-
-.prize-card--champion .prize-incognito-text {
-  color: #fde047 !important;
-  text-shadow: 0 0 25px rgba(253, 224, 71, 0.4);
-}
-
-.prize-incognito-sub {
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #bfaedc;
-  text-transform: uppercase;
-}
-
-@media (max-width: 768px) {
-  .hero-prize-pool--incognito {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding-left: 0.85rem;
-  }
-  .hero-prize-amount--incognito {
-    font-size: 2rem !important;
-  }
-}
-
-.hero-tournament-start-notice {
-  margin-top: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.85rem;
-  background: rgba(168, 85, 247, 0.12);
-  border: 1px solid rgba(168, 85, 247, 0.32);
-  border-radius: 4px;
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  color: #e9d5ff;
-}
-
-.hero-tournament-start-notice strong {
-  color: #38bdf8;
-  font-weight: 700;
-}
-
-.tournament-start-icon {
-  color: #fbbf24;
-  font-size: 0.85rem;
-}
-
-/* Fit the configured prize amounts in the existing cards. */
-.hero-prize-pool--published { flex-wrap: wrap; gap: .75rem 1rem; }
-.template-prize-grid strong.prize-card-amount { font-size: clamp(1.8rem, 3vw, 3.3rem); letter-spacing: -.04em; overflow-wrap: anywhere; }

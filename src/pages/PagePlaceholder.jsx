@@ -36,7 +36,7 @@ function PagePlaceholder({ title, description, kind = 'teams' }) {
           <CharacterArt character={game === 'ff' ? 'tiradora' : 'marcel'} className="competition-character" />
         </div>
       </section>
-      {!notFound && <div className="competition-facts"><span>{game === 'ff' ? 'FREE FIRE / SQUADS' : 'MOBILE LEGENDS / DRAFT PICK'}</span><span>{game === 'ff' ? '4 TITULARES + 1 SUPLENTE OPCIONAL' : '5 TITULARES + HASTA 2 SUPLENTES'}</span><span>PUNO, PERÚ / 2026</span></div>}
+      {!notFound && <div className="competition-facts"><span>{game === 'ff' ? 'FREE FIRE / SQUADS' : 'MOBILE LEGENDS / DRAFT PICK'}</span><span>{game === 'ff' ? '4 TITULARES + 1 SUPLENTE OPCIONAL' : '5 TITULARES + HASTA 2 SUPLENTES'}</span><span>ARENA UNIVERSITARIA / 2026</span></div>}
     </main>
   )
 }

@@ -8,8 +8,8 @@ import RulesSection from '../components/RulesSection'
 import RegistrationSteps from '../components/RegistrationSteps'
 import useHeroRotation from '../hooks/useHeroRotation'
 import { useTournament } from '../context/TournamentContext'
-import { communityLink } from '../lib/whatsapp'
 import { formatSoles } from '../lib/money'
+import { communityLink } from '../lib/whatsapp'
 
 function getTimeLeft(deadline) {
   const time = Math.max(deadline - Date.now(), 0)
@@ -21,11 +21,10 @@ function getTimeLeft(deadline) {
   ]
 }
 
-const DAYS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB']
 const MONTHS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
 const formatDeadline = (ms) => {
   const d = new Date(ms)
-  return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} / ${d.getFullYear()}`
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} / ${d.getFullYear()}`
 }
 
 const divisions = [
@@ -109,12 +108,18 @@ function Home({ heroEnabled = true }) {
                 La próxima gran jugada lleva el nombre de tu universidad.
                 Reúne a tu equipo y entra a la arena de Mobile Legends y Free Fire.
               </p>
-              <div className="hero-prize-pool hero-prize-pool--published">
-                <strong className="hero-prize-amount">{formatSoles(prizeTotal, 2)}</strong>
-                <div>
-                  <span className="hero-prize-kicker">BOLSA TOTAL DE PREMIOS</span>
-                  <small className="hero-prize-note">Total de los premios por puesto</small>
-                </div>
+              <div className="hero-prize-pool">
+                {prizeTotal > 0 ? (
+                  <>
+                    <strong className="hero-prize-amount"><span>S/</span> {prizeTotal.toLocaleString('es-PE')}</strong>
+                    <div><span className="hero-prize-kicker">BOLSA DE PREMIOS</span><small className="hero-prize-note">En efectivo · Dos disciplinas</small></div>
+                  </>
+                ) : (
+                  <>
+                    <strong className="hero-prize-amount hero-prize-amount--tba"><Icon name="trophy" size={24} /> POR ANUNCIAR</strong>
+                    <div><span className="hero-prize-kicker">BOLSA DE PREMIOS</span><small className="hero-prize-note">Según equipos inscritos.</small></div>
+                  </>
+                )}
               </div>
               <div className="hero-cta-group">
                 <button onClick={() => handleInscribe(heroGame)} type="button" className="hero-btn-primary clip-corner">
@@ -128,7 +133,11 @@ function Home({ heroEnabled = true }) {
                     className="hero-btn-community clip-corner"
                     onClick={() => audio.click()}
                   >
-                    ÚNETE A LA COMUNIDAD <span aria-hidden="true">↗</span>
+                    <svg className="hero-btn-community-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                      <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.8 2 1.4.9 2 1 2.3.8.3-.1 1.2-.6 1.4-1.2Z" />
+                    </svg>
+                    <span className="hero-btn-community-text">ÚNETE A LA COMUNIDAD</span>
+                    <span className="hero-btn-community-arrow" aria-hidden="true">↗</span>
                   </a>
                 )}
               </div>
@@ -141,10 +150,6 @@ function Home({ heroEnabled = true }) {
                       <span className="countdown-unit">{label}</span>
                     </div>
                   ))}
-                </div>
-                <div className="hero-tournament-start-notice">
-                  <span className="tournament-start-icon">⚡</span>
-                  <span>Torneo inicia: <strong>Lunes 23 de Noviembre</strong></span>
                 </div>
               </div>
             </div>
@@ -211,10 +216,14 @@ function Home({ heroEnabled = true }) {
                   <button type="button" onClick={() => handleInscribe(division.key)}>
                     INSCRIBIR EQUIPO <Icon name="arrow-up-right" size={16} />
                   </button>
-                  <a className="discipline-rules-link" href="#reglamento" onClick={() => exploreRules(division.key)}>
-                    Consultar reglamento <Icon name="arrow-right" size={14} />
-                  </a>
+                  <strong>
+                    {formatSoles(gameConfig[division.key].price)}
+                    <small>POR EQUIPO</small>
+                  </strong>
                 </div>
+                <a className="discipline-rules-link" href="#reglamento" onClick={() => exploreRules(division.key)}>
+                  Consultar reglamento <Icon name="arrow-right" size={14} />
+                </a>
               </div>
             </article>
           ))}
@@ -226,23 +235,53 @@ function Home({ heroEnabled = true }) {
         </div>
       </section>
 
+
+
       <section className="template-prizes" id="premios" aria-labelledby="prizes-title">
         <div className="template-section-title">
           <span>02 / PREMIOS Y RECONOCIMIENTO</span>
-          <h2 id="prizes-title">Juega por <em>la gloria.</em></h2>
-          <p>Consulta el premio de cada puesto.</p>
+          <h2 id="prizes-title">{prizeTotal > 0 ? <>LA GLORIA TAMBIÉN<br /><em>SE LLEVA A CASA.</em></> : <>Juega por <em>la gloria.</em></>}</h2>
+          <p>
+            {prizeTotal > 0
+              ? 'Compite por tu universidad. Deja tu nombre en lo más alto.'
+              : 'La bolsa de premios se anunciará según la cantidad de equipos inscritos en cada categoría.'}
+          </p>
         </div>
-        <div className="template-prize-grid">
-          {prizes.map((prize) => (
-            <article className={`prize-card ${Number(prize.place) === 1 ? 'prize-card--champion' : ''}`} key={prize.place}>
-              <span className="prize-card-place">{String(prize.place).padStart(2, '0')}</span>
-              <span className="prize-card-label">{prize.label}</span>
-              <strong className="prize-card-amount">{formatSoles(prize.amount, 2)}</strong>
-              {prize.description && <small className="prize-card-desc">{prize.description}</small>}
-              <span className="prize-card-line" aria-hidden="true" />
-            </article>
-          ))}
-        </div>
+        {prizeTotal > 0 ? (
+          <div className="template-prize-grid">
+            {prizes.map((prize) => (
+              <article className={`prize-card ${prize.place === 1 ? 'prize-card--champion' : ''}`} key={prize.place}>
+                <span className="prize-card-place">{String(prize.place).padStart(2, '0')}</span>
+                <span>{prize.label}</span>
+                <strong>{prize.amount > 0 ? formatSoles(prize.amount) : 'POR ANUNCIAR'}</strong>
+                <small>{prize.description}</small>
+                <span className="prize-card-line" aria-hidden="true" />
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="tba-prize-banner">
+            <div className="tba-prize-badge">
+              <Icon name="trophy" size={30} />
+              <span>RECOMPENSA<br />EN CONSTRUCCIÓN</span>
+            </div>
+            <div className="tba-prize-center">
+              <span className="tba-prize-kicker">BOLSA DE PREMIOS</span>
+              <h3 className="tba-prize-title">POR ANUNCIAR</h3>
+              <p>
+                La competencia crece con cada escuadra. Los premios finales se comunicarán cuando se cierre el registro de cada categoría.
+              </p>
+            </div>
+            <div className="tba-prize-places">
+              {prizes.map((prize) => (
+                <div key={prize.place} className="tba-place-row">
+                  <span className="tba-place-num">{String(prize.place).padStart(2, '0')}</span>
+                  <span className="tba-place-label">{prize.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
       <RegistrationSteps />
       <RulesSection />

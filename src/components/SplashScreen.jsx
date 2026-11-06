@@ -79,7 +79,7 @@ function SplashScreen({ onEnter }) {
           width="320"
           height="100"
         />
-        <span className="entry-location">PUNO, PERÚ <i /> TEMPORADA 2026</span>
+        <span className="entry-location">TEMPORADA 2026</span>
       </header>
 
       <div className="entry-content">
@@ -111,7 +111,7 @@ function SplashScreen({ onEnter }) {
 
       <footer className="entry-footer">
         <span><i /><i /><i /> DOS DISCIPLINAS. UN MISMO LEGADO.</span>
-        <span>RAGNAROK / PUNO 2026</span>
+        <span>RAGNAROK / U-SERIES 2026</span>
       </footer>
     </div>
   )

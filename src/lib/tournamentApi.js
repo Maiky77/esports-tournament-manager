@@ -4,7 +4,7 @@ import { isSupabaseConfigured, supabase } from '../supabaseClient'
 export const FALLBACK_CONFIG = {
   settings: {
     registration_open: true,
-    registration_deadline: '2026-11-21T23:59:59-05:00',
+    registration_deadline: '2026-12-15T23:59:59-05:00',
     yape_number: '',
     yape_holder: '',
     yape_qr_path: null,
@@ -79,15 +79,23 @@ export async function submitRegistration({ gameKey, team, captain, whatsapp, ins
   if (!isSupabaseConfigured) throw new Error('El sistema de inscripciones aún no está habilitado.')
   const receiptPath = await upload('receipts', receipt)
   const logoPath = logo ? await upload('team-logos', logo) : null
+
+  // Si no especificaron institución o carrera, se envía "Independiente" para que
+  // la base de datos actual lo acepte con total normalidad sin necesidad de modificar nada en Supabase.
+  const isUnap = institution === 'UNAP'
+  const resolvedInstitution = isUnap ? 'UNAP' : 'Otra'
+  const resolvedOther = isUnap ? null : (otherInstitution?.trim() || 'Independiente')
+  const resolvedSchool = school?.trim() || (isUnap ? 'UNAP' : 'Independiente')
+
   const { data, error } = await supabase.rpc('submit_registration', {
     payload: {
       game_key: gameKey,
       team_name: team,
       captain_name: captain,
       captain_whatsapp: whatsapp,
-      institution,
-      professional_school: school,
-      other_institution: institution === 'Otra' ? otherInstitution : null,
+      institution: resolvedInstitution,
+      professional_school: resolvedSchool,
+      other_institution: resolvedOther,
       receipt_path: receiptPath,
       logo_path: logoPath,
       players,

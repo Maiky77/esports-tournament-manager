@@ -1,8 +1,13 @@
 // Instituciones de procedencia. "UNAP" se guarda como institución propia (pide escuela profesional);
 // el resto se guarda por nombre. Para agregar una, basta con sumarla a la lista que corresponda.
 export const OTHER_INSTITUTION = '__otra__'
+export const NO_INSTITUTION = '__ninguna__'
 
 export const institutionGroups = [
+  {
+    group: 'Sin institución / Independiente',
+    items: [{ value: NO_INSTITUTION, label: 'Ninguna / Equipo independiente (Opcional)' }],
+  },
   {
     group: 'Universidad del Altiplano',
     items: [{ value: 'UNAP', label: 'UNAP · Universidad Nacional del Altiplano de Puno' }],

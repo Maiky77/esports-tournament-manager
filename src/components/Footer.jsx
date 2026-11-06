@@ -20,7 +20,7 @@ function Footer() {
 
   return (
     <footer className="site-footer" id="comunidad">
-      {/* Música: Warsongs Piercing Light */}
+      {/* Música bajo licencia CC BY 4.0: "Heroic Age" (Mobile Legends) y "Volatile Reaction" (Free Fire) de Kevin MacLeod (incompetech.com) */}
       <div className="footer-main-grid">
         <div className="footer-brand-col">
           <Link className="footer-brand-row" to="/">
@@ -33,7 +33,7 @@ function Footer() {
             />
             <div>
               <strong className="footer-brand-name">RAGNAROK · U-SERIES</strong>
-              <span className="footer-brand-sub">ARENA UNIVERSITARIA / PUNO 2026</span>
+              <span className="footer-brand-sub">ARENA UNIVERSITARIA 2026</span>
             </div>
           </Link>
           <p className="footer-brand-desc">
@@ -65,8 +65,7 @@ function Footer() {
             <li><Link to="/equipos">Equipos confirmados</Link></li>
             <li><Link to="/llaves">Fixture y resultados</Link></li>
             <li><span>Temporada 2026</span></li>
-            <li><span>Cierre inscripciones: {closingDate}</span></li>
-            <li><span>Inicio torneo: 23 de noviembre</span></li>
+            <li><span>Cierre: {closingDate}</span></li>
           </ul>
         </div>
       </div>

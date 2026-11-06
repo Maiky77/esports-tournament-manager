@@ -46,16 +46,20 @@
 
 .game-choice-slots { display: block; margin-top: .35rem; font-family: var(--font-display); font-size: .7rem; letter-spacing: .12em; opacity: .85; }
 
-/* Lista con buscador (institución y escuela profesional) */
+/* Lista con buscador (instituciÃ³n y escuela profesional) */
 .ss { position: relative; }
 .ss > input { padding-right: 2rem; cursor: text; }
-.ss-chevron { position: absolute; right: .8rem; bottom: .62rem; color: #94a3b8; pointer-events: none; font-size: .8rem; }
+.ss-chevron { position: absolute; right: .8rem; bottom: .62rem; color: #94a3b8; pointer-events: auto; cursor: pointer; font-size: .8rem; user-select: none; transition: transform 0.2s ease, color 0.15s ease; }
+.ss-chevron:hover { color: #fff; }
 .ss-list { z-index: 2147483000; overflow-y: auto; box-sizing: border-box; margin: 0; padding: .3rem; list-style: none; background: #0d0913; border: 1px solid rgba(178, 153, 207, .35); border-radius: 4px; box-shadow: 0 18px 40px rgba(0, 0, 0, .6); }
 .ss-group { padding: .55rem .6rem .25rem; font-family: var(--font-display); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: #94a3b8; position: sticky; top: -.3rem; background: #0d0913; }
 .ss-option { padding: .55rem .6rem; font-family: var(--font-body); font-size: .88rem; color: #e4e4e7; border-radius: 3px; cursor: pointer; line-height: 1.35; }
 .ss-option--active { background: rgba(157, 92, 255, .22); color: #fff; }
 .ss-option--selected { font-weight: 700; }
 .ss-empty { padding: .8rem .6rem; color: #94a3b8; font-family: var(--font-body); font-size: .85rem; }
+.ss-option--custom { background: rgba(124, 58, 237, 0.16); border: 1px dashed rgba(168, 85, 247, 0.55); margin: 0.25rem 0.2rem; color: #d8b4fe; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+.ss-option--custom:hover { background: rgba(124, 58, 237, 0.32); color: #ffffff; border-color: #c084fc; }
+.ss-group--custom { color: #c084fc; letter-spacing: 0.12em; }
 
 .footer-music-credit a { color: inherit; text-decoration: underline; }
 
@@ -67,35 +71,386 @@
 
 .pd-room-table + .pd-room-table { margin-top: 1.2rem; }
 
-/* Free Fire: equipos por sala con su número */
+/* Free Fire: pestaÃ±as por sala y 3 columnas con logo grande (44px) */
 .pd-rooms-block { margin-bottom: 1.4rem; }
 .pd-rooms-block > h3 { margin: 0 0 .8rem; font-family: var(--font-display); letter-spacing: .06em; }
-.pd-rooms-block .pd-room-lists { margin-top: 0; }
-.pd-room-lists { list-style: none; margin: 1.6rem auto 0; padding: 0; max-width: 1240px; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); align-items: start; }
-.pd-room-card { background: var(--panel); border: 1px solid rgba(255,255,255,.09); border-top: 3px solid var(--a1); border-radius: 10px; padding: 1rem 1.1rem; }
-.pd-room-card header { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; margin-bottom: .8rem; }
-.pd-room-card h3 { margin: 0; font-family: var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
-.pd-room-card header span { color: #94a3b8; font-family: var(--font-body); font-size: .8rem; }
-.pd-room-card ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
-.pd-room-help { margin: -.3rem 0 .8rem; color: #94a3b8; font-family: var(--font-body); font-size: .78rem; }
-.pd-room-help b { color: #e2e8f0; font-weight: 600; }
-.pd-room-item { border-radius: 8px; background: rgba(255,255,255,.04); overflow: hidden; border: 1px solid transparent; }
-.pd-room-item--open { border-color: color-mix(in srgb, var(--a1) 55%, transparent); background: rgba(255,255,255,.06); }
-.pd-room-colhead { display: grid; grid-template-columns: 5.2rem 1fr; gap: .6rem; padding: 0 .5rem .3rem; color: #94a3b8; font-family: var(--font-display); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; line-height: 1.2; }
-.pd-room-colhead span:last-child { padding-left: 2.8rem; }
-.pd-room-row { width: 100%; display: grid; grid-template-columns: 5.2rem 2.2rem 1fr auto; align-items: center; gap: .6rem; padding: .35rem .5rem; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; font: inherit; }
-.pd-room-row:hover { background: rgba(255,255,255,.05); }
-.pd-room-caret { color: #94a3b8; font-size: .8rem; padding-right: .2rem; }
-.pd-room-detail { padding: .2rem .7rem .8rem; display: grid; gap: .6rem; }
-.pd-room-career { margin: 0; color: #cbd5e1; font-family: var(--font-body); font-size: .8rem; }
-.pd-room-detail .pd-members { border-top: 0; padding-top: 0; }
-.pd-room-num { display: grid; place-items: center; justify-self: center; width: 2.6rem; height: 2rem; border-radius: 8px; background: color-mix(in srgb, var(--a1) 30%, transparent); font-family: var(--font-display); font-size: 1rem; font-variant-numeric: tabular-nums; }
-.pd-room-logo { width: 2.2rem; height: 2.2rem; border-radius: 7px; object-fit: cover; }
-.pd-room-logo--empty { display: grid; place-items: center; background: rgba(255,255,255,.07); font-family: var(--font-display); }
-.pd-room-name strong { display: block; font-family: var(--font-body); font-size: .92rem; }
-.pd-room-name small { display: block; color: #94a3b8; font-family: var(--font-body); font-size: .74rem; }
 
-/* EN VIVO: aviso fijo con los enlaces de transmisión de cada juego */
+.pd-room-tabs-container { margin-top: 0.8rem; }
+.pd-room-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.pd-room-tabs-nav::-webkit-scrollbar { height: 4px; }
+.pd-room-tabs-nav::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 4px; }
+
+.pd-room-tab-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.pd-room-tab-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.pd-room-tab-btn--active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(236, 72, 153, 0.25));
+  border-color: #ec4899;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.25);
+}
+.pd-room-tab-badge {
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.08rem 0.4rem;
+  border-radius: 4px;
+  color: #d8b4fe;
+}
+
+.pd-room-single-card {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 3px solid #ec4899;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0.9rem 1.1rem;
+}
+.pd-room-single-card header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+}
+.pd-room-single-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  color: #fff;
+}
+.pd-room-single-card header span {
+  color: #94a3b8;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+.pd-room-help {
+  margin: 0 0 0.8rem;
+  color: #94a3b8;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+}
+
+.pd-room-colhead-3 {
+  display: grid;
+  grid-template-columns: 2.8rem 2fr 1.3fr 1.6fr 1.8rem;
+  gap: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+.pd-colhead-slot { text-align: center; }
+
+.pd-room-list-3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.pd-room-item-3 {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  transition: all 0.15s ease;
+}
+.pd-room-item-3:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(236, 72, 153, 0.3);
+}
+.pd-room-item-3--open {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+.pd-room-row-3 {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.8rem 2fr 1.3fr 1.6fr 1.8rem;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pd-room-num-3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f472b6;
+  text-align: center;
+}
+.pd-room-team-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.pd-room-logo-3 {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.pd-room-logo-3--default {
+  object-fit: contain;
+  padding: 3px;
+  background: #090e18;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0.5;
+  filter: grayscale(1) brightness(1.2);
+}
+.pd-room-logo-3--empty {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #fff;
+  font-size: 1.15rem;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.pd-room-team-info {
+  min-width: 0;
+}
+.pd-room-team-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+.pd-room-mobile-top {
+  display: block;
+  min-width: 0;
+}
+.pd-room-mobile-career,
+.pd-room-mobile-inst {
+  display: none;
+}
+
+.pd-room-col-inst {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pd-room-col-career {
+  font-size: 0.82rem;
+  color: #d8b4fe;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pd-room-caret-3 {
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.pd-room-caret-3 svg {
+  display: block;
+}
+.pd-room-item-3--open .pd-room-caret-3 {
+  transform: rotate(90deg);
+  color: #fff;
+}
+
+.pd-room-detail-3 {
+  padding: 0.7rem 0.9rem 0.9rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 0.5rem;
+}
+.pd-room-detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pd-room-detail-title {
+  font-size: 0.72rem;
+  font-family: var(--font-display);
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.pd-room-detail-meta {
+  font-size: 0.72rem;
+  color: #ec4899;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pd-room-empty-players {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+
+/* Chips horizontales de integrantes */
+.pd-room-players-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.pd-room-player-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0.28rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.pd-player-nick {
+  font-weight: 600;
+  color: #f8fafc;
+}
+.pd-room-player-chip em {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 0.68rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.pd-room-player-chip em.cap {
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.18);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+.pd-room-player-chip em.sup {
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+@media (max-width: 768px) {
+  .pd-room-colhead-3 {
+    display: none;
+  }
+  .pd-room-row-3 {
+    grid-template-columns: 2.2rem 1fr auto;
+    gap: 0.65rem;
+    padding: 0.45rem 0.6rem;
+  }
+  .pd-room-num-3 {
+    font-size: 1.05rem;
+  }
+  .pd-room-logo-3,
+  .pd-room-logo-3--empty {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+  .pd-room-col-inst,
+  .pd-room-col-career {
+    display: none;
+  }
+  .pd-room-team-info {
+    min-width: 0;
+    flex: 1;
+  }
+  .pd-room-mobile-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+  .pd-room-team-title {
+    font-size: 0.88rem;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pd-room-mobile-career {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #d8b4fe;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+    flex: 0 1 auto;
+    max-width: 52%;
+  }
+  .pd-room-mobile-inst {
+    display: block;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 1px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* EN VIVO: aviso fijo con los enlaces de transmisiÃ³n de cada juego */
 .lv-dock { position: fixed; z-index: 70; left: 1.1rem; bottom: 1.1rem; display: grid; gap: .6rem; max-width: min(340px, calc(100vw - 2.2rem)); }
 .lv-card { padding: .7rem .9rem; border: 1px solid #ffffff26; border-left: 4px solid #ef4444; border-radius: 8px; background: #0b0f17f2; backdrop-filter: blur(12px); box-shadow: 0 10px 30px #0006; }
 .lv-card--mlbb { border-left-color: #b48aff; }
@@ -128,3 +483,433 @@
 .cl--sub > .cl-panel > .cl-inner { padding-top: .4rem; }
 .pd-stage + .pd-stage { margin-top: 1rem; }
 @media (prefers-reduced-motion: reduce) { .cl-panel, .cl-head svg { transition: none; } }
+
+/* =========================================================
+   SKELETON GAMER & SHIMMER LOADING STYLES
+   ========================================================= */
+@keyframes pd-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pd-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(168, 85, 247, 0.12) 50%,
+    rgba(255, 255, 255, 0.03) 80%
+  );
+  background-size: 200% 100%;
+  animation: pd-shimmer 1.8s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Skeleton para tarjetas de equipos */
+.tc--skeleton { pointer-events: none; user-select: none; }
+.tc-skeleton-avatar { grid-column: 1; grid-row: 1 / span 3; width: 56px; height: 56px; border-radius: 14px; }
+.tc-skeleton-lines { grid-column: 2; display: flex; flex-direction: column; gap: 0.45rem; }
+.tc-skeleton-lines .line-eyebrow { height: 10px; width: 45%; }
+.tc-skeleton-lines .line-title { height: 18px; width: 80%; }
+.tc-skeleton-lines .line-school { height: 12px; width: 60%; }
+.tc-skeleton-foot { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.15rem; border-top: 1px solid #ffffff12; background: #ffffff05; }
+.tc-skeleton-foot .sk-stack { display: flex; gap: 4px; }
+.tc-skeleton-foot .sk-dot { width: 22px; height: 22px; border-radius: 50%; }
+.tc-skeleton-foot .sk-pill { width: 95px; height: 16px; border-radius: 12px; }
+
+/* Skeleton para llaves / brackets */
+.pd-stage--skeleton { pointer-events: none; user-select: none; margin-bottom: 1rem; }
+.pd-stage-card-skeleton {
+  background: var(--panel, #120c1d);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.pd-stage-head-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.pd-stage-grid-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Skeleton para cronograma */
+.sc-day-skeleton {
+  background: var(--panel, #120c1d);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Ajustes para instituciÃ³n y carrera en salas y resultados */
+.pd-room-name .pd-room-career-sub {
+  color: #c084fc;
+  font-size: 0.72rem;
+  margin-top: 1px;
+}
+
+.pd-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 0.9rem;
+}
+
+.pd-table th {
+  white-space: nowrap;
+}
+
+.pd-table td {
+  white-space: nowrap;
+}
+
+.pd-table .pd-col-institution {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.pd-table .pd-col-career {
+  color: #c084fc;
+  font-size: 0.8rem;
+}
+
+/* SubtÃ­tulo de instituciÃ³n y carrera en los cruces de bracket */
+.pd-match-team-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.pd-match-team-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pd-match-team-sub {
+  color: #c084fc;
+  font-size: 0.68rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+/* Podio de Ganadores (Top 3 del Torneo) */
+.pd-podium-section {
+  margin-top: 2.2rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pd-podium-head {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+.pd-podium-kicker {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  display: block;
+}
+.pd-podium-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin: 0.3rem 0 0;
+}
+.pd-podium-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr 1fr;
+  gap: 1.2rem;
+  align-items: end;
+}
+.pd-podium-card {
+  border-radius: 18px;
+  padding: 1.5rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pd-podium-card--gold {
+  order: 2;
+  background:
+    radial-gradient(ellipse at top right, rgba(168, 85, 247, 0.16) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(245, 158, 11, 0.18) 0%, rgba(15, 21, 35, 0.98) 100%);
+  border: 2px solid rgba(245, 158, 11, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.5),
+    0 16px 40px -12px rgba(245, 158, 11, 0.35),
+    0 0 25px rgba(168, 85, 247, 0.25);
+  transform: translateY(-12px);
+}
+.pd-podium-card--silver {
+  order: 1;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(15, 21, 35, 0.95) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+}
+.pd-podium-card--bronze {
+  order: 3;
+  background: linear-gradient(180deg, rgba(180, 83, 9, 0.12) 0%, rgba(15, 21, 35, 0.95) 100%);
+  border: 1px solid rgba(180, 83, 9, 0.35);
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+  transform: scale(0.96);
+  transform-origin: bottom center;
+}
+.pd-podium-card--bronze .pd-podium-players-list {
+  gap: 0.25rem;
+}
+.pd-podium-card--bronze .pd-podium-player {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.45rem;
+}
+/* Marca de agua de la Copa Ragnarok en diagonal (16°, desplazada a la derecha y abajo) */
+.pd-podium-trophy-watermark {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.pd-podium-trophy-watermark img {
+  position: absolute;
+  top: 40px;        /* <-- SUBIR O BAJAR (ej: 40px más abajo, 10px más arriba) */
+  right: -80px;      /* <-- IZQUIERDA O DERECHA (ej: 35px más izquierda, -10px más derecha) */
+  width: 16rem;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.5));
+  transform-origin: top right;
+  transform: rotate(16deg) scale(1.25); /* <-- aquí ya no necesitas translate */
+  pointer-events: none;
+}
+.pd-podium-badge {
+  position: absolute;
+  top: -12px;
+  z-index: 3;
+  padding: 0.22rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.pd-podium-card--gold .pd-podium-badge {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #0f172a;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+}
+.pd-podium-card--silver .pd-podium-badge {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+.pd-podium-card--bronze .pd-podium-badge {
+  background: #b45309;
+  color: #fef3c7;
+}
+.pd-podium-logo-wrap {
+  position: relative;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0 0.8rem;
+  background: #090e18;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.pd-podium-card--gold .pd-podium-logo-wrap {
+  width: 72px;
+  height: 72px;
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+.pd-podium-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.pd-podium-logo--default {
+  object-fit: contain;
+  padding: 5px;
+  opacity: 0.55;
+  filter: grayscale(1) brightness(1.2);
+}
+.pd-podium-team-name {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+.pd-podium-card--gold .pd-podium-team-name {
+  font-size: 1.2rem;
+}
+.pd-podium-title-cup {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.75));
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.pd-podium-inst {
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-top: 0.25rem;
+}
+.pd-podium-career {
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-size: 0.74rem;
+  color: #d8b4fe;
+  margin-top: 0.1rem;
+}
+.pd-podium-stats {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+}
+.pd-podium-card--gold .pd-podium-stats {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fde68a;
+}
+.pd-podium-dot {
+  opacity: 0.5;
+}
+.pd-podium-players-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pd-podium-players-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.45rem;
+  text-align: center;
+}
+.pd-podium-players-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.pd-podium-player {
+  position: relative;
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pd-podium-player--sub {
+  border-color: rgba(168, 85, 247, 0.3);
+  background: rgba(168, 85, 247, 0.08);
+}
+.pd-podium-sub-badge {
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  padding: 0.05rem 0.28rem;
+  border-radius: 4px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .pd-podium-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .pd-podium-card--gold {
+    order: 1;
+    transform: none;
+  }
+  .pd-podium-card--silver {
+    order: 2;
+  }
+  .pd-podium-card--bronze {
+    order: 3;
+  }
+  .pd-podium-card {
+    padding: 1.4rem 1rem;
+    width: 100%;
+  }
+  .pd-podium-logo-wrap {
+    width: 56px;
+    height: 56px;
+  }
+  .pd-podium-card--gold .pd-podium-logo-wrap {
+    width: 64px;
+    height: 64px;
+  }
+}

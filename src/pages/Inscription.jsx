@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { audio } from '../lib/audioEngine'
 import CharacterArt from '../components/CharacterArt'
 import { useRegistration } from '../context/RegistrationContext'
-import ragnarokCrest from '../assets/ragnarok-crest.svg'
 import { useTournament } from '../context/TournamentContext'
 import { formatSoles } from '../lib/money'
 import { publicUrl, submitRegistration, validateUpload } from '../lib/tournamentApi'
 import SearchSelect from '../components/SearchSelect'
 import RegistrationSuccess from '../components/RegistrationSuccess'
+import Icon from '../components/Icon'
 import { communityLink } from '../lib/whatsapp'
-import { institutionGroups, OTHER_INSTITUTION } from '../lib/institutions'
+import { institutionGroups, OTHER_INSTITUTION, NO_INSTITUTION } from '../lib/institutions'
 import { careerGroups, OTHER_CAREER } from '../lib/careers'
 
 const baseGames = {
@@ -125,7 +125,7 @@ function Inscription({ modal = false }) {
   const [teamLogo, setTeamLogo] = useState(null)
   const [captainName, setCaptainName] = useState('')
   const [captainWhatsapp, setCaptainWhatsapp] = useState('')
-  const [institutionChoice, setInstitutionChoice] = useState('UNAP')
+  const [institutionChoice, setInstitutionChoice] = useState('')
   const [professionalSchool, setProfessionalSchool] = useState('')
   const [customInstitution, setCustomInstitution] = useState('')
   const [customCareer, setCustomCareer] = useState('')
@@ -138,6 +138,38 @@ function Inscription({ modal = false }) {
   // Datos Etapa 3
   const [paymentReceipt, setPaymentReceipt] = useState(null)
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [copiedYape, setCopiedYape] = useState(false)
+
+  const handleCopyYapeNumber = () => {
+    if (!settings.yape_number) return
+    audio.click()
+    const cleanNumber = String(settings.yape_number).replace(/\s+/g, '')
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(cleanNumber).then(() => {
+        setCopiedYape(true)
+        setTimeout(() => setCopiedYape(false), 2000)
+      }).catch(() => fallbackCopy(cleanNumber))
+    } else {
+      fallbackCopy(cleanNumber)
+    }
+  }
+
+  const fallbackCopy = (text) => {
+    try {
+      const ta = document.createElement('textarea')
+      ta.value = text
+      ta.style.position = 'fixed'
+      ta.style.opacity = '0'
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+      setCopiedYape(true)
+      setTimeout(() => setCopiedYape(false), 2000)
+    } catch (e) {
+      console.warn('Fallback copy failed', e)
+    }
+  }
 
   const [stepError, setStepError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
@@ -168,12 +200,23 @@ function Inscription({ modal = false }) {
   })), [gameConfig])
 
   // UNAP se guarda como institución propia (con escuela); cualquier otra, por nombre.
-  const institution = institutionChoice === 'UNAP' ? 'UNAP' : 'Otra'
-  const otherInstitution = institutionChoice === OTHER_INSTITUTION ? customInstitution : institutionChoice
-  // La carrera se pide siempre: escuelas de la UNAP o una lista general para otras instituciones.
-  const career = professionalSchool === OTHER_CAREER ? customCareer.trim() : professionalSchool
+  const isNone = !institutionChoice || institutionChoice === NO_INSTITUTION
+  const isUnap = institutionChoice === 'UNAP'
+  const institution = isUnap ? 'UNAP' : 'Otra'
+  const otherInstitution = isNone || isUnap
+    ? ''
+    : (institutionChoice === OTHER_INSTITUTION ? customInstitution.trim() : institutionChoice)
+
+  const career = professionalSchool === OTHER_CAREER
+    ? customCareer.trim()
+    : professionalSchool.trim()
+
   const changeInstitution = (next) => {
-    if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) {
+    if (next === NO_INSTITUTION) {
+      setProfessionalSchool('')
+      setCustomCareer('')
+      setCustomInstitution('')
+    } else if ((next === 'UNAP') !== (institutionChoice === 'UNAP')) {
       setProfessionalSchool('')
       setCustomCareer('')
     }
@@ -204,6 +247,35 @@ function Inscription({ modal = false }) {
       copy[index] = { ...copy[index], [field]: value }
       return copy
     })
+  }
+
+  const [pastedSlot, setPastedSlot] = useState(null)
+
+  const pasteIntoField = async (index, field) => {
+    try {
+      if (!navigator?.clipboard?.readText) return
+      const raw = await navigator.clipboard.readText()
+      if (!raw || !raw.trim()) return
+      let text = raw.trim()
+      if (field === 'id') {
+        text = text.replace(/\D/g, '')
+        if (text.length > 15) text = text.slice(0, 15)
+      } else if (field === 'nickname') {
+        text = text.normalize('NFC').replace(/\s+/g, ' ')
+        if (text.length > 50) text = text.slice(0, 50)
+      }
+      if (text) {
+        updatePlayer(index, field, text)
+        audio.click()
+        const key = `${index}-${field}`
+        setPastedSlot(key)
+        setTimeout(() => {
+          setPastedSlot((curr) => (curr === key ? null : curr))
+        }, 1200)
+      }
+    } catch (err) {
+      console.warn('No se pudo acceder al portapapeles:', err)
+    }
   }
 
   const pickFile = async (event, setter, allowPdf) => {
@@ -239,16 +311,6 @@ function Inscription({ modal = false }) {
       audio.click()
       return false
     }
-    if (!career) {
-      setStepError(institution === 'UNAP' ? 'Selecciona tu escuela profesional de la UNAP.' : 'Selecciona o escribe tu carrera profesional.')
-      audio.click()
-      return false
-    }
-    if (institution === 'Otra' && !otherInstitution.trim()) {
-      setStepError('Ingresa el nombre de tu universidad o institución.')
-      audio.click()
-      return false
-    }
     setStepError(null)
     return true
   }
@@ -257,8 +319,8 @@ function Inscription({ modal = false }) {
     const requiredSlots = gameInfo.slots.filter((s) => s.required)
     for (let i = 0; i < requiredSlots.length; i++) {
       const p = players[i] || {}
-      if (!p.nickname?.trim() || !p.id?.trim()) {
-        setStepError(`Completa el Nickname e ID del ${requiredSlots[i].label}.`)
+      if (!p.nickname?.trim()) {
+        setStepError(`Completa el Nickname del ${requiredSlots[i].label}.`)
         audio.click()
         return false
       }
@@ -313,6 +375,7 @@ function Inscription({ modal = false }) {
 
     setSubmitting(true)
     setNotice(null)
+    const teamBase = `99${Date.now().toString().slice(-7)}`
     try {
       await submitRegistration({
         gameKey: game,
@@ -322,11 +385,18 @@ function Inscription({ modal = false }) {
         institution,
         school: career,
         otherInstitution: otherInstitution.trim(),
-        players: playerSlots.map((_, i) => ({
-          // Los nicknames pueden llevar símbolos o letras decoradas: se conservan tal cual (solo se limpian espacios).
-          nickname: (players[i]?.nickname || '').normalize('NFC').replace(/\s+/g, ' ').trim(),
-          game_player_id: players[i]?.id || '',
-        })),
+        players: playerSlots.map((_, i) => {
+          const nick = (players[i]?.nickname || '').normalize('NFC').replace(/\s+/g, ' ').trim()
+          if (!nick) {
+            return { nickname: '', game_player_id: '' }
+          }
+          // ID numérico ordenado y correlativo por equipo: ej. 99330683801, 99330683802...
+          const slotNum = String(i + 1).padStart(2, '0')
+          return {
+            nickname: nick,
+            game_player_id: `${teamBase}${slotNum}`,
+          }
+        }),
         receipt: paymentReceipt,
         logo: teamLogo,
         honeypot,
@@ -352,7 +422,7 @@ function Inscription({ modal = false }) {
         <CharacterArt character={game === 'mlbb' ? 'zetian' : 'moco'} className={`registration-character ${game === 'ff' ? 'registration-character--ff' : ''}`} />
         <div className="modal-hero-content">
           <div className="modal-hero-left">
-            <img className="modal-hero-crest" src={ragnarokCrest} alt="Crest" />
+            <img className="modal-hero-crest" src="/images/ragnarok-principal.png" alt="Ragnarok U-Series" width="48" height="48" />
             <div>
               <span className="modal-hero-kicker">// RAGNAROK U-SERIES 2026</span>
               <h2>INSCRIBE A TU EQUIPO</h2>
@@ -488,27 +558,32 @@ function Inscription({ modal = false }) {
                 />
               </label>
               <SearchSelect
-                label="INSTITUCIÓN DE PROCEDENCIA *"
+                label="INSTITUCIÓN DE PROCEDENCIA (OPCIONAL)"
                 groups={institutionGroups}
                 value={institutionChoice}
                 onChange={changeInstitution}
-                placeholder="Busca tu universidad o instituto…"
-                emptyText="No aparece. Elige “Otra institución” y escribe el nombre."
+                placeholder="Busca o escribe tu universidad o instituto…"
+                emptyText="Escribe el nombre de tu institución…"
+                allowCustom
+                customGroupLabel="Institución personalizada"
               />
               <SearchSelect
-                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) *' : 'CARRERA PROFESIONAL *'}
+                label={institution === 'UNAP' ? 'ESCUELA PROFESIONAL (UNAP) (OPCIONAL)' : 'CARRERA O ESCUELA (OPCIONAL)'}
                 groups={institution === 'UNAP' ? schoolGroups : careerGroups}
                 value={professionalSchool}
                 onChange={setProfessionalSchool}
-                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional…' : 'Busca tu carrera…'}
+                placeholder={institution === 'UNAP' ? 'Busca tu escuela profesional (opcional)…' : 'Busca o escribe tu carrera (opcional)…'}
+                emptyText="Escribe el nombre de tu carrera…"
+                allowCustom
+                customGroupLabel="Carrera personalizada"
               />
               {institutionChoice === OTHER_INSTITUTION && (
                 <label className="form-field">
-                  <span>NOMBRE DE LA INSTITUCIÓN *</span>
+                  <span>NOMBRE DE LA INSTITUCIÓN (OPCIONAL)</span>
                   <input
                     name="otherInstitution"
                     maxLength="120"
-                    placeholder="Escribe el nombre completo"
+                    placeholder="Escribe el nombre de tu institución"
                     value={customInstitution}
                     onChange={(e) => setCustomInstitution(e.target.value)}
                   />
@@ -516,7 +591,7 @@ function Inscription({ modal = false }) {
               )}
               {professionalSchool === OTHER_CAREER && (
                 <label className="form-field">
-                  <span>NOMBRE DE LA CARRERA *</span>
+                  <span>NOMBRE DE LA CARRERA (OPCIONAL)</span>
                   <input name="customCareer" maxLength="120" placeholder="Escribe el nombre de tu carrera" value={customCareer} onChange={(e) => setCustomCareer(e.target.value)} />
                 </label>
               )}
@@ -535,11 +610,26 @@ function Inscription({ modal = false }) {
               </p>
             </div>
 
+            <div className="roster-notice-box">
+              <div className="roster-notice-header">
+                <span className="roster-notice-tag">AVISO IMPORTANTE</span>
+              </div>
+              <p className="roster-notice-text">
+                Asegúrate de ingresar los Nicknames reales del juego. Si el nombre de un jugador en la sala no coincide exactamente con el registrado aquí, las cuentas no serán admitidas a la partida.
+              </p>
+              <p className="roster-notice-tip">
+                {game === 'ff' ? (
+                  <><strong>Tip:</strong> Usa Pagostore con su ID para copiar el Nickname exacto si tiene símbolos.</>
+                ) : (
+                  <><strong>Tip:</strong> En MLBB entra al perfil de tus compañeros en la lista de amigos para copiar sus Nicknames, o consulta con su ID en Codashop.</>
+                )}
+              </p>
+            </div>
+
             <div className="roster-list">
               <div className="roster-table-head">
                 <span>ROL</span>
                 <span>NICKNAME EN JUEGO</span>
-                <span>ID DE JUGADOR</span>
               </div>
 
               {playerSlots.map((slot, index) => (
@@ -553,25 +643,41 @@ function Inscription({ modal = false }) {
                     </span>
                     <span className="roster-slot-label">{slot.label}</span>
                   </div>
-                  <input
-                    className="compact-input"
-                    maxLength={50}
-                    name={`player-${index}-nickname`}
-                    placeholder={`Nickname ${slot.required ? '*' : '(opcional)'}`}
-                    value={players[index]?.nickname || ''}
-                    onChange={(e) => updatePlayer(index, 'nickname', e.target.value)}
-                    required={slot.required}
-                  />
-                  <input
-                    className="compact-input compact-input--mono"
-                    inputMode="numeric"
-                    maxLength={15}
-                    name={`player-${index}-id`}
-                    placeholder={`ID ${slot.required ? '*' : '(opcional)'}`}
-                    value={players[index]?.id || ''}
-                    onChange={(e) => updatePlayer(index, 'id', e.target.value.replace(/\D/g, ''))}
-                    required={slot.required}
-                  />
+                  <div className="compact-input-wrap">
+                    <input
+                      className="compact-input compact-input--with-paste"
+                      maxLength={50}
+                      name={`player-${index}-nickname`}
+                      placeholder={`Nickname ${slot.required ? '*' : '(opcional)'}`}
+                      value={players[index]?.nickname || ''}
+                      onChange={(e) => updatePlayer(index, 'nickname', e.target.value)}
+                      required={slot.required}
+                    />
+                    <button
+                      type="button"
+                      className={`compact-paste-btn ${pastedSlot === `${index}-nickname` ? 'compact-paste-btn--success' : ''}`}
+                      onClick={() => pasteIntoField(index, 'nickname')}
+                      title="Pegar nickname del portapapeles"
+                      aria-label={`Pegar nickname del ${slot.label}`}
+                    >
+                      {pastedSlot === `${index}-nickname` ? (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          <span>Listo</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                          </svg>
+                          <span>Pegar</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -601,7 +707,7 @@ function Inscription({ modal = false }) {
               </div>
               <div className="summary-col">
                 <span className="summary-label">INSTITUCIÓN</span>
-                <strong>{institution === 'UNAP' ? career || 'UNAP' : [otherInstitution, career].filter(Boolean).join(' · ') || 'Otra'}</strong>
+                <strong>{institution === 'UNAP' ? ['UNAP', career].filter(Boolean).join(' · ') : [otherInstitution, career].filter(Boolean).join(' · ') || 'Independiente'}</strong>
                 <small>Roster: {players.filter((p) => p.nickname?.trim()).length} jugadores registrados</small>
               </div>
             </div>
@@ -631,10 +737,29 @@ function Inscription({ modal = false }) {
                 </div>
 
                 <h2>REALIZA EL ABONO POR YAPE</h2>
+                {settings.yape_number ? (
+                  <div className="yape-info-box">
+                    <div className="yape-info-text">
+                      <span className="yape-info-kicker">NÚMERO OFICIAL DE YAPE</span>
+                      <strong className="yape-info-number">{settings.yape_number}</strong>
+                      {settings.yape_holder && (
+                        <span className="yape-info-holder">Titular: <b>{settings.yape_holder}</b></span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      className={`yape-copy-btn ${copiedYape ? 'yape-copy-btn--copied' : ''}`}
+                      onClick={handleCopyYapeNumber}
+                      title="Copiar número de Yape"
+                    >
+                      <Icon name={copiedYape ? 'check' : 'copy'} size={15} />
+                      <span>{copiedYape ? '¡Copiado!' : 'Copiar número'}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <p>La organización publicará aquí el código oficial y los datos de pago.</p>
+                )}
                 <p>
-                  {settings.yape_number
-                    ? <>Yapea a <strong>{settings.yape_number}</strong>{settings.yape_holder ? <> a nombre de <strong>{settings.yape_holder}</strong></> : null}. </>
-                    : 'La organización publicará aquí el código oficial y los datos de pago. '}
                   La tarifa de esta disciplina es <strong>{gameInfo.priceFormatted}</strong> por equipo.
                 </p>
                 {/^\d{8,15}$/.test(settings.contact_whatsapp || '') && (
@@ -668,7 +793,7 @@ function Inscription({ modal = false }) {
                   type="checkbox"
                 />
                 <span>
-                  Declaro bajo juramento que los datos del roster son verídicos, que los jugadores cumplen con las normas universitarias y acepto el cumplimiento estricto del{' '}
+                  Declaro bajo juramento que los datos del roster son verídicos y acepto el cumplimiento estricto del{' '}
                   <a
                     href={gameInfo.pdfUrl}
                     download={gameInfo.pdfName}

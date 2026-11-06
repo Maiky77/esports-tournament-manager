@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import RouteScroll from './components/RouteScroll'
@@ -10,12 +10,6 @@ import Footer from './components/Footer'
 import LiveDock from './components/LiveDock'
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext'
 import { audio } from './lib/audioEngine'
-import Home from './pages/Home'
-import Inscription from './pages/Inscription'
-import PagePlaceholder from './pages/PagePlaceholder'
-import Teams from './pages/Teams'
-import Bracket from './pages/Bracket'
-import Schedule from './pages/Schedule'
 import { TournamentProvider, useTournament } from './context/TournamentContext'
 import { publicUrl } from './lib/tournamentApi'
 import './App.css'
@@ -29,6 +23,13 @@ import './styles/teams.css'
 import './styles/schedule.css'
 import './styles/disciplines.css'
 
+const Home = lazy(() => import('./pages/Home'))
+const Inscription = lazy(() => import('./pages/Inscription'))
+const Teams = lazy(() => import('./pages/Teams'))
+const Bracket = lazy(() => import('./pages/Bracket'))
+const Schedule = lazy(() => import('./pages/Schedule'))
+const PagePlaceholder = lazy(() => import('./pages/PagePlaceholder'))
+
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true)
   const [audioStarted, setAudioStarted] = useState(false)
@@ -37,10 +38,10 @@ function AppContent() {
   const mlbbMusic = games.mlbb.music_path
   const ffMusic = games.ff.music_path
 
-  // Música de fondo: Warsongs Piercing Light.mp3 de la carpeta public.
+  // Música de fondo de cada juego: el archivo subido desde el panel (Supabase) o, si no hay,
+  // /audio/mlbb.mp3 y /audio/ff.mp3 de la carpeta public. Sin archivo, ese juego queda en silencio.
   useEffect(() => {
     let active = true
-    const warsongsTrack = encodeURI('/audio/Warsongs Piercing Light.mp3')
     const resolve = async (path, fallback) => {
       const remote = publicUrl('public-assets', path)
       if (remote) return remote
@@ -51,15 +52,9 @@ function AppContent() {
         return null
       }
     }
-    Promise.all([
-      resolve(mlbbMusic, warsongsTrack),
-      resolve(ffMusic, warsongsTrack),
-    ]).then(([mlbb, ff]) => {
-      if (active) audio.setTracks({ mlbb: mlbb || warsongsTrack, ff: ff || warsongsTrack })
-    })
-    return () => {
-      active = false
-    }
+    Promise.all([resolve(mlbbMusic, '/audio/mlbb.mp3'), resolve(ffMusic, '/audio/ff.mp3')])
+      .then(([mlbb, ff]) => { if (active) audio.setTracks({ mlbb, ff }) })
+    return () => { active = false }
   }, [mlbbMusic, ffMusic])
 
   // El tema cambia con el juego elegido (sin elegir, suena el de Mobile Legends).
@@ -71,7 +66,18 @@ function AppContent() {
     audio.start()
     audio.arenaEnter()
     setAudioStarted(true)
-    window.setTimeout(() => setShowSplash(false), 1050)
+    window.setTimeout(() => {
+      setShowSplash(false)
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1)
+        const el = document.getElementById(id)
+        if (el) {
+          window.requestAnimationFrame(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          })
+        }
+      }
+    }, 1050)
   }
 
   return (
@@ -85,19 +91,23 @@ function AppContent() {
         <ParticleBackground />
         {showSplash && <SplashScreen onEnter={enterArena} />}
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home heroEnabled={!showSplash} />} />
-          <Route path="/inscripcion" element={<Inscription />} />
-          <Route path="/equipos" element={<Teams />} />
-          <Route path="/llaves" element={<Bracket />} />
-          <Route path="/cronograma" element={<Schedule />} />
-          <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home heroEnabled={!showSplash} />} />
+            <Route path="/inscripcion" element={<Inscription />} />
+            <Route path="/equipos" element={<Teams />} />
+            <Route path="/llaves" element={<Bracket />} />
+            <Route path="/cronograma" element={<Schedule />} />
+            <Route path="*" element={<PagePlaceholder title="Página no encontrada" description="La ruta que buscas no existe en U-Series." kind="not-found" />} />
+          </Routes>
+        </Suspense>
         <Footer />
         {audioStarted && <AudioControls />}
         {!showSplash && <LiveDock />}
         <RegistrationModal onClose={closeRegistration} open={isRegistrationOpen}>
-          <Inscription modal />
+          <Suspense fallback={null}>
+            <Inscription modal />
+          </Suspense>
         </RegistrationModal>
       </div>
     </BrowserRouter>
@@ -115,3 +125,4 @@ function App() {
 }
 
 export default App
+
