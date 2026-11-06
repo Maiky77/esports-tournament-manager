@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import defaultLogo from '../assets/ragnarok-logo-blancoNegro.png'
 
-const MAX_SHOWN = 5
-
 const isBlank = (val) => {
   if (!val) return true
   const s = String(val).trim().toLowerCase()
@@ -19,7 +17,7 @@ const isBlank = (val) => {
 }
 
 // Tarjeta de un equipo confirmado. Jerarquía: institución (título pequeño) con indicador de integrantes integrado en texto, nombre del equipo, carrera.
-// Al presionar en cualquier parte de la tarjeta se despliega la bandeja de chips compactos con los integrantes.
+// Al presionar en cualquier parte de la tarjeta se despliega la bandeja de chips en 3 columnas con los integrantes.
 export default function TeamCard({ team, logo }) {
   const [open, setOpen] = useState(false)
   const players = team.players ?? []
@@ -96,15 +94,10 @@ export default function TeamCard({ team, logo }) {
                   <div
                     key={player.slot}
                     className={`tc-chip ${isCap ? 'tc-chip--cap' : ''}`}
-                    title={player.nickname}
-                    tabIndex={0}
                     role="listitem"
                   >
                     {isCap && <span className="tc-chip-star" aria-hidden="true">★</span>}
                     <span className="tc-chip-text">{player.nickname}</span>
-                    <span className="tc-chip-tooltip" aria-hidden="true">
-                      {player.nickname}
-                    </span>
                   </div>
                 )
               })}
