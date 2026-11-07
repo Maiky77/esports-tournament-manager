@@ -408,7 +408,7 @@ function Podium({ top3, teamMap }) {
       <div className={`pd-podium-card ${toneClass}`}>
         {isChampion && (
           <div className="pd-podium-trophy-watermark" aria-hidden="true">
-            <img src="/images/copa_ragnarok.png" alt="" />
+            <img src="/images/copa_ragnarok.webp" alt="" loading="lazy" />
           </div>
         )}
 
@@ -426,8 +426,9 @@ function Podium({ top3, teamMap }) {
         <h4 className="pd-podium-team-name">
           {isChampion && (
             <img
-              src="/images/copa_ragnarok.png"
+              src="/images/copa_ragnarok.webp"
               alt=""
+              loading="lazy"
               className="pd-podium-title-cup"
             />
           )}

@@ -33,7 +33,7 @@ const divisions = [
     number: '01',
     name: 'Mobile Legends',
     subtitle: 'BANG BANG',
-    image: '/img/hero-mlbb.jpg',
+    image: '/img/hero-mlbb.webp',
     character: 'kalea',
     mode: '5V5 · DRAFT PICK',
     rounds: 'BO1 eliminatorias · BO3 semifinal y final',
@@ -44,7 +44,7 @@ const divisions = [
     number: '02',
     name: 'Free Fire',
     subtitle: 'BATTLE ROYALE',
-    image: '/img/hero-ff.jpg',
+    image: '/img/hero-ff.webp',
     character: 'deeee',
     mode: 'SQUADS · BATTLE ROYALE',
     rounds: 'Puntos por posición + 1 punto por kill',
@@ -91,8 +91,8 @@ function Home({ heroEnabled = true }) {
     <main className="home-page home-page--template">
       <section className="template-hero-v2" id="inicio" aria-labelledby="event-title" ref={containerRef} data-hero-game={heroGame}>
         <div className="hero-backdrop" aria-hidden="true">
-          <img src="/img/hero-mlbb.jpg" alt="" width="2560" height="1440" className={`hero-bg-img hero-bg-img--mlbb ${!isHeroFreeFire ? 'hero-bg-img--active' : ''}`} />
-          <img src="/img/hero-ff.jpg" alt="" width="1920" height="1080" className={`hero-bg-img hero-bg-img--ff ${isHeroFreeFire ? 'hero-bg-img--active' : ''}`} />
+          <img src="/img/hero-mlbb.webp" alt="" width="2560" height="1440" className={`hero-bg-img hero-bg-img--mlbb ${!isHeroFreeFire ? 'hero-bg-img--active' : ''}`} fetchPriority="high" decoding="async" />
+          <img src="/img/hero-ff.webp" alt="" width="1920" height="1080" className={`hero-bg-img hero-bg-img--ff ${isHeroFreeFire ? 'hero-bg-img--active' : ''}`} loading="lazy" decoding="async" />
           <div className="hero-backdrop-gradient" />
         </div>
         <div className="hero-watermark" aria-hidden="true"><span>U-SERIES</span></div>

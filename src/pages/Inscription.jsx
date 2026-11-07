@@ -17,7 +17,7 @@ const baseGames = {
     name: 'Mobile Legends: Bang Bang',
     shortName: 'MOBA MLBB',
     modeBadge: '5V5 MOBA · DRAFT PICK',
-    image: '/img/hero-mlbb.jpg',
+    image: '/img/hero-mlbb.webp',
     pdfUrl: '/docs/Bases_MOBA.pdf',
     pdfName: 'Bases_MOBA.pdf',
     accent: '#b48aff',
@@ -27,7 +27,7 @@ const baseGames = {
     name: 'Free Fire',
     shortName: 'FREE FIRE',
     modeBadge: 'SQUADS BATTLE ROYALE',
-    image: '/img/hero-ff.jpg',
+    image: '/img/hero-ff.webp',
     pdfUrl: '/docs/Bases_FF.pdf',
     pdfName: 'Bases_FF.pdf',
     accent: '#ef54a6',
@@ -422,7 +422,7 @@ function Inscription({ modal = false }) {
         <CharacterArt character={game === 'mlbb' ? 'zetian' : 'moco'} className={`registration-character ${game === 'ff' ? 'registration-character--ff' : ''}`} />
         <div className="modal-hero-content">
           <div className="modal-hero-left">
-            <img className="modal-hero-crest" src="/images/ragnarok-principal.png" alt="Ragnarok U-Series" width="48" height="48" />
+            <img className="modal-hero-crest" src="/images/ragnarok-principal.webp" alt="Ragnarok U-Series" width="48" height="48" />
             <div>
               <span className="modal-hero-kicker">// RAGNAROK U-SERIES 2026</span>
               <h2>INSCRIBE A TU EQUIPO</h2>

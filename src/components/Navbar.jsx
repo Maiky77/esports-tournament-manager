@@ -66,7 +66,7 @@ function Navbar() {
         <NavLink to="/" className="brand" onClick={closeMenu}>
           <img
             className="brand-logo"
-            src="/images/ragnarok-principal.png"
+            src="/images/ragnarok-principal.webp"
             alt="Ragnarok U-Series"
             width="40"
             height="40"

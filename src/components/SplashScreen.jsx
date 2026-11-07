@@ -57,11 +57,11 @@ function SplashScreen({ onEnter }) {
     >
       <div className="entry-art" aria-hidden="true">
         <div className="entry-scene entry-scene--mlbb">
-          <img className="entry-background" src="/img/hero-mlbb.jpg" alt="" width="2560" height="1440" decoding="async" />
+          <img className="entry-background" src="/img/hero-mlbb.webp" alt="" width="2560" height="1440" decoding="async" />
           <CharacterArt character="hirara" className="entry-character entry-character--mlbb" priority />
         </div>
         <div className="entry-scene entry-scene--ff">
-          <img className="entry-background" src="/img/hero-ff.jpg" alt="" width="1920" height="1080" decoding="async" />
+          <img className="entry-background" src="/img/hero-ff.webp" alt="" width="1920" height="1080" decoding="async" />
           <CharacterArt character="tiradora" className="entry-character entry-character--ff" priority />
         </div>
         <div className="entry-shade" />
@@ -74,7 +74,7 @@ function SplashScreen({ onEnter }) {
       <header className="entry-topline">
         <img
           className="entry-logo"
-          src="/images/ragnarok-contexto.png"
+          src="/images/ragnarok-contexto.webp"
           alt="Ragnarok U-Series, arena universitaria"
           width="320"
           height="100"
