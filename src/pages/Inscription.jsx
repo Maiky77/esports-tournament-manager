@@ -619,9 +619,30 @@ function Inscription({ modal = false }) {
               </p>
               <p className="roster-notice-tip">
                 {game === 'ff' ? (
-                  <><strong>Tip:</strong> Usa Pagostore con su ID para copiar el Nickname exacto si tiene símbolos.</>
+                  <>
+                    <strong>Tip:</strong> Usa{' '}
+                    <a
+                      href="https://pagostore.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="roster-notice-link"
+                    >
+                      Pagostore ↗
+                    </a>{' '}
+                    con su ID para copiar el Nickname exacto si tiene símbolos.
+                  </>
                 ) : (
-                  <><strong>Tip:</strong> En MLBB entra al perfil de tus compañeros en la lista de amigos para copiar sus Nicknames, o consulta con su ID en Codashop.</>
+                  <>
+                    <strong>Tip:</strong> En MLBB entra al perfil de tus compañeros en la lista de amigos para copiar sus Nicknames, o consulta con su ID en{' '}
+                    <a
+                      href="https://www.codashop.com/es-pe/mobile-legends"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="roster-notice-link"
+                    >
+                      Codashop ↗
+                    </a>.
+                  </>
                 )}
               </p>
             </div>

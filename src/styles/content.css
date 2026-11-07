@@ -289,6 +289,8 @@
 .roster-notice-text { margin: 0 0 0.35rem; color: #e2e8f0; font-family: var(--font-body); font-size: 0.85rem; line-height: 1.5; }
 .roster-notice-tip { margin: 0; color: #c084fc; font-family: var(--font-body); font-size: 0.8rem; line-height: 1.45; }
 .roster-notice-tip strong { color: #e9d5ff; font-weight: 700; }
+.roster-notice-link { color: #38bdf8; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; transition: color 0.15s ease, opacity 0.15s ease; }
+.roster-notice-link:hover { color: #7dd3fc; opacity: 0.9; }
 .payment-panel { gap:2rem; }
 .payment-qr-pending { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; width:200px; height:200px; background:#1b102a; border:1px dashed #ae83d777; color:#d0b4ec; }
 .payment-qr-pending>strong { font-family:var(--font-display); font-size:.95rem; }
