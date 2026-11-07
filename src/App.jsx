@@ -23,7 +23,8 @@ import './styles/teams.css'
 import './styles/schedule.css'
 import './styles/disciplines.css'
 
-const Home = lazy(() => import('./pages/Home'))
+import Home from './pages/Home'
+
 const Inscription = lazy(() => import('./pages/Inscription'))
 const Teams = lazy(() => import('./pages/Teams'))
 const Bracket = lazy(() => import('./pages/Bracket'))
