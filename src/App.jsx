@@ -88,7 +88,7 @@ function AppContent() {
           <div className="site-grid" />
           <div className="scanline" />
         </div>
-        <ParticleBackground />
+        <ParticleBackground active={!showSplash} />
         {showSplash && <SplashScreen onEnter={enterArena} />}
         <Navbar />
         <Suspense fallback={null}>

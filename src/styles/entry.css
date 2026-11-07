@@ -1,6 +1,6 @@
 /* Brand finish shared with the event pages. */
 :root { --brand-solid: #7c3aed; --brand-light: #c7a7ff; }
-.site-header { background: #0c0913ee; border-color: #b695e526; }
+.site-header { border-bottom-color: var(--a1); }
 .brand-mark, .brand-logo { background: transparent; border: none; box-shadow: none; font-style: normal; }
 .brand-title em { color: #a66bff; }
 .hero-gradient-text, :root[data-game="ff"] .hero-gradient-text { background-image: none; background-clip: initial; -webkit-background-clip: initial; color: #c6a5ff; }
